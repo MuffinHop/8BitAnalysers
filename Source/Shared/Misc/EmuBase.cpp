@@ -555,6 +555,11 @@ void FEmuBase::OptionsMenu()
 #endif // NDEBUG
 
 	OptionsMenuAdditions();
+	ImGui::Separator();
+	if (ImGui::MenuItem("Edit Global Config"))
+	{
+		bEditGlobalConfig = true;
+	}
 }
 
 void FEmuBase::SystemMenu()
@@ -690,6 +695,29 @@ void FEmuBase::DrawMainMenu()
 	DrawExportAsmModalPopup();
 	DrawReplaceGameModalPopup();
 	DrawErrorMessageModalPopup();
+	DrawEditGlobalConfigModalPopup();
+}
+
+void FEmuBase::DrawEditGlobalConfigModalPopup()
+{
+	if (bEditGlobalConfig)
+	{
+		ImGui::OpenPopup("Edit Global Config");
+	}
+	if (ImGui::BeginPopupModal("Edit Global Config", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Global Config");
+		CodeAnalysis.pGlobalConfig->DrawUI();
+
+		if (ImGui::Button("Ok", ImVec2(120, 0)))
+		{
+			CodeAnalysis.pGlobalConfig->Save("GlobalConfig.json");
+
+			ImGui::CloseCurrentPopup();
+			bEditGlobalConfig = false;
+		}
+		ImGui::EndPopup();
+	}
 }
 
 void FEmuBase::DrawExportAsmModalPopup()
