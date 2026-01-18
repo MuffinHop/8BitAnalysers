@@ -1,5 +1,7 @@
 #include "EmuBase.h"
 
+#define NOMINMAX
+
 #include <imgui.h>
 #include <implot.h>
 #include <CodeAnalyser/UI/CodeAnalyserUI.h>
@@ -19,6 +21,7 @@
 #include "LuaScripting/LuaSys.h"
 #include <CodeAnalyser/UI/UIColours.h>
 #include "CodeAnalyser/CodeAnalysisDot.h"
+#include "MCPServer/MCPManager.h"
 
 
 void FEmulatorLaunchConfig::ParseCommandline(int argc, char** argv)
@@ -45,6 +48,10 @@ void FEmulatorLaunchConfig::ParseCommandline(int argc, char** argv)
 		else if (*argIt == std::string("-nomultiwindow"))
 		{
 			bMultiWindow = false;
+		}
+		else if (*argIt == std::string("-mcpserver"))
+		{
+			bRunMCPServer = true;
 		}
 
 		++argIt;
@@ -91,6 +98,9 @@ bool	FEmuBase::Init(const FEmulatorLaunchConfig& launchConfig)
 	pStaticAnalysis = new FStaticAnalyser(this);
 	AddViewer(pStaticAnalysis);
 
+	if(launchConfig.bRunMCPServer)
+		InitMCPServer(this);
+
 	return true;
 }
 
@@ -98,12 +108,14 @@ bool	FEmuBase::Init(const FEmulatorLaunchConfig& launchConfig)
 void FEmuBase::Shutdown()
 {
 	LuaSys::Shutdown();
+	ShutdownMCPServer();
 }
 
 void FEmuBase::Tick()
 {
 	Colours::Tick();
 	UpdateCharacterSets(CodeAnalysis);
+	UpdateMCPServer();
 }
 
 void FEmuBase::Reset()

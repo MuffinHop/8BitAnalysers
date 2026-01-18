@@ -8,6 +8,8 @@
 #include "ArcadeZ80.h"
 #include "CodeAnalyser/AssemblerExport.h"
 
+#if 0
+
 FMCPManager* g_MCPManager = nullptr;
 FMCPToolsRegistry* g_MCPToolsRegistry = nullptr;
 FMCPResourceRegistry* g_MCPResourceRegistry = nullptr;
@@ -72,3 +74,5 @@ void RegisterArcadeZ80Resources(FMCPResourceRegistry& registry)
 {
 	
 }
+
+#endif

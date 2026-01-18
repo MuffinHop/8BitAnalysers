@@ -2,6 +2,7 @@
 #include "MCPTransport.h"
 #include "MCPServer.h"
 
+class FEmuBase;
 
 enum class EMCPTransportType
 {
@@ -108,3 +109,7 @@ private:
 	int			Port = 7777;
 
 };
+
+void InitMCPServer(FEmuBase* pEmu);
+void ShutdownMCPServer();
+void UpdateMCPServer();

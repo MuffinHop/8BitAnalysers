@@ -45,6 +45,8 @@ struct FArcadeZ80LaunchConfig : public FEmulatorLaunchConfig
 {
     void ParseCommandline(int argc, char** argv) override
     {
+		FEmulatorLaunchConfig::ParseCommandline(argc, argv);	// call base class
+
         // Parse commandline arguments
 		if (argc > 1)
 		{

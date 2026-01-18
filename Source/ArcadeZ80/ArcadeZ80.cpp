@@ -143,8 +143,6 @@ bool FArcadeZ80::Init(const FEmulatorLaunchConfig& launchConfig)
 	// Because all Arcade games are ROM based, enable ROM-based globals by default
 	pGlobalsViewer->ShowROMLabels(true);
 
-	InitMCPServer(this);
-
 	return true;
 }
 
@@ -226,8 +224,6 @@ void FArcadeZ80::Tick()
 
 	// Draw UI
 	DrawDockingView();
-
-	UpdateMCPServer();
 }
 
 

@@ -128,9 +128,128 @@ public:
 	}
 };
 
+// Get code info tool
+class FGetCodeInfoTool : public FMCPTool
+{
+	public:
+		FGetCodeInfoTool()
+		{
+			Description = "Get information about the instruction code at a specific address, such as which memory addresses it reads and writes to";
+			InputSchema = {
+			{"type", "object"},
+			{"properties", {
+				{"address", {
+					{"type", "integer"},
+					{"description", "Memory address of the instruction"}
+				}}
+			}},
+			{"required", {"address"}}
+			};
+		}
+
+		nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+		{
+			FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
+			uint32_t address = arguments["address"].get<uint32_t>();
+			FAddressRef addrRef = codeAnalysis.AddressRefFromPhysicalAddress(address);
+			FCodeInfo* pCodeInfo = codeAnalysis.GetCodeInfoForAddress(addrRef);
+			if(pCodeInfo)
+			{
+				// todo: output code info as json
+				nlohmann::json result;
+				result["disassembly"] = pCodeInfo->Text;
+				result["no_times_executed"] = pCodeInfo->ExecutionCount;
+
+				// reads
+				nlohmann::json reads = nlohmann::json::array();
+				auto& readRefs = pCodeInfo->Reads.GetReferences();
+				for (auto& read : readRefs)
+				{
+					reads.push_back(read.Address);
+				}
+				result["memory_reads"] = reads;
+
+				// writes
+				nlohmann::json writes = nlohmann::json::array();
+				auto& writeRefs = pCodeInfo->Writes.GetReferences();
+				for (auto& write : writeRefs)
+				{
+					writes.push_back(write.Address);
+				}
+				result["memory_writes"] = writes;
+
+				return result;
+			}
+			else
+			{
+				return { {"success", false}, {"error", "No code at address"} };
+			}
+		}
+};
+
+
+// TODO: GetDataInfoTool
+class FGetDataInfoTool : public FMCPTool
+{
+public:
+	FGetDataInfoTool()
+	{
+		Description = "Get information about the data at a specific address, such as what code has read and written to it";
+		InputSchema = {
+		{"type", "object"},
+		{"properties", {
+			{"address", {
+				{"type", "integer"},
+				{"description", "Memory address of the data to get info on"}
+			}}
+		}},
+		{"required", {"address"}}
+		};
+	}
+
+	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+	{
+		FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
+		uint32_t address = arguments["address"].get<uint32_t>();
+		FAddressRef addrRef = codeAnalysis.AddressRefFromPhysicalAddress(address);
+		FDataInfo* pDataInfo = codeAnalysis.GetDataInfoForAddress(addrRef);
+		if (pDataInfo)
+		{
+			nlohmann::json result;
+
+			// reads
+			nlohmann::json reads = nlohmann::json::array();
+			auto& readRefs = pDataInfo->Reads.GetReferences();
+			for (auto& read : readRefs)
+			{
+				reads.push_back(read.Address);
+			}
+			result["read_instrujctions"] = reads;
+
+			// writes
+			nlohmann::json writes = nlohmann::json::array();
+			auto& writeRefs = pDataInfo->Writes.GetReferences();
+			for (auto& write : writeRefs)
+			{
+				writes.push_back(write.Address);
+			}
+			result["write_instructions"] = writes;
+			result["last_writer"] = pDataInfo->LastWriter.Address;
+
+			return result;
+		}
+
+		return { {"success", false}, {"error", "No data at address"} };
+
+	}
+};
+
+
 void RegisterBaseTools(FMCPToolsRegistry& registry)
 {
 	registry.RegisterTool("read_memory", new FReadMemoryTool());
 	registry.RegisterTool("go_to_address", new FGoToAddressTool());
 	registry.RegisterTool("add_comment", new FAddCommentTool());
+	registry.RegisterTool("get_code_info", new FGetCodeInfoTool());
+	registry.RegisterTool("get_data_info", new FGetDataInfoTool());
 }

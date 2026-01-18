@@ -24,6 +24,7 @@ struct FEmulatorLaunchConfig
 	std::string		SpecificGame;
 
 	bool		bMultiWindow = true;
+	bool		bRunMCPServer = false;
 };
 
 
