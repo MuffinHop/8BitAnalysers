@@ -249,7 +249,7 @@ void RegisterBaseTools(FMCPToolsRegistry& registry)
 {
 	registry.RegisterTool("read_memory", new FReadMemoryTool());
 	registry.RegisterTool("go_to_address", new FGoToAddressTool());
-	registry.RegisterTool("add_comment", new FAddCommentTool());
+	//registry.RegisterTool("add_comment", new FAddCommentTool());
 	registry.RegisterTool("get_code_info", new FGetCodeInfoTool());
 	registry.RegisterTool("get_data_info", new FGetDataInfoTool());
 }
