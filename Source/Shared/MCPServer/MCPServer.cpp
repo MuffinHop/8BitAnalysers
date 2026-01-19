@@ -10,6 +10,48 @@ static const std::string kServerVersion = "1.0";
 static const std::string kServerHttpPrefix = "arcadez80://";
 
 
+nlohmann::json	FMCPToolCommand::Execute(FMCPServer* pServer)
+{
+	FMCPToolsRegistry* pToolsRegistry = pServer->GetToolsRegistry();
+
+	// Normalize tool name: VS Code converts underscores to dots
+	std::string normalizedTool = ToolName;
+	size_t pos = 0;
+	while ((pos = normalizedTool.find('.', pos)) != std::string::npos)
+	{
+		normalizedTool[pos] = '_';
+		pos++;
+	}
+
+	// Find tool and execute it
+	nlohmann::json result;
+	if (pToolsRegistry->ExecuteTool(normalizedTool, Arguments, result))
+	{
+		return result;
+	}
+
+	// Report unknown tool for now
+	return { {"error", "Unknown tool: " + ToolName} };
+}
+
+nlohmann::json FMCPResourceCommand::Execute(FMCPServer* pServer)
+{
+	FMCPResourceRegistry* pResourcesRegistry = pServer->GetResourcesRegistry();
+	FMCPResource* pResource = pResourcesRegistry->GetResource(ResourceUri);
+	if (pResource)
+	{
+		std::string data = pResourcesRegistry->ReadResource(pResource);
+
+		nlohmann::json result;
+		result["data"] = data;
+		result["mimeType"] = pResource->MimeType;
+		result["__mcp_image"] = (pResource->MimeType.find("image/") == 0); // mark as image if mime type starts with image/
+		return result;
+	}
+	return { {"error", "Unknown resource: " + ResourceUri} };
+}
+
+
 FMCPServer::FMCPServer(FMCPTransport* pTransport, FMCPToolsRegistry* toolsRegistry, FMCPResourceRegistry* resourcesRegistry, FMCPCommandQueue& commandQueue, FMCPResponseQueue& responseQueue)
 	: pTransport(pTransport)
 	, pToolsRegistry(toolsRegistry)
@@ -270,15 +312,16 @@ void FMCPServer::HandleToolsCall(const nlohmann::json& request)
 	std::string toolName = request["params"]["name"];
 
 	nlohmann::json arguments = request["params"].contains("arguments") ? request["params"]["arguments"] : nlohmann::json::object();
+
 	// Enqueue command for main thread to execute
-	FMCPCommand* cmd = new FMCPCommand();
+	FMCPToolCommand* cmd = new FMCPToolCommand();
 	cmd->RequestId = id;
 	cmd->ToolName = toolName;
 	cmd->Arguments = arguments;
 	CommandQueue.Push(cmd);
-
 }
 
+#if 0
 nlohmann::json FMCPServer::ExecuteCommand(const std::string& toolName, const nlohmann::json& arguments)
 {
 	// Normalize tool name: VS Code converts underscores to dots
@@ -300,6 +343,7 @@ nlohmann::json FMCPServer::ExecuteCommand(const std::string& toolName, const nlo
 	// Report unknown tool for now
 	return { {"error", "Unknown tool: " + toolName} };
 }
+#endif
 
 void FMCPServer::SendResponse(const nlohmann::json& response)
 {
@@ -467,6 +511,13 @@ void FMCPServer::HandleResourcesRead(const nlohmann::json& request)
 	}
 
 	std::string uri = request["params"]["uri"].get<std::string>();
+
+	// queue resource read
+	FMCPResourceCommand* pResourceCmd = new FMCPResourceCommand();
+	pResourceCmd->RequestId = id;
+	pResourceCmd->ResourceUri = uri;
+	CommandQueue.Push(pResourceCmd);
+#if 0
 	nlohmann::json response;
 
 	FMCPResource* pResource = pResourcesRegistry->GetResource(uri);
@@ -497,4 +548,5 @@ void FMCPServer::HandleResourcesRead(const nlohmann::json& request)
 	};	
 
 	SendResponse(response);
+#endif
 }

@@ -14,6 +14,8 @@
 class FMCPToolsRegistry;
 class FMCPResourceRegistry;
 
+class FMCPServer;
+
 struct FResourceInfo
 {
 	std::string		Uri;
@@ -26,9 +28,24 @@ struct FResourceInfo
 
 struct FMCPCommand
 {
+	virtual nlohmann::json	Execute(FMCPServer* pServer) = 0;
+
 	int64_t			RequestId;
+};
+
+struct FMCPToolCommand : public FMCPCommand
+{
+	nlohmann::json	Execute(FMCPServer* pServer) override;
+
 	std::string		ToolName;
 	nlohmann::json	Arguments;
+};
+
+struct FMCPResourceCommand : public FMCPCommand
+{
+	nlohmann::json	Execute(FMCPServer* pServer) override;
+
+	std::string		ResourceUri;
 };
 
 struct FMCPResponse
@@ -154,6 +171,15 @@ public:
 	}
 
 	nlohmann::json ExecuteCommand(const std::string& toolName, const nlohmann::json& arguments);
+
+	FMCPToolsRegistry* GetToolsRegistry() const
+	{
+		return pToolsRegistry;
+	}
+	FMCPResourceRegistry* GetResourcesRegistry() const
+	{
+		return pResourcesRegistry;
+	}
 
 	void ReaderLoop();
 private:

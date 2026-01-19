@@ -10,8 +10,6 @@ enum class EMCPTransportType
 	HTTP,
 };
 
-
-
 class FMCPManager
 {
 public:
@@ -27,76 +25,12 @@ public:
 		Port = port;
 	}
 
-	void Start()
-	{
-		if(pMCPServer && pMCPServer->IsRunning())
-			return;
+	void Start();
+	void Stop();
+	void ProcessCommands();
 
-		CommandQueue.Clear();
-		ResponseQueue.Reset();
-
-		// Create transport
-		FMCPTransport* pTransport = nullptr;
-		if (TransportType == EMCPTransportType::Stdio)
-		{
-			pTransport = new FStdioTransport();
-		}
-		else if (TransportType == EMCPTransportType::HTTP)
-		{
-			pTransport = new FHttpTransport(Port);
-		}
-
-		pMCPServer = new FMCPServer(pTransport, pToolsRegistry, pResourcesRegistry, CommandQueue, ResponseQueue);
-		pMCPServer->Start();
-	}
-
-	void Stop()
-	{
-		if (pMCPServer)
-		{
-			pMCPServer->Stop();
-
-			if(pMCPServer->GetTransport() != nullptr)
-				pMCPServer->GetTransport()->Close();
-
-			delete pMCPServer;
-			pMCPServer = nullptr;
-		}
-	}
-
-	bool IsRunning() const
-	{
-		return pMCPServer && pMCPServer->IsRunning();
-	}
-
-	int GetTransportType() const
-	{
-		return (int)TransportType;
-	}
-
-	void ProcessCommands()
-	{
-		FMCPCommand* pCmd = nullptr;
-		while ((pCmd = CommandQueue.Pop()) != nullptr)
-		{
-			FMCPResponse* pResponse = new FMCPResponse();
-			pResponse->RequestId = pCmd->RequestId;
-			pResponse->bIsError = false;
-
-			pResponse->Result = pMCPServer->ExecuteCommand(pCmd->ToolName, pCmd->Arguments);
-
-			if(pResponse->Result.contains("error"))
-			{
-				pResponse->bIsError = true;
-				pResponse->ErrorCode = -32603;
-				pResponse->ErrorMessage = pResponse->Result["error"];
-			}
-
-			ResponseQueue.Push(pResponse);
-			delete pCmd;
-			pCmd = nullptr;
-		}
-	}
+	bool IsRunning() const { return pMCPServer && pMCPServer->IsRunning(); }
+	int GetTransportType() const { return (int)TransportType; }
 
 private:
 	FMCPServer*			pMCPServer = nullptr;

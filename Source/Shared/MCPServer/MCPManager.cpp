@@ -6,6 +6,69 @@ FMCPManager* g_MCPManager = nullptr;
 FMCPToolsRegistry* g_MCPToolsRegistry = nullptr;
 FMCPResourceRegistry* g_MCPResourceRegistry = nullptr;
 
+void FMCPManager::Start()
+{
+	if (pMCPServer && pMCPServer->IsRunning())
+		return;
+
+	CommandQueue.Clear();
+	ResponseQueue.Reset();
+
+	// Create transport
+	FMCPTransport* pTransport = nullptr;
+	if (TransportType == EMCPTransportType::Stdio)
+	{
+		pTransport = new FStdioTransport();
+	}
+	else if (TransportType == EMCPTransportType::HTTP)
+	{
+		pTransport = new FHttpTransport(Port);
+	}
+
+	pMCPServer = new FMCPServer(pTransport, pToolsRegistry, pResourcesRegistry, CommandQueue, ResponseQueue);
+	pMCPServer->Start();
+}
+
+void FMCPManager::Stop()
+{
+	if (pMCPServer)
+	{
+		pMCPServer->Stop();
+
+		if (pMCPServer->GetTransport() != nullptr)
+			pMCPServer->GetTransport()->Close();
+
+		delete pMCPServer;
+		pMCPServer = nullptr;
+	}
+}
+
+void FMCPManager::ProcessCommands()
+{
+	FMCPCommand* pCmd = nullptr;
+	while ((pCmd = CommandQueue.Pop()) != nullptr)
+	{
+		FMCPResponse* pResponse = new FMCPResponse();
+		pResponse->RequestId = pCmd->RequestId;
+		pResponse->bIsError = false;
+
+		//old pResponse->Result = pMCPServer->ExecuteCommand(pCmd->ToolName, pCmd->Arguments);
+		pResponse->Result = pCmd->Execute(pMCPServer);
+
+		if (pResponse->Result.contains("error"))
+		{
+			pResponse->bIsError = true;
+			pResponse->ErrorCode = -32603;
+			pResponse->ErrorMessage = pResponse->Result["error"];
+		}
+
+		ResponseQueue.Push(pResponse);
+		delete pCmd;
+		pCmd = nullptr;
+	}
+}
+
+
 void InitMCPServer(FEmuBase* pEmu)
 {
 	EMCPTransportType transportType = EMCPTransportType::HTTP;
@@ -29,17 +92,15 @@ void InitMCPServer(FEmuBase* pEmu)
 
 void ShutdownMCPServer()
 {
+	// TODO: stop the mcp server threads safely
+/*
 	if (g_MCPManager)
 	{
 		g_MCPManager->Stop();
 		delete g_MCPManager;
 		g_MCPManager = nullptr;
 	}
-	if (g_MCPToolsRegistry)
-	{
-		delete g_MCPToolsRegistry;
-		g_MCPToolsRegistry = nullptr;
-	}
+*/
 }
 
 void UpdateMCPServer()
