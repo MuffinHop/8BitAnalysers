@@ -23754,39 +23754,48 @@
                 },
                 {
                     "Address": 915,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "read enemy state counter"
                 },
                 {
                     "Address": 918,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "check for 0xF0"
                 },
                 {
                     "Address": 920,
                     "ByteSize": 3,
+                    "Comment": "jump if it is",
                     "OperandType": 2
                 },
                 {
                     "Address": 923,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "is it 60?",
+                    "OperandType": 3
                 },
                 {
                     "Address": 925,
                     "ByteSize": 3,
+                    "Comment": "process death",
                     "Flags": 8,
                     "OperandType": 2
                 },
                 {
                     "Address": 928,
                     "ByteSize": 3,
+                    "Comment": "if >= 60",
                     "OperandType": 2
                 },
                 {
                     "Address": 931,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "decrement death counter"
                 },
                 {
                     "Address": 934,
                     "ByteSize": 2,
+                    "Comment": "remove enemy if 0",
                     "OperandType": 2
                 },
                 {
@@ -23801,7 +23810,9 @@
                 },
                 {
                     "Address": 940,
-                    "ByteSize": 4
+                    "ByteSize": 4,
+                    "Comment": "start count down",
+                    "OperandType": 3
                 },
                 {
                     "Address": 944,
@@ -23826,6 +23837,7 @@
                 {
                     "Address": 954,
                     "ByteSize": 3,
+                    "Comment": "play enemy death sound?",
                     "Flags": 8,
                     "OperandType": 2
                 },
@@ -23845,15 +23857,18 @@
                 {
                     "Address": 962,
                     "ByteSize": 2,
+                    "Comment": "skip if no ships remaning",
                     "OperandType": 2
                 },
                 {
                     "Address": 964,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "dec ships in wave"
                 },
                 {
                     "Address": 965,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "check enemy flags"
                 },
                 {
                     "Address": 968,
@@ -24255,7 +24270,7 @@
                 {
                     "Address": 940,
                     "LabelType": 2,
-                    "Name": "label_2BAC"
+                    "Name": "init_death_state"
                 },
                 {
                     "Address": 948,
@@ -44775,6 +44790,10 @@
         {
             "CommentBlocks": [
                 {
+                    "Address": 80,
+                    "Comment": "Enemy state data\nbyte 0: Enemy state counter. \n    0x00 - Empty\n    0xFF - Enemy flying, attacking player\n    0xFE - Enemy spawned\n    0xF0 - Enemy killed - start death sequence\n    0x3B - 0x01 - Death animation countdown"
+                },
+                {
                     "Address": 430,
                     "Comment": "These are bit-inverted copies of the HW regs"
                 },
@@ -45137,7 +45156,7 @@
                 },
                 {
                     "Address": 160,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 161,
@@ -46819,11 +46838,13 @@
                 {
                     "Address": 994,
                     "ByteSize": 2,
+                    "Comment": "boss/special enemy",
                     "DataType": 2
                 },
                 {
                     "Address": 996,
                     "ByteSize": 2,
+                    "Comment": "enemy AI/movement",
                     "DataType": 2
                 },
                 {
