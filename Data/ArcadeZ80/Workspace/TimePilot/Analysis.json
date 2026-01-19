@@ -2326,6 +2326,15 @@
         },
         {
             "Description": "",
+            "EndAddress": 727711745,
+            "StartAddress": 727711745,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
             "EndAddress": 730988545,
             "ExitPoints": [
                 730988545,
@@ -23235,7 +23244,8 @@
                 },
                 {
                     "Address": 436,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "inactive - jump out"
                 },
                 {
                     "Address": 437,
@@ -23244,6 +23254,7 @@
                 {
                     "Address": 438,
                     "ByteSize": 2,
+                    "Comment": "0xFF - active - jump",
                     "OperandType": 2
                 },
                 {
@@ -23253,6 +23264,7 @@
                 {
                     "Address": 441,
                     "ByteSize": 3,
+                    "Comment": "0xFE - spawning, call spawn function",
                     "OperandType": 2
                 },
                 {
@@ -23640,11 +23652,13 @@
                 },
                 {
                     "Address": 850,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "decrement timer"
                 },
                 {
                     "Address": 853,
                     "ByteSize": 2,
+                    "Comment": "if timer expired - jump",
                     "OperandType": 2
                 },
                 {
@@ -23653,11 +23667,14 @@
                 },
                 {
                     "Address": 856,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "make enemy active",
+                    "Flags": 32
                 },
                 {
                     "Address": 859,
-                    "ByteSize": 4
+                    "ByteSize": 4,
+                    "Comment": "set timer to 128"
                 },
                 {
                     "Address": 863,
@@ -23665,7 +23682,8 @@
                 },
                 {
                     "Address": 864,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Flags": 32
                 },
                 {
                     "Address": 867,
@@ -23826,8 +23844,7 @@
                 },
                 {
                     "Address": 948,
-                    "ByteSize": 3,
-                    "Flags": 32
+                    "ByteSize": 3
                 },
                 {
                     "Address": 951,
@@ -24243,17 +24260,18 @@
                     "Address": 850,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_2B52"
+                    "Name": "MakeSpawnedEnemyActive"
                 },
                 {
                     "Address": 856,
                     "LabelType": 2,
-                    "Name": "label_2B58"
+                    "Name": "make_enemy_active"
                 },
                 {
                     "Address": 864,
-                    "LabelType": 2,
-                    "Name": "label_2B60"
+                    "Global": true,
+                    "LabelType": 1,
+                    "Name": "function_2B60"
                 },
                 {
                     "Address": 899,
@@ -28267,6 +28285,10 @@
                     "Address": 863,
                     "ByteSize": 2,
                     "OperandType": 2
+                },
+                {
+                    "Address": 865,
+                    "ByteSize": 3
                 },
                 {
                     "Address": 868,
@@ -45344,7 +45366,7 @@
                 {
                     "Address": 528,
                     "Comment": "x",
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 529,
@@ -45353,7 +45375,7 @@
                 },
                 {
                     "Address": 530,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 531,
