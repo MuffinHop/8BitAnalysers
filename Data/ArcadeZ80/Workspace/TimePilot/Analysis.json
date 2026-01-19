@@ -24426,7 +24426,8 @@
                 },
                 {
                     "Address": 49,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Flags": 32
                 },
                 {
                     "Address": 52,
@@ -46860,7 +46861,7 @@
                 {
                     "Address": 994,
                     "ByteSize": 2,
-                    "Comment": "boss/special enemy",
+                    "Comment": "boss/special enemy 2",
                     "DataType": 2
                 },
                 {
