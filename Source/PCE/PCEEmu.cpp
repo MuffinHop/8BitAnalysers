@@ -847,6 +847,8 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	//pMemoryAnalyser->SetScreenMemoryArea(kScreenPixMemStart, kScreenAttrMemEnd);
 
 	InitPCEAsmExporters();
+	ExportStartAddress = 0x2000;
+	ExportEndAddress = 0xffff;
 
 #ifndef NDEBUG
 	std::chrono::duration<double, std::milli> ms_double = std::chrono::high_resolution_clock::now() - t1;
