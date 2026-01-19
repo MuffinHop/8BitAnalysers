@@ -78,7 +78,7 @@ public:
 		};
 	}
 
-	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments) override
 	{
 		FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
 		uint32_t address = arguments["address"].get<uint32_t>();
@@ -112,7 +112,7 @@ public:
 		};
 	}
 
-	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments) override
 	{
 		FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
 		uint32_t address = arguments["address"].get<uint32_t>();
@@ -147,7 +147,7 @@ class FGetCodeInfoTool : public FMCPTool
 			};
 		}
 
-		nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+		nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments) override
 		{
 			FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
 			uint32_t address = arguments["address"].get<uint32_t>();
@@ -155,7 +155,7 @@ class FGetCodeInfoTool : public FMCPTool
 			FCodeInfo* pCodeInfo = codeAnalysis.GetCodeInfoForAddress(addrRef);
 			if(pCodeInfo)
 			{
-				// todo: output code info as json
+				// output code info as json
 				nlohmann::json result;
 				result["disassembly"] = pCodeInfo->Text;
 				result["no_times_executed"] = pCodeInfo->ExecutionCount;
@@ -207,7 +207,7 @@ public:
 		};
 	}
 
-	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments) override
 	{
 		FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
 		uint32_t address = arguments["address"].get<uint32_t>();
@@ -262,19 +262,19 @@ public:
 		{"required", {"label_name"}}
 		};
 	}
-	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments) override
 	{
 		FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
 		std::string labelName = arguments["label_name"].get<std::string>();
 
-		// TODO: get the function below to return the address too
-		const FLabelInfo* pLabelInfo = codeAnalysis.FindLabel(labelName.c_str());
-		/*if (pLabelInfo)
+		FAddressRef address;
+		const FLabelInfo* pLabelInfo = codeAnalysis.FindLabel(labelName.c_str(), address);
+		if (pLabelInfo)
 		{
 			nlohmann::json result;
-			result["address"] = pLabelInfo->Address.Address;
+			result["address"] = address.Address;
 			return result;
-		}*/
+		}
 		return { {"success", false}, {"error", "Label not found"} };
 	}
 };
