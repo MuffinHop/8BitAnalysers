@@ -289,6 +289,34 @@ bool ContainsTextLower(const std::string& searchText, const std::string& stringT
 	return stringToSearchLower.find(searchText) != std::string::npos;
 }
 
+const FLabelInfo* FCodeAnalysisState::FindLabel(const char* pLabelName, FAddressRef& outAddress) const
+{
+	std::string searchTextLower = pLabelName;
+	std::transform(searchTextLower.begin(), searchTextLower.end(), searchTextLower.begin(), [](unsigned char c) { return std::tolower(c); });
+
+	// iterate through banks
+	for (auto& bank : Banks)
+	{
+		for (int pageNo = 0; pageNo < bank.NoPages; pageNo++)
+		{
+			const FCodeAnalysisPage& page = bank.Pages[pageNo];
+			for (int pageAddr = 0; pageAddr < FCodeAnalysisPage::kPageSize; pageAddr++)
+			{
+				// search label name
+				const FLabelInfo* pLabelInfo = page.Labels[pageAddr];
+				if (pLabelInfo && ContainsTextLower(searchTextLower, pLabelInfo->GetName()))
+				{
+					const FAddressRef addrRef(bank.Id, bank.GetMappedAddress() + (pageNo * FCodeAnalysisPage::kPageSize) + pageAddr);
+					outAddress = addrRef;
+					return const_cast<FLabelInfo*>(pLabelInfo);
+				}
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 std::vector<FAddressRef> FCodeAnalysisState::FindInAnalysis(const char* pString, bool bSearchROM)
 {
 	std::vector<FAddressRef> results;

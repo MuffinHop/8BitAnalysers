@@ -636,6 +636,7 @@ public:
 	std::vector<FAddressRef> FindAllMemoryPatterns(const uint8_t* pData, size_t dataSize, bool bROM, bool bPhysicalOnly);
 	std::vector<FFoundString> FindAllStrings(bool bROM, bool bPhysicalOnly);
 	std::vector<FAddressRef> FindInAnalysis(const char* pString, bool bSearchROM);
+	const FLabelInfo* FindLabel(const char* pLabelName, FAddressRef& outAddress) const;
 
 	//bool FindMemoryPatternInPhysicalMemory(uint8_t* pData, size_t dataSize, uint16_t offset, uint16_t& outAddr);
 

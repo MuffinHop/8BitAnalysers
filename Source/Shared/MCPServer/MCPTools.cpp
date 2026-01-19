@@ -188,7 +188,7 @@ class FGetCodeInfoTool : public FMCPTool
 };
 
 
-// TODO: GetDataInfoTool
+// GetDataInfoTool
 class FGetDataInfoTool : public FMCPTool
 {
 public:
@@ -244,6 +244,41 @@ public:
 	}
 };
 
+// Tool to get address of label
+class FGetLabelAddressTool : public FMCPTool
+{
+public:
+	FGetLabelAddressTool()
+	{
+		Description = "Get the address of a label by name";
+		InputSchema = {
+		{"type", "object"},
+		{"properties", {
+			{"label_name", {
+				{"type", "string"},
+				{"description", "Name of the label to get address for"}
+			}}
+		}},
+		{"required", {"label_name"}}
+		};
+	}
+	nlohmann::json Execute(FEmuBase* pEmu, const nlohmann::json& arguments)
+	{
+		FCodeAnalysisState& codeAnalysis = pEmu->GetCodeAnalysis();
+		std::string labelName = arguments["label_name"].get<std::string>();
+
+		// TODO: get the function below to return the address too
+		const FLabelInfo* pLabelInfo = codeAnalysis.FindLabel(labelName.c_str());
+		/*if (pLabelInfo)
+		{
+			nlohmann::json result;
+			result["address"] = pLabelInfo->Address.Address;
+			return result;
+		}*/
+		return { {"success", false}, {"error", "Label not found"} };
+	}
+};
+
 
 void RegisterBaseTools(FMCPToolsRegistry& registry)
 {
@@ -252,4 +287,5 @@ void RegisterBaseTools(FMCPToolsRegistry& registry)
 	//registry.RegisterTool("add_comment", new FAddCommentTool());
 	registry.RegisterTool("get_code_info", new FGetCodeInfoTool());
 	registry.RegisterTool("get_data_info", new FGetDataInfoTool());
+	registry.RegisterTool("get_label_address", new FGetLabelAddressTool());
 }
