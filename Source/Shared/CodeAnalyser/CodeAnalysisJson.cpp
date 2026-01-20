@@ -425,7 +425,7 @@ bool ImportAnalysisJson(FCodeAnalysisState& state, const char* pJsonFileName)
 			function.Description = functionJson["Description"];
 			function.bROMFunction = functionJson["bROMFunction"];
 			function.bManualEdit = functionJson["bManualEdit"];
-			if(functionJson.contains("bStubbed"))
+			if(functionJson.contains("bStubbedOut"))
 				function.bStubbedOut = functionJson["bStubbedOut"];
 			if (functionJson.contains("bStubImplemented"))
 				function.bStubImplemented = functionJson["bStubImplemented"];
