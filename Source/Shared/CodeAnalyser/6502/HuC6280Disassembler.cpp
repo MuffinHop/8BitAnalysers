@@ -1,6 +1,7 @@
 #include "HuC6280Disassembler.h"
 
 #include "../CodeAnalyser.h"
+#include "../AssemblerExport.h"
 #include "../Disassembler.h"
 
 #include <assert.h>
@@ -128,6 +129,10 @@
 #define A_IMA    (18)	 /* immediate absolute. TST instructions only */
 #define A_IZX    (19)	 /* immediate zero page indexed. TST instructions only */
 #define A_IAX    (20)	 /* immediate absolute indexed. TST instructions only */
+#define A_ZPR    (21)	 /* zero page relative. BBRi & BBSi instructions only */
+
+// BBRi & BBSi are zero page relative
+// they are the only instructions that use that addressing mode.
 
 static std::vector<std::string> g_AddressingModeNames = 
 {
@@ -152,6 +157,7 @@ static std::vector<std::string> g_AddressingModeNames =
 	"immediate absolute",				// 18
 	"immediate zero page indexed",	// 19
 	"immediate absolute indexed"		// 20
+	"zero page relative"					// 21
 };
 
 /* opcode descriptions */
@@ -241,6 +247,18 @@ static void _m6502dasm_u16(uint16_t val, dasm_output_t out_cb, void* user_data) 
 		}
 	}
 }
+
+static FHuC6280DisassemblerConfig _config =
+{
+	'(',
+	')'
+};
+
+static constexpr FHuC6280DisassemblerConfig _config_default =
+{
+	'(',
+	')'
+};
 
 /* main disassembler function */
 uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, void* user_data) {
@@ -491,7 +509,7 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 		case A_JMP:
 			_CHR(' '); _FETCH_U16(u16);
 			if (indirect) {
-				_CHR('('); _STR_U16(u16); _CHR(')');
+				_CHR(_config.BrOp); _STR_U16(u16); _CHR(_config.BrCl);
 			}
 			else {
 				_STR_U16(u16);
@@ -504,19 +522,19 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 			_CHR(' '); _FETCH_U16(u16); _STR_U16(u16); _STR(",Y");
 			break;
 		case A_IDX:
-			_CHR(' '); _FETCH_U8(u8); _CHR('('); _STR_U8(u8); _STR(",X)");
+			_CHR(' '); _FETCH_U8(u8); _CHR(_config.BrOp); _STR_U8(u8); _STR(",X"); _CHR(_config.BrCl);
 			break;
 		case A_IDY:
-			_CHR(' '); _FETCH_U8(u8); _CHR('('); _STR_U8(u8); _STR("),Y");
+			_CHR(' '); _FETCH_U8(u8); _CHR(_config.BrOp); _STR_U8(u8); _CHR(_config.BrCl); _STR(",Y");
 			break;
 		case A_BRA: /* relative branch, compute target address */
 			_CHR(' '); _FETCH_I8(i8); _STR_U16(pc + i8);
 			break;
 		case A_ZPI:
-			_CHR(' '); _FETCH_U8(u8); _CHR('('); _STR_U8(u8); _STR(")");
+			_CHR(' '); _FETCH_U8(u8); _CHR(_config.BrOp); _STR_U8(u8); _CHR(_config.BrCl);
 			break;
 		case A_AXI:
-			_CHR(' '); _FETCH_U16(u16); _CHR('('); _STR_U16(u16); _STR(",X"); _STR(")");
+			_CHR(' '); _FETCH_U16(u16); _CHR(_config.BrOp); _STR_U16(u16); _STR(",X"); _CHR(_config.BrCl);
 			break;
 		case A_BLK:
 			_CHR(' '); _FETCH_U16(u16); _STR_U16(u16); _CHR(','); _FETCH_U16(u16); _STR_U16(u16); _CHR(','); _FETCH_U16(u16); _STR_U16(u16);
@@ -539,6 +557,16 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 
 // END CHIPS
 
+
+FHuC6280DisassemblerConfig& GetHuC6280DisassemblerConfig()
+{
+	return _config;
+}
+
+const FHuC6280DisassemblerConfig& GetHuC6280DisassemblerDefaultConfig()
+{
+	return _config_default;
+}
 
 // These functions were added to support the 8bit Analysers
 
@@ -600,7 +628,7 @@ bool HuC6280GenerateDasmExportString(FExportDasmState& exportState)
 	return true;
 }
 
-// Test function to disassemble new M65C02 instruction set
+// Test function to disassemble new HuC6280 instruction set
 struct FTestDasmState : public IDasmNumberOutput
 {
 	std::vector<uint8_t> OpCodes; // vector to hold the opcodes
@@ -660,6 +688,19 @@ void TestOutputCB_6280(char c, void* pUserData)
 
 static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 {
+	{ 0x0f, 0x10, 0x9 }, // BBR0
+	{ 0x1f, 0x10, 0x9 }, // BBR1
+	{ 0x2f, 0x10, 0x9 }, // BBR2
+	{ 0x3f, 0x10, 0x9 }, // BBR3
+	{ 0x4f, 0x10, 0x9 }, // BBR4
+	{ 0x5f, 0x10, 0x9 }, // BBR5
+	{ 0x6f, 0x10, 0x9 }, // BBR6
+	{ 0x7f, 0x10, 0x9 }, // BBR7
+
+	{ 0x03, 0x11 }, // ST0 $11
+	{ 0x13, 0x22 }, // ST1 $22
+	{ 0x23, 0x33 }, // ST2 $33
+
 	{ 0xa2, 0xff }, // LDX $ff
 
 	{ 0x02 }, // SXY
@@ -668,10 +709,6 @@ static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 	{ 0x62 }, // CLA
 	{ 0x82 }, // CLX
 	{ 0xC2 }, // CLY
-
-	{ 0x03, 0x11 }, // ST0 $11
-	{ 0x13, 0x22 }, // ST1 $22
-	{ 0x23, 0x33 }, // ST2 $33
 
 	{ 0x43, 0x80 }, // TMA $80
 	{ 0x53, 0x02 }, // TAM $02
@@ -691,7 +728,7 @@ static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 	{ 0x44, 0xa5 }, // BSR
 	{ 0x54 }, // CSL
 	{ 0xD4 }, // CSH
-	{ 0xF4 }  // SET
+	{ 0xF4 },  // SET
 };
 
 
@@ -734,4 +771,8 @@ struct FHuC6280Test
 		DoHuC6280Test();
 	}
 };
-//FHuC6280Test gTest;
+
+#define RUN_HUC6280_DISASSEMBLER_TESTS 0
+#if RUN_HUC6280_DISASSEMBLER_TESTS
+FHuC6280Test gTest;
+#endif

@@ -1,4 +1,5 @@
 #include "CodeAnalyser/AssemblerExport.h"
+#include "CodeAnalyser/6502/HuC6280Disassembler.h"
 
 class FPCEAsmExporterBase : public FASMExporter
 {
@@ -46,9 +47,23 @@ public:
 		Config.LocalLabelPrefix = ".";
 	}
 
+	void	ExportDidBegin() override
+	{
+		FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
+		config.BrOp = '[';
+		config.BrCl = ']';
+	}
+
+	void	ExportDidEnd() override
+	{
+		FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
+		config = GetHuC6280DisassemblerDefaultConfig();
+	}
+
 	void AddHeader(void) override
 	{
-		//Output("\tDEVICE ZXSPECTRUM48\n");	// only 48k spectrum asm dumps are supported atm
+		// needed?
+		//Output("\t.cpu 6280\n");
 	}
 };
 

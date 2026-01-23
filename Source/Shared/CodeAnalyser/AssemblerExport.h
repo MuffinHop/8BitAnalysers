@@ -29,6 +29,8 @@ public:
 	void		SetOutputToHeader(){OutputString = &HeaderText;}
 	void		SetOutputToBody(){OutputString = &BodyText;}
 	void		Output(const char* pFormat, ...);
+	virtual void	ExportDidBegin(){}
+	virtual void	ExportDidEnd(){}
 	virtual void	AddHeader(void){}
 	virtual void	ProcessLabelsOutsideExportedRange(void){}
 	bool		ExportAddressRange(uint16_t startAddr, uint16_t endAddr);

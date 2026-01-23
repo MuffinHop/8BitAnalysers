@@ -61,6 +61,9 @@ bool FASMExporter::Init(const char* pFilename, FEmuBase* pEmu)
 	OldNumberMode = GetNumberDisplayMode();
 	SetNumberDisplayMode(HexMode);
 	bInitialised = true;
+
+	ExportDidBegin();
+
 	return true;
 }
 
@@ -74,6 +77,8 @@ bool FASMExporter::Finish()
 	}
 
 	SetNumberDisplayMode(OldNumberMode);
+	ExportDidEnd();
+
 	return true;
 }
 
