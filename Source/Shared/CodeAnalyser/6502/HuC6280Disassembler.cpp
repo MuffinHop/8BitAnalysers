@@ -156,7 +156,7 @@ static std::vector<std::string> g_AddressingModeNames =
 	"immediate zero page",				// 17
 	"immediate absolute",				// 18
 	"immediate zero page indexed",	// 19
-	"immediate absolute indexed"		// 20
+	"immediate absolute indexed",		// 20
 	"zero page relative"					// 21
 };
 
@@ -208,12 +208,12 @@ static uint8_t _huc6280dasm_ops[4][8][8] = {
 		{A_IMM,A_IMM,A_IMM,A_IDX,A_IMZ,A_IZX,A_BLK,A_BLK},	// 0 - bbb
 		{A_ZER,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER},	// 1
 		{A_INV,A_INV,A_INV,A_INV,A_INV,A_INV,A_INV,A_IMM},	// 2
-		{A_ABS,A_ABS,A_ABS,A_ABS,A_ABS,A_ABS,A_ABS,A_ABS},	// 3
+		{A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR},	// 3
 		//ST1        TAM   TII   TST   TST   TIN   TAI   
 		{A_IMM,A_IDY,A_IMM,A_BLK,A_IMA,A_IAX,A_BLK,A_BLK},	// 4
 		{A_ZPX,A_ZPX,A_ZPX,A_ZPX,A_ZPY,A_ZPY,A_ZPX,A_ZPX},	// 5
 		{A_ABY,A_ABY,A_ABY,A_ABY,A_INV,A_INV,A_ABY,A_ABY},	// 6
-		{A_ABX,A_ABX,A_ABX,A_ABX,A_INV,A_ABY,A_ABX,A_ABX}	// 7
+		{A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR}	// 7
  } };
 
 static const char* _m6502dasm_hex = "0123456789ABCDEF";
@@ -460,29 +460,61 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 		case 0:
 			switch (bbb) {
 				case 0:  n = "ST0"; break; // HuC6280
+				case 3:  n = "BBR0"; break; // HuC6280
+				case 7:  n = "BBR1"; break; // HuC6280
 				default: n = "ST1"; break; // HuC6280
 			}
 			break;
-		case 1: n = "ST2"; break; // HuC6280
+		case 1: 
+			switch (bbb) {
+				case 3:  n = "BBR2"; break; // HuC6280
+				case 7:  n = "BBR3"; break; // HuC6280
+				default: n = "ST2"; break; // HuC6280
+			}
+			break;
 		case 2:
 			switch (bbb) {
 				case 0: n = "TMA"; break; // HuC6280
+				case 3:  n = "BBR4"; break; // HuC6280
+				case 7:  n = "BBR5"; break; // HuC6280
 				default: n = "TAM"; break; // HuC6280
 			}
 			break;
-		case 3: n = "TII"; break; // HuC6280
-		case 4: n = "TST"; break; // HuC6280
-		case 5: n = "TST"; break; // HuC6280
+		case 3: 
+			switch (bbb) {
+				case 3:  n = "BBR6"; break; // HuC6280
+				case 7:  n = "BBR7"; break; // HuC6280
+				default: n = "TII"; break; // HuC6280
+			}
+			break;
+		case 4: 
+			switch (bbb) {
+				case 3:  n = "BBS0"; break; // HuC6280
+				case 7:  n = "BBS1"; break; // HuC6280
+				default: n = "TST"; break; // HuC6280
+			}
+			break;
+		case 5: 
+			switch (bbb) {
+				case 3:  n = "BBS2"; break; // HuC6280
+				case 7:  n = "BBS3"; break; // HuC6280
+				default: n = "TST"; break; // HuC6280
+			}
+			break;
 		case 6:
 			switch (bbb) {
 				case 0: n = "TDD"; break; // HuC6280
+				case 3:  n = "BBS4"; break; // HuC6280
+				case 7:  n = "BBS5"; break; // HuC6280
 				default: n = "TIN"; break; // HuC6280
 			}
 			break;
 		case 7:
 			switch (bbb) {
 				case 2:  n = "*SBC"; break;
-				case 4: n = "TAI"; break; // HuC6280
+				case 3:  n = "BBS6"; break; // HuC6280
+				case 4:  n = "TAI"; break; // HuC6280
+				case 7:  n = "BBS7"; break; // HuC6280
 				default: n = "TIA"; break; // HuC6280
 			}
 			break;
@@ -551,6 +583,10 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 		case A_IAX:
 			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _FETCH_U16(u16); _STR_U16(u16); _STR(",X");
 			break;
+		case A_ZPR:
+			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8); _CHR(','); _FETCH_I8(i8); _STR_U16(pc + i8);
+			break;
+
 	}
 	return pc;
 }
@@ -688,6 +724,15 @@ void TestOutputCB_6280(char c, void* pUserData)
 
 static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 {
+	{ 0x8f, 0x10, 0x9 }, // BBS0
+	{ 0x9f, 0x10, 0x9 }, // BBS1
+	{ 0xaf, 0x10, 0x9 }, // BBS2
+	{ 0xbf, 0x10, 0x9 }, // BBS3
+	{ 0xcf, 0x10, 0x9 }, // BBS4
+	{ 0xef, 0x10, 0x9 }, // BBS5
+	{ 0xff, 0x10, 0x9 }, // BBS6
+	{ 0xff, 0x10, 0x9 }, // BBS7
+
 	{ 0x0f, 0x10, 0x9 }, // BBR0
 	{ 0x1f, 0x10, 0x9 }, // BBR1
 	{ 0x2f, 0x10, 0x9 }, // BBR2
