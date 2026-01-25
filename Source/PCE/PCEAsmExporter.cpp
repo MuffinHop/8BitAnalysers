@@ -1,36 +1,50 @@
 #include "CodeAnalyser/AssemblerExport.h"
 #include "CodeAnalyser/6502/HuC6280Disassembler.h"
+#include "PCEEmu.h"
 
 class FPCEAsmExporterBase : public FASMExporter
 {
 	public:
 		void ProcessLabelsOutsideExportedRange(void) override
 		{
-			#if 0
 			FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
 
 			SetOutputToHeader();
 
-			Output("\n\n; ROM Labels\n");
+			Output("\n; HW Page Labels\n");
 
 			for (auto labelAddr : DasmState.LabelsOutsideRange)
 			{
 				const FLabelInfo* pLabelInfo = state.GetLabelForPhysicalAddress(labelAddr);
-				if (labelAddr < 0x4000)
-					Output("%s: \t%s %s\n", pLabelInfo->GetName(),Config.EQUText, NumStr(labelAddr));
-			}
-
-			Output("\n; Screen Memory Labels\n");
-
-			for (auto labelAddr : DasmState.LabelsOutsideRange)
-			{
-				const FLabelInfo* pLabelInfo = state.GetLabelForPhysicalAddress(labelAddr);
-				if (labelAddr >= 0x4000)
+				if (pLabelInfo)
 					Output("%s: \t%s %s\n", pLabelInfo->GetName(), Config.EQUText, NumStr(labelAddr));
+				else
+					LOGINFO("Can't get label for address 0x%x", labelAddr);
 			}
-
+			
 			Output("\n");
-			#endif
+		}
+		void	ExportDidEnd() override
+		{
+			// Reset disassembler back to default settings
+			FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
+			config = GetHuC6280DisassemblerDefaultConfig();
+
+			// Update every code item to refresh the disassembly.
+			FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
+			int addr = 0x2000;
+			while (addr <= 0xffff)
+			{
+				if (const FCodeInfo* pCodeInfo = state.GetCodeInfoForPhysicalAddress(addr))
+				{
+					UpdateCodeInfoForAddress(state, addr);
+					addr += pCodeInfo->ByteSize;
+				}
+				else
+				{
+					addr++;
+				}
+			}
 		}
 };
 
@@ -43,7 +57,7 @@ public:
 		Config.DataWordPrefix = "dw";
 		Config.DataTextPrefix = "db";
 		Config.ORGText = "\torg";
-		Config.EQUText = "equ";
+		Config.EQUText = ".equ";
 		Config.LocalLabelPrefix = ".";
 	}
 
@@ -52,12 +66,8 @@ public:
 		FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
 		config.BrOp = '[';
 		config.BrCl = ']';
-	}
-
-	void	ExportDidEnd() override
-	{
-		FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
-		config = GetHuC6280DisassemblerDefaultConfig();
+		config.ZpRelPr = ZipRelativePrefix.c_str();
+		config.MprIndexMode = true;
 	}
 
 	void AddHeader(void) override
@@ -65,6 +75,7 @@ public:
 		// needed?
 		//Output("\t.cpu 6280\n");
 	}
+	std::string ZipRelativePrefix = "<";
 };
 
 bool InitPCEAsmExporters()

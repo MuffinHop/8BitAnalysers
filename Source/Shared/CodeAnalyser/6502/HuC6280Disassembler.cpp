@@ -107,6 +107,9 @@
 /* output number number as unsigned 16-bit string (hex) */
 #define _STR_U16(u16) DasmOutputU16((uint16_t)(u16),out_cb,user_data);
 
+/* convert bitfield into mpr index and output */
+#define _STR_MPR(u8) _m6502dasm_mpr(u8,out_cb,user_data);
+
 /* addressing modes */
 #define A____    (0)     /* no addressing mode */
 #define A_IMM    (1)     /* # */
@@ -131,8 +134,7 @@
 #define A_IAX    (20)	 /* immediate absolute indexed. TST instructions only */
 #define A_ZPR    (21)	 /* zero page relative. BBRi & BBSi instructions only */
 
-// BBRi & BBSi are zero page relative
-// they are the only instructions that use that addressing mode.
+// TODO RMBi
 
 static std::vector<std::string> g_AddressingModeNames = 
 {
@@ -165,7 +167,7 @@ static uint8_t _huc6280dasm_ops[4][8][8] = {
 	/* cc = 00 */
 	{
 		//---  BIT   JMP   JMP() STY   LDY   CPY   CPX
-		{A____,A_JSR,A____,A____,A_IMM,A_IMM,A_IMM,A_IMM},	// 0 - bbb
+		{A____,A_JSR,A____,A____,A_BRA,A_IMM,A_IMM,A_IMM},	// 0 - bbb
 		//           BSR
 		{A_ZER,A_ZER,A_BRA,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER},	// 1 - bbb
 		{A____,A____,A____,A____,A____,A____,A____,A____},	// 2 - bbb
@@ -220,7 +222,7 @@ static const char* _m6502dasm_hex = "0123456789ABCDEF";
 
 /* helper function to output string */
 static void _m6502dasm_str(const char* str, dasm_output_t out_cb, void* user_data) {
-	if (out_cb) {
+	if (out_cb && str) {
 		char c;
 		while (0 != (c = *str++)) {
 			out_cb(c, user_data);
@@ -248,17 +250,26 @@ static void _m6502dasm_u16(uint16_t val, dasm_output_t out_cb, void* user_data) 
 	}
 }
 
-static FHuC6280DisassemblerConfig _config =
-{
-	'(',
-	')'
-};
+/* helper function to convert a bitfield into an mpr index and output as decimal */
+static void _m6502dasm_mpr(uint8_t val, dasm_output_t out_cb, void* user_data) {
+	int index = 0;
+	while ((val >>= 1) != 0) {
+		++index;
+	}
+
+	// todo: make this decimal. ie TAM #1 instead of TAM #$01
+	DasmOutputU8(index, out_cb, user_data);
+}
 
 static constexpr FHuC6280DisassemblerConfig _config_default =
 {
 	'(',
-	')'
+	')',
+	nullptr,
+	false,
 };
+
+static FHuC6280DisassemblerConfig _config = _config_default;
 
 /* main disassembler function */
 uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, void* user_data) {
@@ -525,7 +536,12 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 	uint8_t u8; int8_t i8; uint16_t u16;
 	switch (_huc6280dasm_ops[cc][bbb][aaa]) {
 		case A_IMM:
-			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8);
+			if (_config.MprIndexMode && (op == 0x43 || op == 0x53)) {
+				_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_MPR(u8);
+			}
+			else {
+				_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8);
+			}
 			break;
 		case A_ZER:
 			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8);
@@ -584,7 +600,7 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _FETCH_U16(u16); _STR_U16(u16); _STR(",X");
 			break;
 		case A_ZPR:
-			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8); _CHR(','); _FETCH_I8(i8); _STR_U16(pc + i8);
+			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpRelPr); _STR_U8(u8); _CHR(','); _FETCH_I8(i8); _STR_U16(pc + i8);
 			break;
 
 	}
@@ -724,6 +740,20 @@ void TestOutputCB_6280(char c, void* pUserData)
 
 static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 {
+	{ 0x53, 0x00 },		// TAM ??
+	{ 0x53, 0x01 },		// TAM #0
+	{ 0x53, 0x02 },		// TAM #1
+	{ 0x53, 0x04 },		// TAM #2
+	{ 0x53, 0x08 },		// TAM #3
+	{ 0x53, 0x10 },		// TAM #4
+	{ 0x53, 0x20 },		// TAM #5
+	{ 0x53, 0x40 },		// TAM #6
+	{ 0x53, 0x80 },		// TAM #7
+	{ 0x53, 0xff },		// TAM ??
+
+	{ 0x80, 0xFB },		// BRA
+	{ 0x44, 0xFB },		// BSR
+
 	{ 0x8f, 0x10, 0x9 }, // BBS0
 	{ 0x9f, 0x10, 0x9 }, // BBS1
 	{ 0xaf, 0x10, 0x9 }, // BBS2
@@ -756,7 +786,6 @@ static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 	{ 0xC2 }, // CLY
 
 	{ 0x43, 0x80 }, // TMA $80
-	{ 0x53, 0x02 }, // TAM $02
 
 	{ 0x83, 0x80, 0x45 },			// TST #$80,$45
 	{ 0x93, 0x33, 0x50, 0x30 },	// TST #$33, $3050

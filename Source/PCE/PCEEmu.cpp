@@ -1153,9 +1153,13 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	// some extra initialisation for creating new analysis from snapshot
 	if(bLoadGameData == false)
 	{
-		FAddressRef initialPC = GetPC();
+		const FAddressRef initialPC = GetPC();
 		SetItemCode(CodeAnalysis, initialPC);
 		CodeAnalysis.Debugger.SetPC(initialPC);
+
+		// Make a label for the entry point.
+		// Without this an exported asm file may not assemble.
+		AddLabel(CodeAnalysis, initialPC, "EntryPoint", ELabelType::Function);
 	}
 
 	//pGraphicsViewer->SetImagesRoot((pGlobalConfig->WorkspaceRoot + "/" + pGameConfig->Name + "/GraphicsSets/").c_str());

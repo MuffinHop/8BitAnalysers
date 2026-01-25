@@ -11,8 +11,10 @@ struct FCodeInfo;
 
 struct FHuC6280DisassemblerConfig
 {
-	char BrOp; // Bracket open
-	char BrCl; // Bracket close
+	char BrOp;				// Bracket open
+	char BrCl;				// Bracket close
+	const char* ZpRelPr; // Zip Relative prefix
+	bool MprIndexMode;	// Convert mpr bitfield to mpr index for TMA & TAM instructions.
 };
 
 uint16_t HuC6280DisassembleCodeInfoItem(uint16_t pc, FCodeAnalysisState& state, FCodeInfo* pCodeInfo);
