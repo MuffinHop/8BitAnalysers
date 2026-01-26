@@ -13615,20 +13615,24 @@
                 },
                 {
                     "Address": 922,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "check bit 7 (bottom half of screen?)"
                 },
                 {
                     "Address": 924,
                     "ByteSize": 2,
+                    "Comment": "no? jump",
                     "OperandType": 2
                 },
                 {
                     "Address": 926,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Flags": 32
                 },
                 {
                     "Address": 927,
                     "ByteSize": 3,
+                    "Comment": "read current scanline",
                     "OperandType": 1
                 },
                 {
@@ -13642,7 +13646,8 @@
                 },
                 {
                     "Address": 933,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "delay"
                 },
                 {
                     "Address": 934,
@@ -13662,7 +13667,9 @@
                 },
                 {
                     "Address": 938,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "put in top half",
+                    "Flags": 32
                 },
                 {
                     "Address": 940,
@@ -13742,6 +13749,7 @@
                 {
                     "Address": 972,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -14602,7 +14610,7 @@
                     "Address": 919,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_0F97"
+                    "Name": "MultiplexClouds"
                 },
                 {
                     "Address": 951,
@@ -18165,12 +18173,12 @@
                     "Address": 687,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "Phase5Function"
+                    "Name": "LevelIntroFunction"
                 },
                 {
                     "Address": 695,
                     "LabelType": 2,
-                    "Name": "label_16B7"
+                    "Name": "tamper_check_loop"
                 },
                 {
                     "Address": 722,
@@ -24072,7 +24080,8 @@
                 },
                 {
                     "Address": 948,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Flags": 32
                 },
                 {
                     "Address": 951,
@@ -25007,6 +25016,34 @@
                     "OperandType": 2
                 },
                 {
+                    "Address": 264,
+                    "ByteSize": 3,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 267,
+                    "ByteSize": 3,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 270,
+                    "ByteSize": 3,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 273,
+                    "ByteSize": 3,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 276,
+                    "ByteSize": 1
+                },
+                {
                     "Address": 277,
                     "ByteSize": 3,
                     "Flags": 8,
@@ -25733,12 +25770,12 @@
                 {
                     "Address": 245,
                     "LabelType": 2,
-                    "Name": "label_2CF5"
+                    "Name": "intro_era_0"
                 },
                 {
                     "Address": 258,
                     "LabelType": 2,
-                    "Name": "label_2D02"
+                    "Name": "intro_era_4"
                 },
                 {
                     "Address": 277,
@@ -25779,6 +25816,12 @@
                     "Address": 333,
                     "LabelType": 0,
                     "Name": "operand_2D4D"
+                },
+                {
+                    "Address": 354,
+                    "Global": true,
+                    "LabelType": 1,
+                    "Name": "function_2D62"
                 },
                 {
                     "Address": 360,
@@ -46179,6 +46222,12 @@
                     "Global": true,
                     "LabelType": 0,
                     "Name": "data_A8F7"
+                },
+                {
+                    "Address": 256,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_A900"
                 },
                 {
                     "Address": 384,
