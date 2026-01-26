@@ -264,6 +264,7 @@ static constexpr FHuC6280DisassemblerConfig _config_default =
 	'(',
 	')',
 	nullptr,
+	nullptr,
 	false,
 };
 
@@ -558,7 +559,7 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 			}
 			break;
 		case A_ZER:
-			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8);
+			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpPr); _STR_U8(u8);
 			break;
 		case A_ZPX:
 			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8); _STR(",X");

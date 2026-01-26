@@ -66,7 +66,8 @@ public:
 		FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
 		config.BrOp = '[';
 		config.BrCl = ']';
-		config.ZpRelPr = ZipRelativePrefix.c_str();
+		config.ZpRelPr = ZeroPagePrefix.c_str();
+		config.ZpPr = ZeroPagePrefix.c_str();
 		config.MprIndexMode = true;
 	}
 
@@ -75,7 +76,7 @@ public:
 		// needed?
 		//Output("\t.cpu 6280\n");
 	}
-	std::string ZipRelativePrefix = "<";
+	std::string ZeroPagePrefix = "<";
 };
 
 bool InitPCEAsmExporters()
