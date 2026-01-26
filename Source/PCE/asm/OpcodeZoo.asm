@@ -412,7 +412,7 @@ BPL label1
 ORA [$10],Y
 TRB <$10             ; 14 10
 ORA <$10,X
-;ASL $10,X
+ASL <$10,X
 CLC                 ; 18
 ORA $1234,Y
 INC A               ; 1A
@@ -426,9 +426,9 @@ ASL $1234,X
 
 JSR $1234           ; 20 ll hh
 AND [$10,X]
-;BIT $10             ; 24 10
-;AND $10             ; 25 10
-;ROL $10             ; 26 10
+BIT <$10             ; 24 10
+AND <$10             ; 25 10
+ROL <$10             ; 26 10
 PLP                 ; 28
 AND #$10            ; 29 10
 ROL A               ; 2A
@@ -456,8 +456,8 @@ ROL $1234,X
 RTI                 ; 40
 EOR [$10,X]
 BSR label1
-;EOR $10             ; 45 10
-;LSR $10             ; 46 10
+EOR <$10             ; 45 10
+LSR <$10             ; 46 10
 PHA                 ; 48
 EOR #$10            ; 49 10
 LSR A               ; 4A
@@ -472,9 +472,9 @@ label2:
 
 BVC label2
 EOR [$10],Y
-;STZ $10             ; 54 10
-;EOR $10,X
-;LSR $10,X
+;STZ <$10             ; 54 10
+EOR <$10,X
+LSR <$10,X
 CLI                 ; 58
 EOR $1234,Y
 PHY                 ; 5A
@@ -488,9 +488,9 @@ LSR $1234,X
 
 RTS                 ; 60
 ADC [$10,X]
-;STZ $10             ; 64 10
-;ADC $10             ; 65 10
-;ROR $10             ; 66 10
+STZ <$10             ; 64 10
+ADC <$10             ; 65 10
+ROR <$10             ; 66 10
 PLA                 ; 68
 ADC #$10            ; 69 10
 ROR A               ; 6A
@@ -504,9 +504,9 @@ ROR $1234           ; 6E ll hh
 
 BVS label2
 ADC [$10],Y
-;STZ $10,X
-;ADC $10,X
-;ROR $10,X
+STZ <$10,X
+ADC <$10,X
+ROR <$10,X
 SEI                 ; 78
 ADC $1234,Y
 PLY                 ; 7A
@@ -520,9 +520,9 @@ ROR $1234,X
 
 BRA label2
 STA [$10,X]
-;STY $10             ; 84 10
-;STA $10             ; 85 10
-;STX $10             ; 86 10
+STY <$10             ; 84 10
+STA <$10             ; 85 10
+STX <$10             ; 86 10
 DEY                 ; 88
 BIT #$10            ; 89 10
 TXA                 ; 8A
@@ -536,9 +536,9 @@ STX $1234           ; 8E ll hh
 
 BCC label2
 STA [$10],Y
-;STY $10,X
-;STA $10,X
-;STX $10,Y
+STY <$10,X
+STA <$10,X
+STX <$10,Y
 TYA                 ; 98
 STA $1234,Y
 TXS                 ; 9A
@@ -553,9 +553,9 @@ STZ $1234,X
 LDY #$10            ; A0 10
 LDA [$10,X]
 ;LDX #$10            ; A2 10
-;LDY $10             ; A4 10
-;LDA $10             ; A5 10
-LDX $10             ; A6 10
+LDY <$10             ; A4 10
+LDA <$10             ; A5 10
+LDX <$10             ; A6 10
 TAY                 ; A8
 LDA #$10            ; A9 10
 TAX                 ; AA
@@ -570,9 +570,9 @@ label3:
 
 BCS label3
 LDA [$10],Y
-;LDY $10,X
-;LDA $10,X
-;LDX $10,Y
+LDY <$10,X
+LDA <$10,X
+LDX <$10,Y
 CLV                 ; B8
 LDA $1234,Y
 TSX                 ; BA
