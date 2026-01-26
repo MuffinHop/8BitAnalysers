@@ -1348,6 +1348,15 @@
         },
         {
             "Description": "",
+            "EndAddress": 368967680,
+            "StartAddress": 368967680,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "Seems to be called when user is on title screen",
             "EndAddress": 374865920,
             "StartAddress": 374407168,
             "bManualEdit": false,
@@ -1884,6 +1893,15 @@
                 659816449
             ],
             "StartAddress": 621871105,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
+            "EndAddress": 657457153,
+            "StartAddress": 657457153,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5783,7 +5801,7 @@
                 {
                     "Address": 350,
                     "ByteSize": 1,
-                    "Flags": 8,
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
@@ -5921,6 +5939,7 @@
                 {
                     "Address": 418,
                     "ByteSize": 3,
+                    "Comment": "clear 32 lines",
                     "OperandType": 1
                 },
                 {
@@ -5994,16 +6013,19 @@
                 },
                 {
                     "Address": 453,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "32 chars"
                 },
                 {
                     "Address": 455,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "Comment": "offset to next line",
+                    "OperandType": 4
                 },
                 {
                     "Address": 458,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "write to video ram"
                 },
                 {
                     "Address": 460,
@@ -6011,7 +6033,8 @@
                 },
                 {
                     "Address": 462,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "write to colour ram"
                 },
                 {
                     "Address": 464,
@@ -6019,7 +6042,8 @@
                 },
                 {
                     "Address": 466,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "next line"
                 },
                 {
                     "Address": 467,
@@ -7168,7 +7192,7 @@
                     "Address": 372,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_0174"
+                    "Name": "ExitInterruptRoutine"
                 },
                 {
                     "Address": 396,
@@ -7207,12 +7231,12 @@
                     "Address": 450,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_01C2"
+                    "Name": "PostBootClearScreenWipe"
                 },
                 {
                     "Address": 458,
                     "LabelType": 2,
-                    "Name": "label_01CA"
+                    "Name": "char_clear_loop"
                 },
                 {
                     "Address": 481,
@@ -14067,56 +14091,56 @@
                 {
                     "Address": 809,
                     "ByteSize": 2,
-                    "Comment": "0",
+                    "Comment": "0 - 1 Frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 811,
                     "ByteSize": 2,
-                    "Comment": "1",
+                    "Comment": "1 - 1 frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 813,
                     "ByteSize": 2,
-                    "Comment": "2",
+                    "Comment": "2 - till wipe has finished",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 815,
                     "ByteSize": 2,
-                    "Comment": "3",
+                    "Comment": "3 - 1 frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 817,
                     "ByteSize": 2,
-                    "Comment": "4",
+                    "Comment": "4 - 1 frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 819,
                     "ByteSize": 2,
-                    "Comment": "5",
+                    "Comment": "5 - Get Ready!, Show Era",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 821,
                     "ByteSize": 2,
-                    "Comment": "6",
+                    "Comment": "6 - Grace Period - no enemies",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 823,
                     "ByteSize": 2,
-                    "Comment": "7",
+                    "Comment": "7 - main gameplay",
                     "DataType": 2,
                     "DisplayType": 2
                 },
@@ -14543,7 +14567,7 @@
                     "Address": 799,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "ExecutePhaseFunction"
+                    "Name": "MainGameFunctionDispatcher"
                 },
                 {
                     "Address": 841,
@@ -16260,6 +16284,7 @@
                 {
                     "Address": 776,
                     "ByteSize": 3,
+                    "Comment": " set to 1 - title screen",
                     "OperandType": 1
                 },
                 {
@@ -16435,7 +16460,7 @@
                     "Address": 409,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "Phase7Function"
+                    "Name": "UpdateGameFrame"
                 },
                 {
                     "Address": 523,
@@ -16602,7 +16627,7 @@
                 {
                     "Address": 450,
                     "ByteSize": 3,
-                    "Comment": "a has to be 0 or it'll break",
+                    "Comment": "a has to be 0 or 6 otherwise it'll break",
                     "Flags": 32,
                     "OperandType": 1
                 },
@@ -16619,7 +16644,7 @@
                 {
                     "Address": 482,
                     "ByteSize": 3,
-                    "Flags": 8,
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
@@ -16672,6 +16697,8 @@
                 {
                     "Address": 506,
                     "ByteSize": 3,
+                    "Comment": "should be 0",
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -16681,18 +16708,19 @@
                 {
                     "Address": 510,
                     "ByteSize": 3,
-                    "Flags": 8,
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
                     "Address": 513,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "return if screen not cleared"
                 },
                 {
                     "Address": 514,
                     "ByteSize": 3,
                     "Comment": "String 'HI-SCORE'",
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 517,
@@ -16820,7 +16848,8 @@
                 },
                 {
                     "Address": 556,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "set program index to 'Title Screen'"
                 },
                 {
                     "Address": 558,
@@ -16840,6 +16869,7 @@
                 {
                     "Address": 565,
                     "ByteSize": 3,
+                    "Comment": "check for 'Free Play' ?",
                     "OperandType": 1
                 },
                 {
@@ -16869,6 +16899,7 @@
                 {
                     "Address": 593,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -16885,7 +16916,7 @@
                 {
                     "Address": 600,
                     "ByteSize": 1,
-                    "Flags": 8,
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
@@ -17721,6 +17752,7 @@
                 {
                     "Address": 1022,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 }
             ],
@@ -17767,15 +17799,15 @@
                 },
                 {
                     "Address": 467,
+                    "Comment": "string terminator",
                     "DisplayType": 11
                 },
                 {
                     "Address": 468,
-                    "DisplayType": 11
-                },
-                {
-                    "Address": 469,
-                    "DisplayType": 11
+                    "ByteSize": 2,
+                    "Comment": "6 : cheeky function pointer",
+                    "DataType": 2,
+                    "DisplayType": 1
                 },
                 {
                     "Address": 470,
@@ -17889,72 +17921,91 @@
                 {
                     "Address": 601,
                     "ByteSize": 2,
+                    "Comment": "0 : does that first frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 603,
                     "ByteSize": 2,
+                    "Comment": "1 : radial wipe, exiting game to enter title screen",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 605,
                     "ByteSize": 2,
+                    "Comment": "2 : after wipe - 1 frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 607,
                     "ByteSize": 2,
+                    "Comment": "3 : 1 frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 609,
                     "ByteSize": 2,
+                    "Comment": "4 : Title screen",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 611,
                     "ByteSize": 2,
+                    "Comment": "5 : 1 frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 613,
                     "ByteSize": 2,
+                    "Comment": "6 : Show Highscores",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 615,
                     "ByteSize": 2,
+                    "Comment": "7 - one frame",
                     "DataType": 2,
                     "DisplayType": 2
                 },
                 {
                     "Address": 617,
                     "ByteSize": 2,
+                    "Comment": "8 : one frame",
                     "DataType": 2,
                     "DisplayType": 1
                 },
                 {
                     "Address": 619,
                     "ByteSize": 2,
+                    "Comment": "9 - one frame",
                     "DataType": 2,
                     "DisplayType": 1
                 },
                 {
                     "Address": 621,
                     "ByteSize": 2,
+                    "Comment": "A : one frame",
                     "DataType": 2,
                     "DisplayType": 1
                 },
                 {
                     "Address": 623,
                     "ByteSize": 2,
+                    "Comment": "B : one frame",
+                    "DataType": 2,
+                    "DisplayType": 1
+                },
+                {
+                    "Address": 625,
+                    "ByteSize": 2,
+                    "Comment": "C : launches attract mode?",
                     "DataType": 2,
                     "DisplayType": 1
                 },
@@ -18029,7 +18080,7 @@
                     "Address": 450,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_15C2"
+                    "Name": "BootFunctionDispathcer"
                 },
                 {
                     "Address": 453,
@@ -18061,13 +18112,14 @@
                 },
                 {
                     "Address": 510,
-                    "LabelType": 0,
-                    "Name": "operand_15FE"
+                    "Global": true,
+                    "LabelType": 1,
+                    "Name": "PostBootSetup"
                 },
                 {
                     "Address": 539,
                     "LabelType": 2,
-                    "Name": "label_161B"
+                    "Name": "high_score_loop"
                 },
                 {
                     "Address": 575,
@@ -18079,7 +18131,7 @@
                     "Address": 593,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_1651"
+                    "Name": "TitleScreenDispatcher"
                 },
                 {
                     "Address": 627,
@@ -22555,6 +22607,12 @@
                     "Global": true,
                     "LabelType": 0,
                     "Name": "ColourRAMPtr"
+                },
+                {
+                    "Address": 816,
+                    "Global": true,
+                    "LabelType": 1,
+                    "Name": "label_2730"
                 },
                 {
                     "Address": 824,
@@ -36847,7 +36905,7 @@
                 },
                 {
                     "Address": 259,
-                    "DisplayType": 11
+                    "DisplayType": 1
                 },
                 {
                     "Address": 260,
@@ -42689,7 +42747,8 @@
                 },
                 {
                     "Address": 699,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "dec grace period timer"
                 },
                 {
                     "Address": 700,
@@ -42698,7 +42757,8 @@
                 {
                     "Address": 701,
                     "ByteSize": 2,
-                    "Comment": "256 loops"
+                    "Comment": "256 loops",
+                    "Flags": 32
                 },
                 {
                     "Address": 703,
@@ -42734,11 +42794,14 @@
                 {
                     "Address": 716,
                     "ByteSize": 3,
+                    "Comment": "should be 3 or Crash!",
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
                     "Address": 719,
                     "ByteSize": 3,
+                    "Comment": "next phase - gameplay!",
                     "OperandType": 2
                 },
                 {
@@ -43028,17 +43091,17 @@
                     "Address": 660,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "Phase6Function"
+                    "Name": "UpdateGameGracePeriod"
                 },
                 {
                     "Address": 668,
                     "LabelType": 2,
-                    "Name": "label_569C"
+                    "Name": "tamper_check_1_loop"
                 },
                 {
                     "Address": 709,
                     "LabelType": 2,
-                    "Name": "label_56C5"
+                    "Name": "tamper_check2_loop"
                 },
                 {
                     "Address": 722,
@@ -44992,6 +45055,10 @@
                     "Comment": "Enemy state data\nbyte 0: Enemy state counter. \n    0x00 - Empty\n    0xFF - Enemy flying, attacking player\n    0xFE - Enemy spawned\n    0xF0 - Enemy killed - start death sequence\n    0x3B - 0x01 - Death animation countdown"
                 },
                 {
+                    "Address": 427,
+                    "Comment": "Program Index - Main program state\n0 : ??\n1 : Title Screen\n2 : ??\n3 : Gameplay"
+                },
+                {
                     "Address": 430,
                     "Comment": "These are bit-inverted copies of the HW regs"
                 },
@@ -45460,6 +45527,16 @@
                     "DisplayType": 11
                 },
                 {
+                    "Address": 392,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 393,
+                    "ByteSize": 2,
+                    "DataType": 2,
+                    "DisplayType": 1
+                },
+                {
                     "Address": 398,
                     "DisplayType": 11
                 },
@@ -45471,7 +45548,8 @@
                 },
                 {
                     "Address": 427,
-                    "DisplayType": 11
+                    "DisplayType": 11,
+                    "Flags": 128
                 },
                 {
                     "Address": 428,
@@ -46149,13 +46227,13 @@
                     "Address": 392,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_A988"
+                    "Name": "ScreenClearCounter"
                 },
                 {
                     "Address": 393,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_A989"
+                    "Name": "ScreenClearVideoRAMPtr"
                 },
                 {
                     "Address": 397,
@@ -46221,7 +46299,7 @@
                     "Address": 427,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "FunctionChecksum"
+                    "Name": "ProgramIndex"
                 },
                 {
                     "Address": 428,
@@ -46329,7 +46407,7 @@
                     "Address": 462,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_A9CE"
+                    "Name": "BCDFrameCounter"
                 },
                 {
                     "Address": 463,
@@ -46395,7 +46473,7 @@
                     "Address": 491,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_A9EB"
+                    "Name": "PhaseTimer"
                 },
                 {
                     "Address": 496,
