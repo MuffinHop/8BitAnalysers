@@ -134,8 +134,6 @@
 #define A_IAX    (20)	 /* immediate absolute indexed. TST instructions only */
 #define A_ZPR    (21)	 /* zero page relative. BBRi & BBSi instructions only */
 
-// TODO RMBi
-
 static std::vector<std::string> g_AddressingModeNames = 
 {
 	"none",									// 0
@@ -213,7 +211,7 @@ static uint8_t _huc6280dasm_ops[4][8][8] = {
 		{A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR},	// 3
 		//ST1        TAM   TII   TST   TST   TIN   TAI   
 		{A_IMM,A_IDY,A_IMM,A_BLK,A_IMA,A_IAX,A_BLK,A_BLK},	// 4
-		{A_ZPX,A_ZPX,A_ZPX,A_ZPX,A_ZPY,A_ZPY,A_ZPX,A_ZPX},	// 5
+		{A_ZER,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER,A_ZER},	// 5
 		{A_ABY,A_ABY,A_ABY,A_ABY,A_INV,A_INV,A_ABY,A_ABY},	// 6
 		{A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR,A_ZPR}	// 7
  } };
@@ -471,14 +469,18 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 		case 0:
 			switch (bbb) {
 				case 0:  n = "ST0"; break; // HuC6280
+				case 1:  n = "RMB0"; break; // HuC6280
 				case 3:  n = "BBR0"; break; // HuC6280
+				case 5:  n = "RMB1"; break; // HuC6280
 				case 7:  n = "BBR1"; break; // HuC6280
 				default: n = "ST1"; break; // HuC6280
 			}
 			break;
 		case 1: 
 			switch (bbb) {
+				case 1:  n = "RMB2"; break; // HuC6280
 				case 3:  n = "BBR2"; break; // HuC6280
+				case 5:  n = "RMB3"; break; // HuC6280
 				case 7:  n = "BBR3"; break; // HuC6280
 				default: n = "ST2"; break; // HuC6280
 			}
@@ -486,45 +488,57 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 		case 2:
 			switch (bbb) {
 				case 0: n = "TMA"; break; // HuC6280
+				case 1:  n = "RMB4"; break; // HuC6280
 				case 3:  n = "BBR4"; break; // HuC6280
+				case 5:  n = "RMB5"; break; // HuC6280
 				case 7:  n = "BBR5"; break; // HuC6280
 				default: n = "TAM"; break; // HuC6280
 			}
 			break;
 		case 3: 
 			switch (bbb) {
+				case 1:  n = "RMB6"; break; // HuC6280
 				case 3:  n = "BBR6"; break; // HuC6280
+				case 5:  n = "RMB7"; break; // HuC6280
 				case 7:  n = "BBR7"; break; // HuC6280
 				default: n = "TII"; break; // HuC6280
 			}
 			break;
 		case 4: 
 			switch (bbb) {
+				case 1:  n = "SMB0"; break; // HuC6280
 				case 3:  n = "BBS0"; break; // HuC6280
+				case 5:  n = "SMB1"; break; // HuC6280
 				case 7:  n = "BBS1"; break; // HuC6280
 				default: n = "TST"; break; // HuC6280
 			}
 			break;
 		case 5: 
 			switch (bbb) {
+				case 1:  n = "SMB2"; break; // HuC6280
 				case 3:  n = "BBS2"; break; // HuC6280
 				case 7:  n = "BBS3"; break; // HuC6280
+				case 5:  n = "SMB3"; break; // HuC6280
 				default: n = "TST"; break; // HuC6280
 			}
 			break;
 		case 6:
 			switch (bbb) {
 				case 0: n = "TDD"; break; // HuC6280
+				case 1:  n = "SMB4"; break; // HuC6280
 				case 3:  n = "BBS4"; break; // HuC6280
+				case 5:  n = "SMB5"; break; // HuC6280
 				case 7:  n = "BBS5"; break; // HuC6280
 				default: n = "TIN"; break; // HuC6280
 			}
 			break;
 		case 7:
 			switch (bbb) {
+				case 1:  n = "SMB6"; break; // HuC6280
 				case 2:  n = "*SBC"; break;
 				case 3:  n = "BBS6"; break; // HuC6280
 				case 4:  n = "TAI"; break; // HuC6280
+				case 5:  n = "SMB7"; break; // HuC6280
 				case 7:  n = "BBS7"; break; // HuC6280
 				default: n = "TIA"; break; // HuC6280
 			}
@@ -740,6 +754,24 @@ void TestOutputCB_6280(char c, void* pUserData)
 
 static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 {
+	{ 0x07, 0x10 },		// RMB0 
+	{ 0x17, 0x10 },		// RMB1 
+	{ 0x27, 0x10 },		// RMB2 
+	{ 0x37, 0x10 },		// RMB3 
+	{ 0x47, 0x10 },		// RMB4 
+	{ 0x57, 0x10 },		// RMB5 
+	{ 0x67, 0x10 },		// RMB6 
+	{ 0x77, 0x10 },		// RMB7 
+
+	{ 0x87, 0x10 },		// SMB0 
+	{ 0x97, 0x10 },		// SMB1 
+	{ 0xA7, 0x10 },		// SMB2 
+	{ 0xB7, 0x10 },		// SMB3 
+	{ 0xC7, 0x10 },		// SMB4 
+	{ 0xD7, 0x10 },		// SMB5 
+	{ 0xE7, 0x10 },		// SMB6 
+	{ 0xF7, 0x10 },		// SMB7 
+
 	{ 0x53, 0x00 },		// TAM ??
 	{ 0x53, 0x01 },		// TAM #0
 	{ 0x53, 0x02 },		// TAM #1
