@@ -155,6 +155,7 @@ struct FCodeAnalysisViewState
 	bool			TrackPCFrame = false;
 	FAddressRef		HoverAddress;			// address being hovered over
 	FAddressRef		HighlightAddress;		// address to highlight
+	FAddressRef		LabelEditAddress;
 	int				HighlightScanline = -1;	// scanline to highlight
 	bool			GoToLabel = false;
 	uint16_t		JumpAddress = 0;
