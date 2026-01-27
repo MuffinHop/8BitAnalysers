@@ -17,6 +17,7 @@ public:
 	void Clear(const uint32_t col = 0xff000000);
 	void UpdateTexture(void);
 	void Draw(float xSize, float ySize, bool bMagnifier = true);
+	void Draw(float scale, bool bMagnifier = true) { Draw((float)Width * scale, (float)Height * scale, bMagnifier); }
 	void Draw(bool bMagnifier = true);
 
 	void DrawCharLine(uint8_t charLine, int xp, int yp, uint32_t inkCol, uint32_t paperCol);

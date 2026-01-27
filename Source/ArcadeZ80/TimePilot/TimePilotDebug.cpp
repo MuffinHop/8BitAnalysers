@@ -27,6 +27,7 @@ class FTimePilotDebug : public FMachineDebug
 {
 public:
 	FTimePilotDebug(FArcadeZ80Machine* pTPMachine);
+	~FTimePilotDebug() override;
 	void DrawDebugUI() override;
 	void DrawDebugOverlays(float x, float y) override;
 	void DrawSpriteDebug(ImVec2 pos);
@@ -42,8 +43,11 @@ private:
 
 	FCodeAnalysisState* pCodeAnalysis = nullptr;
 	FGraphicsView* pSpriteView = nullptr;
-	FGraphicsView* pStringView = nullptr;
-	FGraphicsView* pCharacterView = nullptr;
+	static const int kNoActiveSprites = 64;
+	uint32_t		ActiveSpriteAppearanceHash[kNoActiveSprites] = { 0 };
+	FGraphicsView*	pActiveSpriteView[kNoActiveSprites] = { nullptr };
+	FGraphicsView*	pStringView = nullptr;
+	FGraphicsView*	pCharacterView = nullptr;
 
 	// Sprite Viewer
 	struct FSpriteDebugState
@@ -70,6 +74,22 @@ FTimePilotDebug::FTimePilotDebug(FArcadeZ80Machine* pTPMachine)
 	pSpriteView = new FGraphicsView(64, 64);
 	pStringView = new FGraphicsView(256, 256);
 	pCharacterView = new FGraphicsView(128, 128);
+
+	for (int sprNo = 0; sprNo < kNoActiveSprites; sprNo++)
+	{
+		pActiveSpriteView[sprNo] = new FGraphicsView(16, 16);
+	}
+}
+
+FTimePilotDebug::~FTimePilotDebug()
+{
+	delete pSpriteView;
+	delete pStringView;
+	delete pCharacterView;
+	for (int sprNo = 0; sprNo < kNoActiveSprites; sprNo++)
+	{
+		delete pActiveSpriteView[sprNo];
+	}
 }
 
 void FTimePilotDebug::DrawDebugUI()
@@ -164,6 +184,7 @@ void FTimePilotDebug::SpriteViewer()
 {
 	static bool bFirstRun = true;
 	bool bRedrawSprite = false;
+	const float spriteScale = 2.0f;
 
 	bRedrawSprite |= ImGui::InputInt("SpriteNo", &SpriteDebugState.SpriteNo);
 	//ImGui::SameLine();
@@ -185,12 +206,54 @@ void FTimePilotDebug::SpriteViewer()
 		bFirstRun = false;
 	}
 
-	pSpriteView->Draw(true);
+	pSpriteView->Draw(spriteScale, true);
 
 	if (ImGui::Button("Export Sprites"))
 	{
 		pMachine->ExportZXNSprites();
 	}
+
+	// Show active sprites
+	ImGui::Separator();
+	ImGui::Text("Active Sprites:");
+	auto pSpriteRAM = pMachine->pSpriteRAM;
+	//int sprNo = 0;
+	for (int offs = 0x10; offs <= 0x3e; offs += 2)
+	{
+		int const sx = pSpriteRAM[0][offs];
+		int const sy = 241 - pSpriteRAM[1][offs + 1];
+
+		int const code = pSpriteRAM[0][offs + 1];
+		int const colour = pSpriteRAM[1][offs] & 0x3f;
+		int const flipx = ~pSpriteRAM[1][offs] & 0x40;
+		int const flipy = pSpriteRAM[1][offs] & 0x80;
+
+		int sprNo = (offs - 0x10) / 2;
+
+		ImGui::Text("Sprite %d: at(%d,%d) code:%d colour:%d FlipX:%s FlipY:%s", sprNo, sx,sy, code, colour, flipx ? "Yes" : "No", flipy ? "Yes" : "No");
+
+		if (sprNo > kNoActiveSprites)
+		{
+			ImGui::Text("Too many active sprites!");
+		}
+		else
+		{
+			const uint32_t appearanceHash = (code << 16) | (colour << 8) | (flipx << 4) | (flipy << 0);
+
+			if (appearanceHash != ActiveSpriteAppearanceHash[sprNo])
+			{
+				ActiveSpriteAppearanceHash[sprNo] = appearanceHash;
+				// redraw sprite
+				pActiveSpriteView[sprNo]->Clear(0xff000000);
+				const uint32_t* pSpriteColours = pMachine->SpriteColours[colour];
+				const int spriteByteSize = (4 * 16);
+				const uint8_t* pSprite = &pMachine->SpriteROM[code * spriteByteSize];
+				DrawSprite(pActiveSpriteView[sprNo], pSprite, 0, 0, pSpriteColours, flipx, flipy, false);
+			}
+			pActiveSpriteView[sprNo]->Draw(spriteScale, true);
+		}
+	}
+
 }
 
 void FTimePilotDebug::StringViewer()

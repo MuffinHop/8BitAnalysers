@@ -24,6 +24,7 @@ struct FArcadeZ80MachineDesc
 class FMachineDebug
 {
 public:
+	virtual ~FMachineDebug() = default;
 	virtual void DrawDebugUI() = 0;
 	virtual void DrawDebugOverlays(float x, float y) = 0;
 
