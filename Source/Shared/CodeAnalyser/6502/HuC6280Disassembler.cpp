@@ -264,7 +264,6 @@ static constexpr FHuC6280DisassemblerConfig _config_default =
 	'(',
 	')',
 	nullptr,
-	nullptr,
 	false,
 };
 
@@ -562,10 +561,10 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpPr); _STR_U8(u8);
 			break;
 		case A_ZPX:
-			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8); _STR(",X");
+			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpPr); _STR_U8(u8); _STR(",X");
 			break;
 		case A_ZPY:
-			_CHR(' '); _FETCH_U8(u8); _STR_U8(u8); _STR(",Y");
+			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpPr); _STR_U8(u8); _STR(",Y");
 			break;
 		case A_ABS:
 		case A_JSR:
@@ -594,7 +593,7 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 			_CHR(' '); _FETCH_I8(i8); _STR_U16(pc + i8);
 			break;
 		case A_ZPI:
-			_CHR(' '); _FETCH_U8(u8); _CHR(_config.BrOp); _STR_U8(u8); _CHR(_config.BrCl);
+			_CHR(' '); _FETCH_U8(u8); _CHR(_config.BrOp); _STR(_config.ZpPr); _STR_U8(u8); _CHR(_config.BrCl);
 			break;
 		case A_AXI:
 			_CHR(' '); _FETCH_U16(u16); _CHR(_config.BrOp); _STR_U16(u16); _STR(",X"); _CHR(_config.BrCl);
@@ -603,19 +602,19 @@ uint16_t huc6280dasm_op(uint16_t pc, dasm_input_t in_cb, dasm_output_t out_cb, v
 			_CHR(' '); _FETCH_U16(u16); _STR_U16(u16); _CHR(','); _FETCH_U16(u16); _STR_U16(u16); _CHR(','); _FETCH_U16(u16); _STR_U16(u16);
 			break;
 		case A_IMZ:
-			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _FETCH_U8(u8); _STR_U8(u8);
+			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _STR(_config.ZpPr); _FETCH_U8(u8); _STR_U8(u8);
 			break;
 		case A_IMA:
 			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _FETCH_U16(u16); _STR_U16(u16)
 			break;
 		case A_IZX:
-			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _FETCH_U8(u8); _STR_U8(u8); _STR(",X");
+			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _STR(_config.ZpPr); _FETCH_U8(u8); _STR_U8(u8); _STR(",X");
 			break;
 		case A_IAX:
 			_CHR(' '); _FETCH_U8(u8); _CHR('\\'); _CHR('#'); _STR_U8(u8); _CHR(','); _FETCH_U16(u16); _STR_U16(u16); _STR(",X");
 			break;
 		case A_ZPR:
-			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpRelPr); _STR_U8(u8); _CHR(','); _FETCH_I8(i8); _STR_U16(pc + i8);
+			_CHR(' '); _FETCH_U8(u8); _STR(_config.ZpPr); _STR_U8(u8); _CHR(','); _FETCH_I8(i8); _STR_U16(pc + i8);
 			break;
 
 	}
@@ -755,6 +754,9 @@ void TestOutputCB_6280(char c, void* pUserData)
 
 static const std::vector< std::vector<uint8_t>> g_TestOpCodes
 {
+	{ 0xa3, 0x10, 0x10 },		//  
+	{ 0x83, 0x0f, 0x10 },		//  
+
 	{ 0x07, 0x10 },		// RMB0 
 	{ 0x17, 0x10 },		// RMB1 
 	{ 0x27, 0x10 },		// RMB2 

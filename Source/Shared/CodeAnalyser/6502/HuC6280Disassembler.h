@@ -14,7 +14,6 @@ struct FHuC6280DisassemblerConfig
 	char BrOp;						// Bracket open character
 	char BrCl;						// Bracket close character
 	const char* ZpPr;			// Zero Page prefix
-	const char* ZpRelPr;	// Zero Page Relative prefix
 	bool MprIndexMode;		// Convert mpr bitfield to mpr index for TMA & TAM instructions.
 };
 

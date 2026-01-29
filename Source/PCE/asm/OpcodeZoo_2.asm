@@ -271,7 +271,7 @@ BBS2 <$10,.label_a0_af      ; AF
 BCS .label_b0_bf            ; B0
 LDA [$10],Y                 ; B1
 LDA [<$10]                  ; B2
-TST #$0F,$10,X              ; B3
+TST #$0F,data_FFF0,X        ; B3
 LDY <$10,X                  ; B4
 LDA <$10,X                  ; B5
 LDX <$10,Y                  ; B6

@@ -66,7 +66,6 @@ public:
 		FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
 		config.BrOp = '[';
 		config.BrCl = ']';
-		config.ZpRelPr = ZeroPagePrefix.c_str();
 		config.ZpPr = ZeroPagePrefix.c_str();
 		config.MprIndexMode = true;
 	}
