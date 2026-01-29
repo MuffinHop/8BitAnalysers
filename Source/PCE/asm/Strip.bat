@@ -1,0 +1,1 @@
+c:\python39\python.exe Strip.py OpcodeZoo_2.asm > OpCodeZoo_2_Stripped.asm
