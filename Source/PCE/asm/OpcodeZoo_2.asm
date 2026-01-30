@@ -9,6 +9,24 @@
 
 ; there should be 234 opcodes
 
+; to get working:
+; 0f 10 e2
+; BBR0 < $10,$E000 should be BBR0 <$10,Label
+; ...
+; BBR7
+
+; 8f 10 e0
+; BBS0 < $10,$E000 should be BBS0 <$10,Label
+; ...
+; BBS7
+
+; 93 0f f0 ff
+; TST #$0F,$FFF0 should be TST #$0F,data_FFF0
+; 
+; b3 0f f0 ff
+; TST #$0F,$FFF0,X should be TST #$0F,data_FFF0,X
+
+
 ; ------------------------------------------------------------
 ; 00–0F DONE
 ; ------------------------------------------------------------
@@ -376,6 +394,16 @@ PLX                         ; FA
 SBC data_FFF0,X             ; FD
 INC data_FFF0,X             ; FE
 BBS7 <$10,.label_f0_ff      ; FF
+
+; ------------------------------------------------------------
+; End of opcode sequence
+; ------------------------------------------------------------
+
+NOP
+NOP
+NOP
+NOP
+RTS
 
     .org $fff0
     data_FFF0:
