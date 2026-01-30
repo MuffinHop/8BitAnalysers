@@ -21,9 +21,11 @@
 ; BBS7
 
 ; 93 0f f0 ff
+; Addr. mode : 18 'immediate absolute'
 ; TST #$0F,$FFF0 should be TST #$0F,data_FFF0
 ; 
 ; b3 0f f0 ff
+; Addr. mode : 20 'immediate absolute indexed'
 ; TST #$0F,$FFF0,X should be TST #$0F,data_FFF0,X
 
 
