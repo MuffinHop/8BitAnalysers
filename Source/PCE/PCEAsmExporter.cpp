@@ -58,7 +58,11 @@ public:
 		Config.DataTextPrefix = "db";
 		Config.ORGText = "\torg";
 		Config.EQUText = ".equ";
-		Config.LocalLabelPrefix = ".";
+
+		// PCEAS doesn't support labels with the function as a prefix, eg. EntryPoint.loop
+		// Where EntryPoint is a function and loop is a local label in the EntryPoint function.
+		Config.LocalLabelPrefix = "";
+		Config.bUseLocalLabelPrefix = false;
 	}
 
 	void	ExportDidBegin() override

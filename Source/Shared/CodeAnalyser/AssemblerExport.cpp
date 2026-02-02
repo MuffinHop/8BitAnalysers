@@ -274,6 +274,7 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 	DasmState.ExportMin = startAddr;
 	DasmState.ExportMax = endAddr;
 	DasmState.pExporter = this;
+	DasmState.LabelsOutsideRange.clear();
 
 	// place an 'org' at the start
 	SetOutputToBody();

@@ -18,6 +18,7 @@ struct FAssemblerConfig
 	const char* ORGText = nullptr;
 	const char* EQUText = nullptr;
 	const char* LocalLabelPrefix = nullptr;
+	bool bUseLocalLabelPrefix = true;
 };
 
 // Class to encapsulate ASM exporting
