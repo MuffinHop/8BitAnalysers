@@ -20,7 +20,12 @@ static const uint16_t kWriteIndexAddr		= 0xA9B2;
 static const uint16_t kProgramPhase			= 0xA9AC;
 static const uint16_t kPhaseExecution		= 0x0F1F;
 
-static const uint16_t kEnemyData			= 0xA850;
+// Enemies
+static const uint16_t kEnemyData		= 0xA850;
+static const uint16_t kEnemySpriteData	= 0xAA1A;
+static const uint16_t kEnemySpriteOffset = 0x31;	// offset to split sprites
+static const uint16_t kEnemyDataSize	= 16;
+static const int noEnemySlots			= 7;
 
 
 class FTimePilotDebug : public FMachineDebug
@@ -31,6 +36,7 @@ public:
 	void DrawDebugUI() override;
 	void DrawDebugOverlays(float x, float y) override;
 	void DrawSpriteDebug(ImVec2 pos);
+	void DrawEnemyDebug(ImVec2 pos);
 
 private:
 	void	SpriteViewer();
@@ -60,6 +66,7 @@ private:
 	} SpriteDebugState;
 
 	bool	bSpriteDebug = false;
+	bool	bEnemyDebug = false;
 };
 
 FMachineDebug* CreateTimePilotDebug(FArcadeZ80Machine *pMachine)
@@ -128,11 +135,13 @@ void FTimePilotDebug::DrawDebugOverlays(float x, float y)
 	const ImVec2 pos(x, y);
 	
 	ImGui::Checkbox("Sprite Debug", &bSpriteDebug);
-
 	if (bSpriteDebug)
-	{
 		DrawSpriteDebug(pos);
-	}
+
+	ImGui::SameLine();
+	ImGui::Checkbox("Enemy Debug", &bEnemyDebug);
+	if (bEnemyDebug)
+		DrawEnemyDebug(pos);
 }
 
 void FTimePilotDebug::DrawSpriteDebug(ImVec2 pos)
@@ -177,6 +186,50 @@ void FTimePilotDebug::DrawSpriteDebug(ImVec2 pos)
 
 			pDrawList->AddText(scrPos, 0xffffffff, sprNoText);
 		}
+	}
+}
+
+void DrawAngle(ImDrawList* pDrawList, uint8_t angle, float x, float y, uint32_t colour)
+{
+	angle = (angle - 64) & 255; 
+	const float scale = ImGui_GetScaling();
+	const float length = 20.0f * scale;
+	const float angleRad = (float)angle / 256.0f * 2.0f * 3.14159f;
+	const float xEnd = x + cosf(angleRad) * length;
+	const float yEnd = y - sinf(angleRad) * length;
+	pDrawList->AddLine(ImVec2(x, y), ImVec2(xEnd, yEnd), colour, 2.0f);
+}
+
+void FTimePilotDebug::DrawEnemyDebug(ImVec2 pos)
+{
+	const float scale = ImGui_GetScaling();
+	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
+
+	uint16_t enemyPtr = kEnemyData;
+	uint16_t enemySpritePtr = kEnemySpriteData;
+	for (int slotNo = 0; slotNo < noEnemySlots; slotNo++)
+	{
+		bool bActive = pCodeAnalysis->ReadByte(enemyPtr) != 0;
+		if(bActive)
+		{
+			//int x = pCodeAnalysis->ReadByte(enemyPtr + 3) + (pCodeAnalysis->ReadByte(enemyPtr + 4) << 8);
+			//int y = pCodeAnalysis->ReadByte(enemyPtr + 5) + (pCodeAnalysis->ReadByte(enemyPtr + 6) << 8);
+			float x = (float)pCodeAnalysis->ReadByte(enemySpritePtr) * scale;
+			float y = (float)pCodeAnalysis->ReadByte(enemySpritePtr + kEnemySpriteOffset) * scale;
+			DrawAngle(pDrawList, pCodeAnalysis->ReadByte(enemyPtr + 1), pos.x + x + 8.0f * scale, pos.y + y + 8.0f * scale, IM_COL32(0,  255, 0, 255));	// target angle
+			DrawAngle(pDrawList, pCodeAnalysis->ReadByte(enemyPtr + 2), pos.x + x + 8.0f * scale, pos.y + y + 8.0f * scale, IM_COL32(255, 0, 0,  255)); // facing angle
+			char slotText[8];
+			snprintf(slotText, 8, "%d", slotNo);
+			ImVec2 scrPos(pos.x + x, pos.y + y);
+			pDrawList->AddRect(
+				scrPos,
+				ImVec2(scrPos.x + (16 * scale), scrPos.y + (16 * scale)),
+				IM_COL32(0, 255, 0, 255));
+			pDrawList->AddText(scrPos, 0xffffffff, slotText);
+		}
+
+		enemyPtr += kEnemyDataSize;
+		enemySpritePtr += 2;
 	}
 }
 
@@ -350,6 +403,27 @@ static const char* g_pProgramPhases[] =
 	"Phase F"
 };
 
+
+const char* g_EnemyDataFieldName[] = 
+{
+	"State",
+	"Target Angle",
+	"Facing Angle",
+	"Field 3",
+	"Field 4",
+	"Field 5",
+	"Field 6",
+	"Field 7",
+	"Field 8",
+	"Field 9",
+	"Field A",
+	"Field B",
+	"Field C",
+	"Field D",
+	"Field E",
+	"Field F"
+};
+
 void FTimePilotDebug::GameStateViewer()
 {
 	const uint8_t phase = pCodeAnalysis->ReadByte(kProgramPhase);
@@ -358,6 +432,37 @@ void FTimePilotDebug::GameStateViewer()
 	DrawAddressLabel(*pCodeAnalysis,pCodeAnalysis->GetFocussedViewState(),pCodeAnalysis->AddressRefFromPhysicalAddress(kProgramPhase));
 	ImGui::Text("Phase execution Function: "); 
 	DrawAddressLabel(*pCodeAnalysis, pCodeAnalysis->GetFocussedViewState(), pCodeAnalysis->AddressRefFromPhysicalAddress(kPhaseExecution));
+
+	// TODO: Add Player State
+
+	// Add Enemy States
+
+	uint16_t enemyPtr = kEnemyData;
+	for (int slotNo = 0; slotNo < noEnemySlots; slotNo++)
+	{
+		bool bActive = pCodeAnalysis->ReadByte(enemyPtr) != 0;
+		ImGui::Text("Enemy Slot %d:", slotNo);
+		DrawAddressLabel(*pCodeAnalysis, pCodeAnalysis->GetFocussedViewState(), pCodeAnalysis->AddressRefFromPhysicalAddress(enemyPtr));
+		if (bActive)
+		{
+			ImGui::SameLine();
+			ImGui::Text("Active");
+
+			for (int i = 0; i < kEnemyDataSize; i++)
+			{
+				const uint8_t val = pCodeAnalysis->ReadByte(enemyPtr + i);
+				ImGui::Text("%s: %02X", g_EnemyDataFieldName[i], val);
+			}
+		}
+		else
+		{
+			ImGui::SameLine();
+			ImGui::Text("Inactive");
+		}
+
+		ImGui::Separator();
+		enemyPtr += kEnemyDataSize;
+	}
 }
 
 // Debug Command Queue
