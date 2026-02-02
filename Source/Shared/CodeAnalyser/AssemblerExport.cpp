@@ -122,15 +122,6 @@ void FASMExporter::Output(const char* pFormat, ...)
 
 bool FASMExporter::IsLabelStubbed(const char* pLabelName) const
 {
-#if 0
-	const FProjectConfig* pConfig = pEmulator->GetProjectConfig();
-	const std::string labelName(pLabelName);
-	for (const auto& stub : pConfig->StubOutFunctions)
-	{
-		if(stub == labelName)
-			return true;
-	} 
-#endif
 	FFunctionInfo* pFunc = pEmulator->GetCodeAnalysis().pFunctions->FindFunctionByName(pLabelName);
 	if (pFunc != nullptr && pFunc->bStubbedOut)
 		return true;
@@ -351,8 +342,13 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 			LOGERROR("Asm Export - Overlap. Addr = 0x%04X, Expecting  0x%04X",addr,nextAddr);
 		}
 
+
 		//Output("; 0x%04X\n", addr);
 		nextAddr = addr + item.Item->ByteSize;
+
+		// show address ever page
+		if(nextAddr >> 8 != addr >> 8)
+			Output(";Address: 0x%04X\n", addr);
 
 		switch (item.Item->Type)
 		{
