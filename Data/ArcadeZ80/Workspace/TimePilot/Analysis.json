@@ -1389,7 +1389,7 @@
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -2798,6 +2798,15 @@
                 773324801
             ],
             "StartAddress": 770965505,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
+            "EndAddress": 773390337,
+            "StartAddress": 773390337,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5400,6 +5409,7 @@
                 {
                     "Address": 152,
                     "ByteSize": 3,
+                    "Comment": "checksum the interrupt routine",
                     "OperandType": 1
                 },
                 {
@@ -5465,7 +5475,7 @@
                     "Address": 182,
                     "ByteSize": 3,
                     "Comment": "offset to next line",
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 185,
@@ -6069,6 +6079,7 @@
                 {
                     "Address": 433,
                     "ByteSize": 3,
+                    "Comment": "call to crash",
                     "Flags": 8,
                     "OperandType": 2
                 },
@@ -7221,7 +7232,7 @@
                     "Address": 168,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "EnableInterrupts"
+                    "Name": "StartProgram"
                 },
                 {
                     "Address": 177,
@@ -7313,7 +7324,7 @@
                 {
                     "Address": 427,
                     "LabelType": 2,
-                    "Name": "label_01AB"
+                    "Name": "checksum_loop"
                 },
                 {
                     "Address": 437,
@@ -10441,7 +10452,7 @@
                 {
                     "Address": 890,
                     "LabelType": 2,
-                    "Name": "label_077A"
+                    "Name": "tamper_check_loop"
                 },
                 {
                     "Address": 916,
@@ -11461,6 +11472,18 @@
                     "ByteSize": 2,
                     "DataType": 2,
                     "DisplayType": 1
+                },
+                {
+                    "Address": 109,
+                    "ByteSize": 2,
+                    "DataType": 2,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 112,
+                    "ByteSize": 2,
+                    "DataType": 2,
+                    "DisplayType": 4
                 },
                 {
                     "Address": 124,
@@ -16042,7 +16065,7 @@
                 {
                     "Address": 564,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 2
                 },
                 {
                     "Address": 567,
@@ -21691,6 +21714,7 @@
                 {
                     "Address": 270,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -22484,7 +22508,7 @@
                     "Address": 270,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "InitAttracModeData"
+                    "Name": "InitAttractModeData"
                 },
                 {
                     "Address": 291,
@@ -22526,6 +22550,12 @@
                     "Address": 385,
                     "LabelType": 2,
                     "Name": "rotate_clockwise"
+                },
+                {
+                    "Address": 396,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_218C"
                 },
                 {
                     "Address": 593,
@@ -26374,7 +26404,8 @@
                 },
                 {
                     "Address": 540,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "DSW2"
                 },
                 {
                     "Address": 541,
@@ -26767,8 +26798,9 @@
                 },
                 {
                     "Address": 537,
-                    "LabelType": 2,
-                    "Name": "label_2E19"
+                    "Global": true,
+                    "LabelType": 1,
+                    "Name": "InitProgram_2E19"
                 },
                 {
                     "Address": 561,
@@ -27948,7 +27980,7 @@
                 {
                     "Address": 755,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 7
                 },
                 {
                     "Address": 758,
@@ -28841,7 +28873,7 @@
                     "Address": 747,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_32EB"
+                    "Name": "DelayPreStart"
                 },
                 {
                     "Address": 755,
@@ -37179,6 +37211,7 @@
                 {
                     "Address": 464,
                     "ByteSize": 3,
+                    "Comment": "call if intergrity check fails",
                     "Flags": 8,
                     "OperandType": 2
                 },
@@ -37961,7 +37994,8 @@
                 {
                     "Address": 877,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "Comment": "17 bytes",
+                    "OperandType": 4
                 },
                 {
                     "Address": 880,
@@ -38210,8 +38244,6 @@
                 },
                 {
                     "Address": 256,
-                    "ByteSize": 2,
-                    "DataType": 2,
                     "DisplayType": 1
                 },
                 {
@@ -38334,6 +38366,12 @@
                     "Global": true,
                     "LabelType": 0,
                     "Name": "OutputString_KonamiCopyright2"
+                },
+                {
+                    "Address": 257,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_4901"
                 },
                 {
                     "Address": 258,
@@ -38535,7 +38573,7 @@
                     "Address": 871,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_4B67"
+                    "Name": "CopyROMAndTamperCheck_4B67"
                 },
                 {
                     "Address": 900,
@@ -38553,13 +38591,13 @@
                     "Address": 933,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_4BA5"
+                    "Name": "InitialiseHighScoreTable"
                 },
                 {
                     "Address": 945,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_4BB1"
+                    "Name": "DefaultHighscores"
                 },
                 {
                     "Address": 985,
@@ -43474,7 +43512,7 @@
                     "Address": 682,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_52AA"
+                    "Name": "Initprogram_52AA"
                 },
                 {
                     "Address": 719,
@@ -44150,7 +44188,7 @@
                     "Address": 722,
                     "ByteSize": 3,
                     "Comment": "load 15h",
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 725,
@@ -44640,12 +44678,12 @@
                 {
                     "Address": 135,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 138,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 141,
@@ -45639,7 +45677,7 @@
                 {
                     "Address": 196,
                     "LabelType": 2,
-                    "Name": "skip carry"
+                    "Name": "skip_carry"
                 },
                 {
                     "Address": 201,
@@ -45773,6 +45811,11 @@
                     "Global": true,
                     "LabelType": 1,
                     "Name": "function_59D1"
+                },
+                {
+                    "Address": 471,
+                    "LabelType": 2,
+                    "Name": "label_59D7"
                 },
                 {
                     "Address": 848,
@@ -49625,7 +49668,7 @@
                     "Address": 776,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_AB08"
+                    "Name": "HighscoreTable"
                 },
                 {
                     "Address": 816,
@@ -50155,11 +50198,13 @@
                 {
                     "Address": 994,
                     "ByteSize": 2,
+                    "Comment": "return address?",
                     "DataType": 2
                 },
                 {
                     "Address": 996,
                     "ByteSize": 2,
+                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
@@ -50170,7 +50215,6 @@
                 {
                     "Address": 1000,
                     "ByteSize": 2,
-                    "Comment": "update sprites",
                     "DataType": 2
                 },
                 {
@@ -50784,7 +50828,7 @@
                     "Address": 16,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "SpriteRAM2"
+                    "Name": "HWSpriteRAM2"
                 },
                 {
                     "Address": 17,
@@ -50803,6 +50847,12 @@
                     "Global": true,
                     "LabelType": 0,
                     "Name": "HWSprite1_Y"
+                },
+                {
+                    "Address": 20,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "HWSprite2_Attr"
                 },
                 {
                     "Address": 21,
@@ -50866,6 +50916,14 @@
             "DataInfo": [
                 {
                     "Address": 0,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 768,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 769,
                     "DisplayType": 11
                 },
                 {
