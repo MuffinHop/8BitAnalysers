@@ -1,5 +1,6 @@
 {
     "AsmExportPath": "C:/Dev/SpectrumNext/projects/SpectrumNextPorts/TimePilot/src",
+    "BinaryExportPath": "C:/Dev/SpectrumNext/projects/SpectrumNextPorts/TimePilot/bindata",
     "Machine": "",
     "Name": "TimePilot",
     "Options": {
