@@ -6,6 +6,8 @@
 #include "Util/Misc.h"
 #include <set>
 
+#include "CodeAnalyserTypes.h"
+
 class FCodeAnalysisState;
 struct FCodeInfo;
 
@@ -34,7 +36,6 @@ public:
 	}
 
 	FCodeAnalysisState*		CodeAnalysisState = nullptr;
-	uint16_t				CurrentAddress = 0;
 	std::string				Text;
 };
 
@@ -46,6 +47,7 @@ public:
 	void OutputD8(int8_t val, dasm_output_t outputCallback) override;
 
 	FCodeInfo* pCodeInfoItem = nullptr;
+	uint16_t CurrentAddress = 0;
 };
 
 uint8_t AnalysisDasmInputCB(void* pUserData);
@@ -62,6 +64,7 @@ public:
 	const FCodeInfo* pCodeInfoItem = nullptr;
 	ENumberDisplayMode	HexDisplayMode = ENumberDisplayMode::HexDollar;
 	struct FLabelInfo*	pCurrentScope = nullptr;
+	FAddressRef CurrentAddress;
 
 	uint16_t	ExportMin = 0;
 	uint16_t	ExportMax = 0xffff;

@@ -591,7 +591,7 @@ std::string M6502GenerateDasmStringForAddress(FCodeAnalysisState& state, uint16_
 bool M6502GenerateDasmExportString(FExportDasmState& exportState)
 {
 	SetNumberOutput(&exportState);
-	m6502dasm_op(exportState.CurrentAddress, ExportDasmInputCB, ExportOutputCB, &exportState);
+	m6502dasm_op(exportState.CurrentAddress.GetAddress(), ExportDasmInputCB, ExportOutputCB, &exportState);
 	SetNumberOutput(nullptr);
 	return true;
 }

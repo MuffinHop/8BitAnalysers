@@ -526,7 +526,7 @@ uint16_t M65C02DisassembleGetNextPC(uint16_t pc, FCodeAnalysisState& state, std:
 bool M65C02GenerateDasmExportString(FExportDasmState& exportState)
 {
 	SetNumberOutput(&exportState);
-	m65C02dasm_op(exportState.CurrentAddress, ExportDasmInputCB, ExportOutputCB, &exportState);
+	m65C02dasm_op(exportState.CurrentAddress.GetAddress(), ExportDasmInputCB, ExportOutputCB, &exportState);
 	SetNumberOutput(nullptr);
 	return true;
 }

@@ -689,7 +689,7 @@ uint16_t HuC6280DisassembleGetNextPC(uint16_t pc, FCodeAnalysisState& state, std
 bool HuC6280GenerateDasmExportString(FExportDasmState& exportState)
 {
 	SetNumberOutput(&exportState);
-	huc6280dasm_op(exportState.CurrentAddress, ExportDasmInputCB, ExportOutputCB, &exportState);
+	huc6280dasm_op(exportState.CurrentAddress.GetAddress(), ExportDasmInputCB, ExportOutputCB, &exportState);
 	SetNumberOutput(nullptr);
 	return true;
 }

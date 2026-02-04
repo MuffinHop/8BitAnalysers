@@ -267,7 +267,9 @@ uint8_t ExportDasmInputCB(void* pUserData)
 {
 	FExportDasmState* pDasmState = (FExportDasmState*)pUserData;
 
-	return pDasmState->CodeAnalysisState->CPUInterface->ReadByte(pDasmState->CurrentAddress++);
+	const uint8_t val = pDasmState->CodeAnalysisState->ReadByte(pDasmState->CurrentAddress);
+	pDasmState->CurrentAddress.SetAddress(pDasmState->CurrentAddress.GetAddress() + 1);
+	return val;
 }
 
 /* disassembler callback to output a character */

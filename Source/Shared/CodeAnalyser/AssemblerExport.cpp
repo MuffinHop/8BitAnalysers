@@ -323,7 +323,7 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 			if (addr == g_DbgAddress)
 				LOGINFO("DebugAddress");
 
-			DasmState.CurrentAddress = addr;
+			DasmState.CurrentAddress = state.AddressRefFromPhysicalAddress(addr);
 			DasmState.pCodeInfoItem = pCodeInfo;
 			DasmState.Text.clear();
 			DasmState.pCurrentScope = state.GetScopeForAddress(item.AddressRef);

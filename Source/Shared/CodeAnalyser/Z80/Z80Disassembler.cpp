@@ -541,7 +541,7 @@ std::string Z80GenerateDasmStringForAddress(FCodeAnalysisState& state, uint16_t 
 bool Z80GenerateDasmExportString(FExportDasmState& exportState)
 {
 	SetNumberOutput(&exportState);
-	z80dasm_op(exportState.CurrentAddress, ExportDasmInputCB, ExportOutputCB, &exportState);
+	z80dasm_op(exportState.CurrentAddress.GetAddress(), ExportDasmInputCB, ExportOutputCB, &exportState);
 	SetNumberOutput(nullptr);
 	return true;
 }
