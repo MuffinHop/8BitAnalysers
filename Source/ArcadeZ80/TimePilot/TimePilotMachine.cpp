@@ -260,6 +260,8 @@ void DrawCharacterToZXNImage(uint8_t* pZXNImage, int stride, const uint8_t* pSrc
 			const uint32_t col = cols[bBit0 + (bBit1 << 1)];
 			if (bMask && (col == cols[0]))
 				continue;*/
+
+			// TODO: use xpos & ypos passed in
 			if (bRot90)
 				DrawZXNPixel(pZXNImage,stride, drawY,drawX,col);
 			else

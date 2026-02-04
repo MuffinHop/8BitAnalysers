@@ -316,7 +316,7 @@ void FTimePilotDebug::SpriteViewer()
 
 	ImGui::Separator();
 	ImGui::Text("Exported Sprites for ZXN:");
-	pExportedSpriteView->Draw(true);
+	pExportedSpriteView->Draw(4.0f,true);
 
 }
 
