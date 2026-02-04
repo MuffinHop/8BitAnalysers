@@ -86,6 +86,15 @@ bool FArcadeZ80::Init(const FEmulatorLaunchConfig& launchConfig)
 	CPUType = ECPUType::Z80;
 	SetNumberDisplayMode(ENumberDisplayMode::HexAitch);
 
+	// set supported bitmap format
+	CodeAnalysis.Config.bSupportedBitmapTypes[(int)EBitmapFormat::Bitmap_1Bpp] = true;
+	CodeAnalysis.Config.bSupportedBitmapTypes[(int)EBitmapFormat::ColMap2Bpp_CPC] = true;	// a bit of a hack
+	
+	for (int i = 0; i < FCodeAnalysisState::kNoViewStates; i++)
+	{
+		CodeAnalysis.ViewState[i].CurBitmapFormat = EBitmapFormat::Bitmap_1Bpp;
+	}
+
 	// For ASM exporting - ROM area of TimePilot
 	InitAsmExporters(this);
 	ExportStartAddress = 0x0000;
@@ -93,7 +102,7 @@ bool FArcadeZ80::Init(const FEmulatorLaunchConfig& launchConfig)
 
 	// setup code analysis
 	CodeAnalysis.Init(this);
-	CodeAnalysis.Config.bShowBanks = false;
+	CodeAnalysis.Config.bShowBanks = true;
 	CodeAnalysis.ViewState[0].Enabled = true;	// always have first view enabled
 
 	CodeAnalysis.Debugger.Break();

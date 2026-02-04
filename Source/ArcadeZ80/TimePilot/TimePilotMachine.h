@@ -44,6 +44,8 @@ public:
 	int16_t		ROM2BankId;
 	int16_t		ROM3BankId;
 	int16_t		RAMBankId;
+	int16_t		TilesROMBankId;
+	int16_t		SpriteROMBankId;
 
 	int32_t		TicksPerFrame = 0;
 	int32_t		FrameTicks = 0;

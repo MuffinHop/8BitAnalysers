@@ -171,6 +171,12 @@ void FTimePilotMachine::SetupCodeAnalysisForMachine()
 	RAMBankId = codeAnalysis.CreateBank("RAM", 40, RAM, false, 0x6000, true);					// RAM - $6000 - $FFFF - pages 24-63 - 40K
 	codeAnalysis.MapBank(RAMBankId, 24, EBankAccess::ReadWrite);
 	mem_map_ram(&Memory, 0, 0x6000, 40 * 1024, RAM);
+
+	// Could we map the sprite & tile Roms too?
+	TilesROMBankId = codeAnalysis.CreateBank("TilesROM", 8, TilesROM, true, 0x0000, true);	// Tiles ROM
+	SpriteROMBankId = codeAnalysis.CreateBank("SpriteROM", 16, SpriteROM, true, 0x0000, true);	// Sprite ROM
+
+	codeAnalysis.Config.bShowBanks = true;
 }
 
 // byte 0, bits 7-4 : plane 0 for pixels 7-4
