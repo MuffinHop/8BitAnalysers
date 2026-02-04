@@ -1004,6 +1004,7 @@ void ExpandFunctionDesc(FCodeAnalysisState& state, FItemListBuilder& builder, co
 	if (pLabelInfo != nullptr)
 	{
 		AddFunctionDescriptionLine(state, builder, "Function Name: %s", pLabelInfo->GetName());
+		AddFunctionDescriptionLine(state, builder, "Function Address: 0x%04X", pFunctionInfo->StartAddress.Address);
 	}
 
 	if (pFunctionInfo->Description.empty() == false)
