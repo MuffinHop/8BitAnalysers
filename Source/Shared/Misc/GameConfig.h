@@ -37,6 +37,7 @@ struct FProjectConfig
 	std::vector<std::string>	StubOutFunctions;
 
 	std::string		AsmExportPath;
+	std::string		BinaryExportPath;
 
 	FCodeAnalysisViewConfig	ViewConfigs[FCodeAnalysisState::kNoViewStates];
 };

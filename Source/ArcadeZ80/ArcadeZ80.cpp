@@ -70,7 +70,7 @@ bool FArcadeZ80::Init(const FEmulatorLaunchConfig& launchConfig)
 	// setup machine
 	FArcadeZ80MachineDesc desc = {};
 
-	desc.pCodeAnalysis = &CodeAnalysis;
+	desc.pArcadeZ80 = this;
 
 	// setup debug hook
 	desc.Debug.callback.func = DebugCB;

@@ -20,6 +20,8 @@ public:
 	void Draw(float scale, bool bMagnifier = true) { Draw((float)Width * scale, (float)Height * scale, bMagnifier); }
 	void Draw(bool bMagnifier = true);
 
+	void PlotPixel(int x, int y, uint32_t col) { if (x >= 0 && x < Width && y >= 0 && y < Height) PixelBuffer[x + (y * Width)] = col; }
+
 	void DrawCharLine(uint8_t charLine, int xp, int yp, uint32_t inkCol, uint32_t paperCol);
 	void DrawMaskedCharLine(uint8_t charLine, uint8_t maskLine, int xp, int yp, uint32_t inkCol, uint32_t paperCol);
 

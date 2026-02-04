@@ -10,6 +10,9 @@
 #include "imgui.h"
 #include "ImGuiSupport/ImGuiScaling.h"
 #include "TimePilotDebug.h"
+#include "Misc/GameConfig.h"
+#include "../ArcadeZ80Machine.h"
+#include "../ArcadeZ80.h"
 
 // Time Pilot Specifics
 bool FTimePilotMachine::InitMachine(const FArcadeZ80MachineDesc& desc)
@@ -222,14 +225,14 @@ void DrawCharacter8x8(FGraphicsView* pView, const uint8_t* pSrc, int xp, int yp,
 // write nybble tp 4bpp ZXM image
 void DrawZXNPixel(uint8_t* pZXNImage, int stride, int xpos, int ypos, uint8_t val)
 {
-	assert(val >= 0x0f);	// be sure it's a nybble
+	assert(val <= 0x0f);	// be sure it's a nybble
 
 	uint8_t* pDest = pZXNImage + (ypos * stride) + (xpos>>1);
 
 	if ((xpos & 1) == 0)	// even bits are high nybble
-		*pDest = (*pDest & 0x0f) & (val << 4);
+		*pDest = (*pDest & 0x0f) | (val << 4);
 	else
-		*pDest = (*pDest & 0xf0) & val;
+		*pDest = (*pDest & 0xf0) | val;
 }
 
 void DrawCharacterToZXNImage(uint8_t* pZXNImage, int stride, const uint8_t* pSrc, int xpos,int ypos, bool bFlipX, bool bFlipY, bool bRot90)
@@ -299,7 +302,7 @@ void DrawSpriteToZXNImage(uint8_t* pZXNImage, int stride, const uint8_t* pSrc, i
 {
 	bool bFlipX = false;
 	bool bFlipY = false;
-	bool bRot90 = true;
+	bool bRot90 = false;
 	
 	for (int y = 0; y < 2; y++)
 	{
@@ -532,7 +535,41 @@ void FTimePilotMachine::UpdateScreen()
 // ZXN Exporting
 void FTimePilotMachine::ExportZXNSprites()
 {
+	const FGlobalConfig* pGlobalConfig = pArcadeZ80->GetGlobalConfig();	
+	const FProjectConfig* pCurrentProjectConfig = pArcadeZ80->GetProjectConfig();
 
+	std::string exportPath;
+
+	if (pCurrentProjectConfig->BinaryExportPath.empty() == false)
+	{
+		exportPath = pCurrentProjectConfig->BinaryExportPath;
+	}
+	else if (pGlobalConfig->DefaultBinaryExportPath.empty() == false)
+	{
+		exportPath = pGlobalConfig->DefaultBinaryExportPath;
+	}
+	else
+	{
+		exportPath = pArcadeZ80->GetGameWorkspaceRoot();
+	}
+
+	if (exportPath.back() != '/')
+		exportPath += "/";
+
+	
+	memset(ZXNSpriteImages, 0, sizeof(ZXNSpriteImages));
+
+	for (int spriteNo = 0; spriteNo < 256; spriteNo++)
+	{
+		const int spriteByteSize = (4 * 16);
+		const int zxnSpriteSize = (16 * 16) / 2;	// 4bpp   
+		const uint8_t* pSprite = &SpriteROM[spriteNo * spriteByteSize];
+
+		DrawSpriteToZXNImage(ZXNSpriteImages + (spriteNo * zxnSpriteSize), 16 / 2, pSprite,0, spriteNo * 16);
+	}
+
+	exportPath += "TimePilotSprites.spr";
+	SaveBinaryFile(exportPath.c_str(), ZXNSpriteImages, sizeof(ZXNSpriteImages));
 }
 
 void FTimePilotMachine::ExportZXNChars()

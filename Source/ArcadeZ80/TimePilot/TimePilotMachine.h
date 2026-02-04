@@ -60,6 +60,9 @@ public:
 
 	bool		bSpriteDebug = false;
 	bool		bRotateScreen = false;
+
+	// Exported Data for ZXN
+	uint8_t		ZXNSpriteImages[256 * 16 * (16 / 2)];	// max 256 sprites of 16*16 pixels - 4bpp
 };
 
 void DrawCharacter8x8(FGraphicsView* pView, const uint8_t* pSrc, int xp, int yp, const uint32_t* cols, bool bFlipX, bool bFlipY, bool bRot90, bool bMask);

@@ -133,6 +133,7 @@ void FProjectConfig::SaveToJson(nlohmann::json & jsonConfigFile) const
 	}
 	
 	jsonConfigFile["AsmExportPath"] = AsmExportPath;
+	jsonConfigFile["BinaryExportPath"] = BinaryExportPath;
 }
 
 void FProjectConfig::FixupAddressRefs(FCodeAnalysisState& state)
@@ -236,6 +237,9 @@ void FProjectConfig::LoadFromJson(const nlohmann::json & jsonConfigFile)
 
 	if (jsonConfigFile.contains("AsmExportPath"))
 		AsmExportPath = jsonConfigFile["AsmExportPath"];	
+
+	if (jsonConfigFile.contains("BinaryExportPath"))
+		BinaryExportPath = jsonConfigFile["BinaryExportPath"];
 }
 
 bool FProjectConfig::AddLuaSourceFile(const char* pFilename)

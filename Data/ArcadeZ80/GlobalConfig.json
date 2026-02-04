@@ -1,6 +1,7 @@
 {
     "BranchLinesDisplayMode": 1,
     "DefaultAsmExportPath": "",
+    "DefaultBinaryExportPath": "",
     "EditLuaBaseFiles": false,
     "EnableAudio": false,
     "EnableExperimentalFeatures": false,

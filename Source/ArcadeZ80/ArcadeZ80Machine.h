@@ -14,10 +14,12 @@
 
 class FCodeAnalysisState;
 class FGraphicsView;
+class FArcadeZ80;
 
 struct FArcadeZ80MachineDesc
 {
-	FCodeAnalysisState* pCodeAnalysis = nullptr;
+	FArcadeZ80* pArcadeZ80 = nullptr;
+	//FCodeAnalysisState* pCodeAnalysis = nullptr;
 	chips_debug_t	Debug;
 };
 
@@ -81,6 +83,7 @@ public:
 
 	FGraphicsView*	pScreen = nullptr;
 
+	FArcadeZ80* pArcadeZ80 = nullptr;
 	FCodeAnalysisState* pCodeAnalysis = nullptr;
 	FMachineDebug*		pDebug = nullptr;
 };

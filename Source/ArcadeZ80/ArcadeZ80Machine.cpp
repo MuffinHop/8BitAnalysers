@@ -9,6 +9,7 @@
 #include "Util/GraphicsView.h"
 #include "imgui.h"
 #include "ImGuiSupport/ImGuiScaling.h"
+#include "ArcadeZ80.h"
 
 #define CHIPS_ASSERT(c) assert(c)
 
@@ -28,7 +29,8 @@ bool FArcadeZ80Machine::Init(const FArcadeZ80MachineDesc& desc)
 
 	bValid = true;
 
-	pCodeAnalysis = desc.pCodeAnalysis;	
+	pArcadeZ80 = desc.pArcadeZ80;
+	pCodeAnalysis = &pArcadeZ80->GetCodeAnalysis();
 	Debug = desc.Debug;
 
 	// initialize the hardware

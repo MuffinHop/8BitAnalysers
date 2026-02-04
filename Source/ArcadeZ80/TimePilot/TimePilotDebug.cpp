@@ -28,6 +28,9 @@ static const uint16_t kEnemyDataSize	= 16;
 static const int noEnemySlots			= 7;
 
 
+void UpdateExportedZXNSpritesView(FGraphicsView* pExportedSpriteView, uint8_t* pZXNSpriteImages);
+
+
 class FTimePilotDebug : public FMachineDebug
 {
 public:
@@ -52,6 +55,7 @@ private:
 	static const int kNoActiveSprites = 64;
 	uint32_t		ActiveSpriteAppearanceHash[kNoActiveSprites] = { 0 };
 	FGraphicsView*	pActiveSpriteView[kNoActiveSprites] = { nullptr };
+	FGraphicsView*	pExportedSpriteView = nullptr;
 	FGraphicsView*	pStringView = nullptr;
 	FGraphicsView*	pCharacterView = nullptr;
 
@@ -81,6 +85,7 @@ FTimePilotDebug::FTimePilotDebug(FArcadeZ80Machine* pTPMachine)
 	pSpriteView = new FGraphicsView(64, 64);
 	pStringView = new FGraphicsView(256, 256);
 	pCharacterView = new FGraphicsView(128, 128);
+	pExportedSpriteView = new FGraphicsView(16, 256 * 16);	// vertical strip of 256 sprites of 16*16 pixels
 
 	for (int sprNo = 0; sprNo < kNoActiveSprites; sprNo++)
 	{
@@ -93,6 +98,7 @@ FTimePilotDebug::~FTimePilotDebug()
 	delete pSpriteView;
 	delete pStringView;
 	delete pCharacterView;
+	delete pExportedSpriteView;
 	for (int sprNo = 0; sprNo < kNoActiveSprites; sprNo++)
 	{
 		delete pActiveSpriteView[sprNo];
@@ -264,6 +270,7 @@ void FTimePilotDebug::SpriteViewer()
 	if (ImGui::Button("Export Sprites"))
 	{
 		pMachine->ExportZXNSprites();
+		UpdateExportedZXNSpritesView(pExportedSpriteView, pMachine->ZXNSpriteImages);
 	}
 
 	// Show active sprites
@@ -306,6 +313,10 @@ void FTimePilotDebug::SpriteViewer()
 			pActiveSpriteView[sprNo]->Draw(spriteScale, true);
 		}
 	}
+
+	ImGui::Separator();
+	ImGui::Text("Exported Sprites for ZXN:");
+	pExportedSpriteView->Draw(true);
 
 }
 
@@ -564,4 +575,25 @@ void FTimePilotDebug::DebugDrawString(uint16_t stringAddress)
 		y--;
 	}
 
+}
+
+void UpdateExportedZXNSpritesView(FGraphicsView* pExportedSpriteView, uint8_t* pZXNSpriteImages)
+{
+	pExportedSpriteView->Clear(0xff000000);
+
+	for (int y = 0; y < 256 * 16; y++)
+	{
+		for (int x = 0; x < 16; x++)
+		{
+			uint8_t pixel = pZXNSpriteImages[(x>>1) + (y * 8)];
+
+			if((x & 1) == 0)
+				pixel >>= 4;
+			else
+				pixel &= 0x0f;
+
+			uint32_t colour = 0xff000000 | (pixel * 0x404040);
+			pExportedSpriteView->PlotPixel(x, y, colour);
+		}
+	}
 }
