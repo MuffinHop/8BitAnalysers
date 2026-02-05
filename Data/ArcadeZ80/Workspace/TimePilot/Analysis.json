@@ -13795,8 +13795,7 @@
                 {
                     "Address": 938,
                     "ByteSize": 2,
-                    "Comment": "put in top half",
-                    "Flags": 32
+                    "Comment": "put in top half"
                 },
                 {
                     "Address": 940,
@@ -13876,7 +13875,6 @@
                 {
                     "Address": 972,
                     "ByteSize": 3,
-                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -42149,8 +42147,7 @@
                 },
                 {
                     "Address": 529,
-                    "ByteSize": 3,
-                    "Flags": 32
+                    "ByteSize": 3
                 },
                 {
                     "Address": 532,
@@ -50208,13 +50205,13 @@
                 {
                     "Address": 994,
                     "ByteSize": 2,
-                    "Comment": "return address?",
+                    "Comment": "boss/special enemy",
                     "DataType": 2
                 },
                 {
                     "Address": 996,
                     "ByteSize": 2,
-                    "Comment": "return address for below?",
+                    "Comment": "enemy AI/movement",
                     "DataType": 2
                 },
                 {
@@ -50225,6 +50222,7 @@
                 {
                     "Address": 1000,
                     "ByteSize": 2,
+                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
