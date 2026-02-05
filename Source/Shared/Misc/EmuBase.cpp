@@ -1023,9 +1023,36 @@ void FEmuBase::FixupAddressRefs()
 		Viewer->FixupAddressRefs();
 }
 
+
+
+
 // Util
 
 std::string FEmuBase::GetGameWorkspaceRoot() const
 {
 	return GetGlobalConfig()->WorkspaceRoot + GetProjectConfig()->Name + "/";
+}
+
+bool FEmuBase::ExportBinaryFile(const char* pFilename, const void* pData, size_t dataSize)
+{
+	std::string exportPath;
+
+	if (pCurrentProjectConfig->BinaryExportPath.empty() == false)
+	{
+		exportPath = pCurrentProjectConfig->BinaryExportPath;
+	}
+	else if (pGlobalConfig->DefaultBinaryExportPath.empty() == false)
+	{
+		exportPath = pGlobalConfig->DefaultBinaryExportPath;
+	}
+	else
+	{
+		exportPath = GetGameWorkspaceRoot();
+	}
+
+	if (exportPath.back() != '/')
+		exportPath += "/";
+
+	exportPath += pFilename;
+	return SaveBinaryFile(exportPath.c_str(), pData, dataSize);
 }

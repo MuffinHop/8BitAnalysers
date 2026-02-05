@@ -28,9 +28,6 @@ static const uint16_t kEnemyDataSize	= 16;
 static const int noEnemySlots			= 7;
 
 
-void UpdateExportedZXNSpritesView(FGraphicsView* pExportedSpriteView, uint8_t* pZXNSpriteImages);
-
-
 class FTimePilotDebug : public FMachineDebug
 {
 public:
@@ -47,6 +44,7 @@ private:
 	void	GameStateViewer();
 	void	DebugDrawCommandQueue();
 	void	DebugDrawString(uint16_t stringAddress);
+	void	UpdateExportedZXNSpriteView(const uint8_t* pZXNSpriteImage, int paletteNumber);
 
 	FTimePilotMachine* pMachine = nullptr;
 
@@ -82,10 +80,11 @@ FTimePilotDebug::FTimePilotDebug(FArcadeZ80Machine* pTPMachine)
 	: pMachine((FTimePilotMachine*)pTPMachine)
 	, pCodeAnalysis(pMachine->pCodeAnalysis)
 {
-	pSpriteView = new FGraphicsView(64, 64);
+	pSpriteView = new FGraphicsView(16, 16);
+
 	pStringView = new FGraphicsView(256, 256);
 	pCharacterView = new FGraphicsView(128, 128);
-	pExportedSpriteView = new FGraphicsView(16, 256 * 16);	// vertical strip of 256 sprites of 16*16 pixels
+	pExportedSpriteView = new FGraphicsView(16, 16);	// vertical strip of 256 sprites of 16*16 pixels
 
 	for (int sprNo = 0; sprNo < kNoActiveSprites; sprNo++)
 	{
@@ -243,7 +242,13 @@ void FTimePilotDebug::SpriteViewer()
 {
 	static bool bFirstRun = true;
 	bool bRedrawSprite = false;
-	const float spriteScale = 2.0f;
+	const float spriteScale = 4.0f;
+
+	if (ImGui::Button("Export Sprites"))
+	{
+		pMachine->ExportZXNSprites();
+		bRedrawSprite = true;
+	}
 
 	bRedrawSprite |= ImGui::InputInt("SpriteNo", &SpriteDebugState.SpriteNo);
 	//ImGui::SameLine();
@@ -261,17 +266,21 @@ void FTimePilotDebug::SpriteViewer()
 		const int spriteByteSize = (4 * 16);
 		const uint8_t* pSprite = &pMachine->SpriteROM[SpriteDebugState.SpriteNo * spriteByteSize];
 		DrawSprite(pSpriteView, pSprite, 0, 0, pSpriteColours, SpriteDebugState.bFlipx, SpriteDebugState.bFlipy, SpriteDebugState.bRot);
+		
+		const uint8_t* pZXNSpriteImage = &pMachine->ZXNSpriteImages[SpriteDebugState.SpriteNo * 16 * 8];
+		UpdateExportedZXNSpriteView(pZXNSpriteImage, SpriteDebugState.SpriteColour);
 
 		bFirstRun = false;
 	}
 
+	// Draw sprite & exported sprite side by side
+	ImGui::Text("Original");
+	ImGui::SameLine();
 	pSpriteView->Draw(spriteScale, true);
-
-	if (ImGui::Button("Export Sprites"))
-	{
-		pMachine->ExportZXNSprites();
-		UpdateExportedZXNSpritesView(pExportedSpriteView, pMachine->ZXNSpriteImages);
-	}
+	ImGui::SameLine();
+	ImGui::Text("Exported");
+	ImGui::SameLine();
+	pExportedSpriteView->Draw(spriteScale, true);
 
 	// Show active sprites
 	ImGui::Separator();
@@ -280,6 +289,8 @@ void FTimePilotDebug::SpriteViewer()
 	//int sprNo = 0;
 	for (int offs = 0x10; offs <= 0x3e; offs += 2)
 	{
+		const float activeSpriteScale = 2.0f;
+
 		int const sx = pSpriteRAM[0][offs];
 		int const sy = 241 - pSpriteRAM[1][offs + 1];
 
@@ -310,13 +321,13 @@ void FTimePilotDebug::SpriteViewer()
 				const uint8_t* pSprite = &pMachine->SpriteROM[code * spriteByteSize];
 				DrawSprite(pActiveSpriteView[sprNo], pSprite, 0, 0, pSpriteColours, flipx, flipy, false);
 			}
-			pActiveSpriteView[sprNo]->Draw(spriteScale, true);
+			pActiveSpriteView[sprNo]->Draw(activeSpriteScale, true);
 		}
 	}
 
-	ImGui::Separator();
-	ImGui::Text("Exported Sprites for ZXN:");
-	pExportedSpriteView->Draw(4.0f,true);
+	//ImGui::Separator();
+	//ImGui::Text("Exported Sprites for ZXN:");
+	//pExportedSpriteView->Draw(4.0f,true);
 
 }
 
@@ -577,22 +588,34 @@ void FTimePilotDebug::DebugDrawString(uint16_t stringAddress)
 
 }
 
-void UpdateExportedZXNSpritesView(FGraphicsView* pExportedSpriteView, uint8_t* pZXNSpriteImages)
+uint32_t ZXNColourToRGBA32(uint8_t zxnColour)
 {
-	pExportedSpriteView->Clear(0xff000000);
+	const uint32_t r = zxnColour >> 5;			// top 3 bits are red		
+	const uint32_t g = (zxnColour >> 2) & 0x07;	// middle 3 bits are green
+	const uint32_t b = (zxnColour & 0x03) << 1;		// bottom 2 bits are blue
 
-	for (int y = 0; y < 256 * 16; y++)
+	return 0xff000000 | (b << 21) | (g << 13) | (r << 5);
+}
+
+
+void FTimePilotDebug::UpdateExportedZXNSpriteView(const uint8_t* pZXNSpriteImage, int paletteNumber)
+{
+	pExportedSpriteView->Clear(0xff000000);	
+
+	for (int y = 0; y < 16; y++)
 	{
 		for (int x = 0; x < 16; x++)
 		{
-			uint8_t pixel = pZXNSpriteImages[(x>>1) + (y * 8)];
-
+			uint8_t pixel = pZXNSpriteImage[(x>>1) + (y * 8)];
 			if((x & 1) == 0)
 				pixel >>= 4;
 			else
 				pixel &= 0x0f;
 
-			uint32_t colour = 0xff000000 | (pixel * 0x404040);
+			assert(pixel < 4);
+			paletteNumber = std::clamp(paletteNumber,0,63);
+			uint8_t zxnColour = pMachine->ZXNSpriteColours[paletteNumber][pixel&3];
+			uint32_t colour = ZXNColourToRGBA32(zxnColour);//0xff000000 | (pixel * 0x404040);	// TODO: get actual ZXN palette colours in here
 			pExportedSpriteView->PlotPixel(x, y, colour);
 		}
 	}

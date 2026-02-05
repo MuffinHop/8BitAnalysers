@@ -15,6 +15,12 @@
 #include "../ArcadeZ80.h"
 
 // Time Pilot Specifics
+FTimePilotMachine::FTimePilotMachine()
+{
+	memset(ZXNSpriteImages, 0, sizeof(ZXNSpriteImages));
+}
+
+
 bool FTimePilotMachine::InitMachine(const FArcadeZ80MachineDesc& desc)
 {
 	// TODO: Load ROMS etc.
@@ -95,6 +101,9 @@ bool FTimePilotMachine::InitMachine(const FArcadeZ80MachineDesc& desc)
 #define BIT(x,n) ((x)>>n) & 1
 #define RGB(r,g,b) ((0xff<<24) | ((b)<<16) | ((g)<<8) | (r))
 
+// Convert 3 bit R, 3 bit G, 2 bit B into a single byte for ZXN palette
+#define ZXN_RGB(r,g,b) (((r)&7) << 5 | ((g)&7) << 2 | ((b)&3))
+
 void FTimePilotMachine::SetupPalette()
 {
 	for (int i = 0; i < 32; i++)
@@ -121,6 +130,7 @@ void FTimePilotMachine::SetupPalette()
 		int const b = 0x19 * bit0 + 0x24 * bit1 + 0x35 * bit2 + 0x40 * bit3 + 0x4d * bit4;
 
 		Palette[i] = RGB(r, g, b);
+		ZXNPalette[i] = ZXN_RGB(r >> 5, g >> 5, b >> 6);
 	}
 
 	//colourPROM += 2 * 32;
@@ -134,6 +144,10 @@ void FTimePilotMachine::SetupPalette()
 		SpriteColours[i][1] = Palette[SpriteLUTPROM[(i * 4) + 1] & 0x0f];
 		SpriteColours[i][2] = Palette[SpriteLUTPROM[(i * 4) + 2] & 0x0f];
 		SpriteColours[i][3] = Palette[SpriteLUTPROM[(i * 4) + 3] & 0x0f];
+		ZXNSpriteColours[i][0] = ZXNPalette[SpriteLUTPROM[(i * 4) + 0] & 0x0f];
+		ZXNSpriteColours[i][1] = ZXNPalette[SpriteLUTPROM[(i * 4) + 1] & 0x0f];
+		ZXNSpriteColours[i][2] = ZXNPalette[SpriteLUTPROM[(i * 4) + 2] & 0x0f];
+		ZXNSpriteColours[i][3] = ZXNPalette[SpriteLUTPROM[(i * 4) + 3] & 0x0f];
 	}
 
 	// characters
@@ -143,6 +157,10 @@ void FTimePilotMachine::SetupPalette()
 		TileColours[i][1] = Palette[CharLUTPROM[(i * 4) + 1] & 0x0f];
 		TileColours[i][2] = Palette[CharLUTPROM[(i * 4) + 2] & 0x0f];
 		TileColours[i][3] = Palette[CharLUTPROM[(i * 4) + 3] & 0x0f];
+		ZXNTileColours[i][0] = ZXNPalette[CharLUTPROM[(i * 4) + 0] & 0x0f];
+		ZXNTileColours[i][1] = ZXNPalette[CharLUTPROM[(i * 4) + 1] & 0x0f];
+		ZXNTileColours[i][2] = ZXNPalette[CharLUTPROM[(i * 4) + 2] & 0x0f];
+		ZXNTileColours[i][3] = ZXNPalette[CharLUTPROM[(i * 4) + 3] & 0x0f];
 	}
 	//	palette.set_pen_color(32 * 4 + i, palette_val[*colourPROM++ & 0x0f]);
 
@@ -255,6 +273,7 @@ void DrawCharacterToZXNImage(uint8_t* pZXNImage, int stride, const uint8_t* pSrc
 			const int bBit1 = bSet1 ? 1 : 0;
 
 			uint8_t col = bBit0 + (bBit1 << 1);
+			assert(col <= 0x03);	// should only be 2 bits of colour info, so max value is 3
 
 			/*
 			const uint32_t col = cols[bBit0 + (bBit1 << 1)];
@@ -263,9 +282,9 @@ void DrawCharacterToZXNImage(uint8_t* pZXNImage, int stride, const uint8_t* pSrc
 
 			// TODO: use xpos & ypos passed in
 			if (bRot90)
-				DrawZXNPixel(pZXNImage,stride, drawY,drawX,col);
+				DrawZXNPixel(pZXNImage, stride, drawX + xpos, drawY + ypos, col);
 			else
-				DrawZXNPixel(pZXNImage, stride, drawX, drawY, col);				
+				DrawZXNPixel(pZXNImage, stride, drawX + xpos, drawY + ypos, col);				
 		}
 	}
 }
@@ -537,28 +556,6 @@ void FTimePilotMachine::UpdateScreen()
 // ZXN Exporting
 void FTimePilotMachine::ExportZXNSprites()
 {
-	const FGlobalConfig* pGlobalConfig = pArcadeZ80->GetGlobalConfig();	
-	const FProjectConfig* pCurrentProjectConfig = pArcadeZ80->GetProjectConfig();
-
-	std::string exportPath;
-
-	if (pCurrentProjectConfig->BinaryExportPath.empty() == false)
-	{
-		exportPath = pCurrentProjectConfig->BinaryExportPath;
-	}
-	else if (pGlobalConfig->DefaultBinaryExportPath.empty() == false)
-	{
-		exportPath = pGlobalConfig->DefaultBinaryExportPath;
-	}
-	else
-	{
-		exportPath = pArcadeZ80->GetGameWorkspaceRoot();
-	}
-
-	if (exportPath.back() != '/')
-		exportPath += "/";
-
-	
 	memset(ZXNSpriteImages, 0, sizeof(ZXNSpriteImages));
 
 	for (int spriteNo = 0; spriteNo < 256; spriteNo++)
@@ -567,11 +564,19 @@ void FTimePilotMachine::ExportZXNSprites()
 		const int zxnSpriteSize = (16 * 16) / 2;	// 4bpp   
 		const uint8_t* pSprite = &SpriteROM[spriteNo * spriteByteSize];
 
-		DrawSpriteToZXNImage(ZXNSpriteImages + (spriteNo * zxnSpriteSize), 16 / 2, pSprite,0, spriteNo * 16);
+		DrawSpriteToZXNImage(ZXNSpriteImages, 16 / 2, pSprite,0, spriteNo * 16);
 	}
 
-	exportPath += "TimePilotSprites.spr";
-	SaveBinaryFile(exportPath.c_str(), ZXNSpriteImages, sizeof(ZXNSpriteImages));
+	pArcadeZ80->ExportBinaryFile("TimePilotSprites.spr", ZXNSpriteImages, sizeof(ZXNSpriteImages));
+
+	// Export Palette
+	uint8_t zxnPalette[256];
+	for (int i = 0; i < 256; i++)
+	{
+		zxnPalette[i] = ZXNSpriteColours[i>>2][i&3];
+	}
+	pArcadeZ80->ExportBinaryFile("TimePilotSprites.pal", zxnPalette, sizeof(zxnPalette));
+
 }
 
 void FTimePilotMachine::ExportZXNChars()

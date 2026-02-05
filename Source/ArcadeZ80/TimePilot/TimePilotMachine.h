@@ -5,6 +5,8 @@
 class FTimePilotMachine : public FArcadeZ80Machine
 {
 public:
+			FTimePilotMachine();
+
 	bool InitMachine(const FArcadeZ80MachineDesc& desc) override;
 	void SetupCodeAnalysisForMachine() override;
 	void SetupPalette();
@@ -40,13 +42,12 @@ public:
 	uint8_t		CharLUTPROM[0x0100];
 
 	// Bank Ids
-	int16_t		ROM1BankId;
-	int16_t		ROM2BankId;
-	int16_t		ROM3BankId;
-	int16_t		RAMBankId;
-	int16_t		TilesROMBankId;
-	int16_t		SpriteROMBankId;
-
+	int16_t		ROM1BankId = -1;
+	int16_t		ROM2BankId = -1;
+	int16_t		ROM3BankId = -1;
+	int16_t		RAMBankId = -1;
+	int16_t		TilesROMBankId = -1;
+	int16_t		SpriteROMBankId = -1;
 	int32_t		TicksPerFrame = 0;
 	int32_t		FrameTicks = 0;
 
@@ -54,9 +55,15 @@ public:
 	uint8_t* pColourRAM = nullptr;
 	uint8_t* pSpriteRAM[2] = { nullptr, nullptr };
 
+	// Arcade machine palettes
 	uint32_t	Palette[32];
 	uint32_t    TileColours[32][4];
 	uint32_t	SpriteColours[64][4];
+
+	// ZXN Palettes
+	uint8_t		ZXNPalette[32];
+	uint8_t		ZXNTileColours[32][4];
+	uint8_t		ZXNSpriteColours[64][4];
 
 	bool		bSpriteDebug = false;
 	bool		bRotateScreen = false;

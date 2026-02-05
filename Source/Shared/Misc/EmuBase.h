@@ -96,6 +96,8 @@ public:
 	//bool	AddStubbedLabel(const char* pLabelName);
 	//bool	RemoveStubbedLabel(const char* pLabelName);
 
+	bool	ExportBinaryFile(const char* pFilename, const void* pData, size_t dataSize);
+
 protected:
 	void			FileMenu();
 	void			SystemMenu();
