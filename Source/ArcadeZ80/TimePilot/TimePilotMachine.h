@@ -70,6 +70,7 @@ public:
 
 	// Exported Data for ZXN
 	uint8_t		ZXNSpriteImages[256 * 16 * (16 / 2)];	// max 256 sprites of 16*16 pixels - 4bpp
+	uint8_t		ZXNCharImages[512 * 8 * (8 / 2)];		// max 512 chars of 8*8 pixels - 4bpp
 };
 
 void DrawCharacter8x8(FGraphicsView* pView, const uint8_t* pSrc, int xp, int yp, const uint32_t* cols, bool bFlipX, bool bFlipY, bool bRot90, bool bMask);

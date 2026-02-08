@@ -581,7 +581,22 @@ void FTimePilotMachine::ExportZXNSprites()
 
 void FTimePilotMachine::ExportZXNChars()
 {
+	memset(ZXNCharImages, 0, sizeof(ZXNCharImages));
 
+	for (int charNo = 0; charNo < 512; charNo++)
+	{
+		const uint8_t* pTile = &TilesROM[charNo * 16];
+		DrawCharacterToZXNImage(ZXNCharImages, 8 / 2, pTile, 0, charNo * 8, false, false, false);
+	}
+	pArcadeZ80->ExportBinaryFile("TimePilotChars.bin", ZXNCharImages, sizeof(ZXNCharImages));
+
+	// Export Palette
+	uint8_t zxnPalette[128];
+	for (int i = 0; i < 128; i++)
+	{
+		zxnPalette[i] = ZXNTileColours[i>>2][i&3];
+	}
+	pArcadeZ80->ExportBinaryFile("TimePilotChars.pal", zxnPalette, sizeof(zxnPalette));
 }
 
 void FTimePilotMachine::ExportZXNPalettes()
