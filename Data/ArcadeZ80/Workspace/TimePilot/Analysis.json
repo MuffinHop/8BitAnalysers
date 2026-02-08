@@ -12250,6 +12250,7 @@
                 {
                     "Address": 156,
                     "ByteSize": 3,
+                    "Comment": "jump if value is 0",
                     "OperandType": 2
                 },
                 {
@@ -12259,7 +12260,8 @@
                 },
                 {
                     "Address": 162,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "offset *3"
                 },
                 {
                     "Address": 163,
@@ -12295,11 +12297,13 @@
                 },
                 {
                     "Address": 177,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "first 2 digits"
                 },
                 {
                     "Address": 178,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "add score digit 1"
                 },
                 {
                     "Address": 179,
@@ -12307,7 +12311,8 @@
                 },
                 {
                     "Address": 180,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "write scoreback"
                 },
                 {
                     "Address": 181,
@@ -12319,11 +12324,13 @@
                 },
                 {
                     "Address": 183,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "second 2 digits"
                 },
                 {
                     "Address": 184,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "add score digit 2"
                 },
                 {
                     "Address": 185,
@@ -12331,7 +12338,8 @@
                 },
                 {
                     "Address": 186,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "write back"
                 },
                 {
                     "Address": 187,
@@ -12343,7 +12351,8 @@
                 },
                 {
                     "Address": 189,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "third 3 digits"
                 },
                 {
                     "Address": 190,
@@ -12355,7 +12364,8 @@
                 },
                 {
                     "Address": 192,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "write back"
                 },
                 {
                     "Address": 193,
@@ -12365,7 +12375,7 @@
                 {
                     "Address": 196,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 7
                 },
                 {
                     "Address": 199,
@@ -14216,6 +14226,66 @@
                     "DisplayType": 1
                 },
                 {
+                    "Address": 295,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 298,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 301,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 304,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 307,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 310,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 313,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 316,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 319,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 322,
+                    "ByteSize": 3,
+                    "DataType": 1,
+                    "DisplayType": 4
+                },
+                {
                     "Address": 326,
                     "ByteSize": 2,
                     "DataType": 2,
@@ -14421,12 +14491,12 @@
                     "Address": 144,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_0C90"
+                    "Name": "AwardScore"
                 },
                 {
                     "Address": 177,
                     "LabelType": 2,
-                    "Name": "label_0CB1"
+                    "Name": "add_score"
                 },
                 {
                     "Address": 199,
@@ -14456,7 +14526,7 @@
                 {
                     "Address": 232,
                     "LabelType": 2,
-                    "Name": "label_0CE8"
+                    "Name": "exit_func"
                 },
                 {
                     "Address": 233,
@@ -14472,6 +14542,12 @@
                     "Address": 266,
                     "LabelType": 2,
                     "Name": "label_0D0A"
+                },
+                {
+                    "Address": 295,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "score_awards"
                 },
                 {
                     "Address": 325,
@@ -23412,6 +23488,12 @@
                     "Address": 1023,
                     "ByteSize": 3,
                     "OperandType": 1
+                }
+            ],
+            "CommentBlocks": [
+                {
+                    "Address": 1020,
+                    "Comment": "clear player scores"
                 }
             ],
             "DataInfo": [
@@ -39554,7 +39636,8 @@
                 },
                 {
                     "Address": 375,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "return if in attract mode"
                 },
                 {
                     "Address": 376,
@@ -41030,7 +41113,7 @@
                 {
                     "Address": 421,
                     "LabelType": 2,
-                    "Name": "label_4DA5"
+                    "Name": "tamper_check_loop"
                 },
                 {
                     "Address": 431,
@@ -42577,8 +42660,7 @@
                 {
                     "Address": 743,
                     "ByteSize": 1,
-                    "Comment": "fetch colour RAM address",
-                    "Flags": 32
+                    "Comment": "fetch colour RAM address"
                 },
                 {
                     "Address": 744,
@@ -49837,6 +49919,31 @@
                 },
                 {
                     "Address": 306,
+                    "Comment": "current player 0 -player 1, 1 - player 2",
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 307,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 308,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 309,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 310,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 311,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 312,
                     "DisplayType": 11
                 },
                 {
@@ -50575,43 +50682,19 @@
                     "Address": 306,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_AD32"
+                    "Name": "CurrentPlayer"
                 },
                 {
                     "Address": 307,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_AD33"
-                },
-                {
-                    "Address": 308,
-                    "Global": true,
-                    "LabelType": 0,
-                    "Name": "data_AD34"
-                },
-                {
-                    "Address": 309,
-                    "Global": true,
-                    "LabelType": 0,
-                    "Name": "data_AD35"
+                    "Name": "Player1ScoreBCD"
                 },
                 {
                     "Address": 310,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_AD36"
-                },
-                {
-                    "Address": 311,
-                    "Global": true,
-                    "LabelType": 0,
-                    "Name": "data_AD37"
-                },
-                {
-                    "Address": 312,
-                    "Global": true,
-                    "LabelType": 0,
-                    "Name": "data_AD38"
+                    "Name": "Player2ScoreBCD"
                 },
                 {
                     "Address": 498,
