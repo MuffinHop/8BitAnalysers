@@ -446,8 +446,8 @@
             "StartAddress": 40828928,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -42577,7 +42577,8 @@
                 {
                     "Address": 743,
                     "ByteSize": 1,
-                    "Comment": "fetch colour RAM address"
+                    "Comment": "fetch colour RAM address",
+                    "Flags": 32
                 },
                 {
                     "Address": 744,
@@ -50205,13 +50206,11 @@
                 {
                     "Address": 994,
                     "ByteSize": 2,
-                    "Comment": "boss/special enemy",
                     "DataType": 2
                 },
                 {
                     "Address": 996,
                     "ByteSize": 2,
-                    "Comment": "enemy AI/movement",
                     "DataType": 2
                 },
                 {
@@ -50222,7 +50221,6 @@
                 {
                     "Address": 1000,
                     "ByteSize": 2,
-                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
