@@ -3,19 +3,7 @@
 #include <imgui.h>
 
 #include "../PCEEmu.h"
-//#include <geargrafx_core.h>
-
-
-static const char* BankAccessToString(EBankAccess access)
-{
-	switch (access)
-	{
-		case EBankAccess::Read:       return "R";
-		case EBankAccess::Write:      return "W";
-		case EBankAccess::ReadWrite:  return "RW";
-		default:                      return "-";
-	}
-}
+#include "CodeAnalyser/UI/CodeAnalyserUI.h"
 
 enum class EBankTableColumn : int
 {
@@ -23,7 +11,65 @@ enum class EBankTableColumn : int
 	Access,
 	Address,
 	EverMapped,
+	Content,
 };
+
+enum class EBankContent : int
+{
+	Data = 0,
+	Code,
+	Mixed,
+	Unknown,
+};
+
+static const char* BankAccessToString(EBankAccess access)
+{
+	switch (access)
+	{
+	case EBankAccess::Read:       return "R";
+	case EBankAccess::Write:      return "W";
+	case EBankAccess::ReadWrite:  return "RW";
+	default:                      return "-";
+	}
+}
+
+// todo: get ratio of code/data?
+EBankContent GetBankContent(std::vector<FCodeAnalysisItem> items)
+{
+	bool bFoundCode = false;
+	bool bFoundData = false;
+
+	for (const FCodeAnalysisItem& item : items)
+	{
+		if (item.Item->Type == EItemType::Code)
+			bFoundCode = true;
+		if (item.Item->Type == EItemType::Data)
+			bFoundData = true;
+	}
+
+	if (bFoundCode || bFoundData)
+	{
+		if (bFoundCode)
+		{
+			return EBankContent::Code;
+		}
+		return EBankContent::Data;
+	}
+	return EBankContent::Unknown;
+}
+
+static const char* BankContentToString(EBankContent content)
+{
+	switch (content)
+	{
+		case EBankContent::Data:		return "Data";
+		case EBankContent::Code:		return "Code";
+		case EBankContent::Mixed:		return "Mixed";
+
+		case EBankContent::Unknown:
+		default:								return "Unknown";
+	}
+}
 
 static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vector<FCodeAnalysisBank*>& banks,	std::vector<int>& sortedIndices)
 {
@@ -66,8 +112,11 @@ static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vecto
 	std::sort(sortedIndices.begin(), sortedIndices.end(), Compare);
 }
 
+
 void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 {
+	FCodeAnalysisState& state = pPCEEmu->GetCodeAnalysis();
+
 	static std::vector<int> sortedIndices;
 
 	// Initialize index list once or if size changes
@@ -88,7 +137,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 		ImGuiTableFlags_Hideable |
 		ImGuiTableFlags_ScrollY;
 
-	if (ImGui::BeginTable("MemoryBanksTable", 4, flags))
+	if (ImGui::BeginTable("MemoryBanksTable", 5, flags))
 	{
 		ImGui::TableSetupScrollFreeze(0, 1);
 
@@ -112,6 +161,11 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 			0.0f,
 			(int)EBankTableColumn::EverMapped);
 
+		ImGui::TableSetupColumn("Content",
+			ImGuiTableColumnFlags_PreferSortDescending,
+			0.0f,
+			(int)EBankTableColumn::Content);
+
 		ImGui::TableHeadersRow();
 
 		// Handle sorting
@@ -127,21 +181,49 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 		// Draw rows
 		for (int idx : sortedIndices)
 		{
-			const FCodeAnalysisBank* bank = banks[idx];
+			const FCodeAnalysisBank* pBank = banks[idx];
 
 			ImGui::TableNextRow();
 
+			constexpr ImVec4 mappedColour(0.0f, 1.0f, 0.0f, 1.0f);
+			constexpr ImVec4 previouslyMappedColour(1.0f, 1.0f, 1.0f, 1.0f);
+			constexpr ImVec4 neverMappedColour(0.56f, 0.56f, 0.56f, 1.0f);
+
+			ImVec4 colour = neverMappedColour;
+			if (pBank->bEverBeenMapped)
+			{
+				colour = pBank->Mapping != EBankAccess::None ? mappedColour : previouslyMappedColour;
+			}
+
 			ImGui::TableSetColumnIndex(0);
-			ImGui::TextUnformatted(bank->Name.c_str());
+			ImGui::TextColored(colour, pBank->Name.c_str());
 
 			ImGui::TableSetColumnIndex(1);
-			ImGui::TextUnformatted(BankAccessToString(bank->Mapping));
+			ImGui::TextColored(colour, BankAccessToString(pBank->Mapping));
 
 			ImGui::TableSetColumnIndex(2);
-			ImGui::Text("0x%04X", bank->GetMappedAddress());
+			if (pBank->bEverBeenMapped)
+			{
+				ImGui::TextColored(colour, "%s", NumStr(pBank->GetMappedAddress()));
+				const FAddressRef bankAddr(pBank->Id, pBank->GetMappedAddress());
+				if (ImGui::IsItemHovered())
+				{
+					DrawSnippetToolTip(state, state.GetFocussedViewState(), bankAddr, 11);
 
+					// todo make the whole row selectable?
+					if (ImGui::IsMouseDoubleClicked(0))
+						state.GetFocussedViewState().GoToAddress(bankAddr, false);
+				}
+			}
+			else
+			{
+				ImGui::TextColored(colour, "----");
+			}
 			ImGui::TableSetColumnIndex(3);
-			ImGui::TextUnformatted(bank->bEverBeenMapped ? "Y" : "N");
+			ImGui::TextColored(colour, pBank->bEverBeenMapped ? "Y" : "N");
+
+			ImGui::TableSetColumnIndex(4);
+			ImGui::TextColored(colour, pBank->bEverBeenMapped ? BankContentToString(GetBankContent(pBank->ItemList)) : "-");
 		}
 
 		ImGui::EndTable();
@@ -167,6 +249,7 @@ void FBanksViewer::DrawUI()
 	std::vector<FCodeAnalysisBank*> banksToView;
 	//if (!pMedia->IsCDROM())
 
+
 	for (int i = 0; i < 0x80; i++)
 	{
 		const int16_t bankId = pPCEEmu->Banks[i]->GetBankId();
@@ -177,6 +260,13 @@ void FBanksViewer::DrawUI()
 				banksToView.push_back(pBank);
 			}
 		}
+	}
+
+	// WRAM
+	const int16_t ramBankId = pPCEEmu->Banks[0xf8]->GetBankId();
+	if (FCodeAnalysisBank* pBank = state.GetBank(ramBankId))
+	{
+		banksToView.push_back(pBank);
 	}
 
 	DrawBankTable(banksToView);
