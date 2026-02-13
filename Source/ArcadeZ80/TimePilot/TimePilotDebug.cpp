@@ -27,6 +27,10 @@ static const uint16_t kEnemySpriteOffset = 0x31;	// offset to split sprites
 static const uint16_t kEnemyDataSize	= 16;
 static const int noEnemySlots			= 7;
 
+struct FTimePilotSpriteInfo
+{
+	std::unordered_set<uint8_t>	PalettesUsed;
+};
 
 class FTimePilotDebug : public FMachineDebug
 {
@@ -45,6 +49,10 @@ private:
 	void	DebugDrawCommandQueue();
 	void	DebugDrawString(uint16_t stringAddress);
 	void	UpdateExportedZXNSpriteView(const uint8_t* pZXNSpriteImage, int paletteNumber);
+
+	void	ResetZXNSpriteAllocation();
+	uint8_t GetZXNSpriteForTPSprite(int tpSpriteNo);
+	uint8_t GetZXNPaletteForTPPalette(int tpPaletteNo);
 
 	FTimePilotMachine* pMachine = nullptr;
 
@@ -69,6 +77,19 @@ private:
 
 	bool	bSpriteDebug = false;
 	bool	bEnemyDebug = false;
+
+	// ZXN sprite & palette allocation
+	static const int kMaxZXNSprites = 128;
+	static const int kMaxZXNPalettes = 16;
+	static const int kNoTPSprites = 256;
+	static const int kNoTPSpritePalettes = 64;
+	uint8_t 	ZXNSpriteAllocation[kNoTPSprites] = { 0xff };	// which ZXN sprite each TP sprite is allocated to
+	bool		ZXNSpriteUsed[kMaxZXNSprites] = { false };			// which ZXN sprites are used
+	uint8_t		ZXNSpritePaletteAllocation[kNoTPSpritePalettes] = { 0xff };	// which ZXN palette each TP palette is allocated to (-1 for none)
+	bool		ZXNSpritePaletteUsed[kMaxZXNPalettes] = { false };	// which ZXN palettes are used
+
+
+	FTimePilotSpriteInfo	SpriteInfo[kNoTPSprites];
 };
 
 FMachineDebug* CreateTimePilotDebug(FArcadeZ80Machine *pMachine)
@@ -90,6 +111,8 @@ FTimePilotDebug::FTimePilotDebug(FArcadeZ80Machine* pTPMachine)
 	{
 		pActiveSpriteView[sprNo] = new FGraphicsView(16, 16);
 	}
+
+	ResetZXNSpriteAllocation();
 }
 
 FTimePilotDebug::~FTimePilotDebug()
@@ -281,6 +304,12 @@ void FTimePilotDebug::SpriteViewer()
 	ImGui::Text("Exported");
 	ImGui::SameLine();
 	pExportedSpriteView->Draw(spriteScale, true);
+	ImGui::Text("Palettes used:");
+	for (uint8_t palette : SpriteInfo[SpriteDebugState.SpriteNo].PalettesUsed)
+	{
+		ImGui::SameLine();
+		ImGui::Text("%d ", palette);
+	}
 
 	// Show active sprites
 	ImGui::Separator();
@@ -299,9 +328,24 @@ void FTimePilotDebug::SpriteViewer()
 		int const flipx = ~pSpriteRAM[1][offs] & 0x40;
 		int const flipy = pSpriteRAM[1][offs] & 0x80;
 
+		// TODO: allocate ZXN sprite for code
+		uint8_t zxnSprite = GetZXNSpriteForTPSprite(code);
+
+		// TODO: allocate ZXN palette for colour
+		uint8_t zxnPalette = GetZXNPaletteForTPPalette(colour);
+
+		SpriteInfo[code].PalettesUsed.insert(colour);
+
 		int sprNo = (offs - 0x10) / 2;
 
 		ImGui::Text("Sprite %d: at(%d,%d) code:%d colour:%d FlipX:%s FlipY:%s", sprNo, sx,sy, code, colour, flipx ? "Yes" : "No", flipy ? "Yes" : "No");
+		ImGui::Text("ZXN Sprite: %d, ZXN Palette: %d", zxnSprite, zxnPalette);
+		ImGui::Text("Palettes used:");
+		for (uint8_t palette : SpriteInfo[code].PalettesUsed)
+		{
+			ImGui::SameLine();
+			ImGui::Text("%d ", palette);
+		}
 
 		if (sprNo > kNoActiveSprites)
 		{
@@ -619,4 +663,58 @@ void FTimePilotDebug::UpdateExportedZXNSpriteView(const uint8_t* pZXNSpriteImage
 			pExportedSpriteView->PlotPixel(x, y, colour);
 		}
 	}
+}
+
+
+void	FTimePilotDebug::ResetZXNSpriteAllocation()
+{
+	for(int i=0; i < kNoTPSprites;i++)
+		ZXNSpriteAllocation[i] = 0xff;
+
+	for (int i = 0; i < kMaxZXNSprites; i++)
+		ZXNSpriteUsed[i] = false;
+
+	for (int i = 0; i < kNoTPSpritePalettes; i++)
+		ZXNSpritePaletteAllocation[i] = 0xff;
+
+	for (int i = 0; i < kMaxZXNPalettes; i++)
+		ZXNSpritePaletteUsed[i] = false;
+}
+
+uint8_t FTimePilotDebug::GetZXNSpriteForTPSprite(int tpSpriteNo)
+{
+	const uint8_t zxnSpriteNo = ZXNSpriteAllocation[tpSpriteNo];
+	if (zxnSpriteNo != 0xff)
+		return zxnSpriteNo;
+
+	for (int i = 0; i < kMaxZXNSprites; i++)
+	{
+		if (!ZXNSpriteUsed[i])
+		{
+			ZXNSpriteUsed[i] = true;
+			ZXNSpriteAllocation[tpSpriteNo] = (uint8_t)i;
+			return (uint8_t)i;
+		}
+	}
+
+	return 0xff;	// no more ZXN sprites available
+}
+
+uint8_t FTimePilotDebug::GetZXNPaletteForTPPalette(int tpPaletteNo)
+{
+	const uint8_t zxnPaletteNo = ZXNSpritePaletteAllocation[tpPaletteNo];
+	if (zxnPaletteNo != 0xff)
+		return zxnPaletteNo;
+
+	for (int i = 0; i < kMaxZXNPalettes; i++)
+	{
+		if (!ZXNSpritePaletteUsed[i])
+		{
+			ZXNSpritePaletteUsed[i] = true;
+			ZXNSpritePaletteAllocation[tpPaletteNo] = (uint8_t)i;
+			return (uint8_t)i;
+		}
+	}
+
+	return 0xff;	// no more ZXN palettes available
 }
