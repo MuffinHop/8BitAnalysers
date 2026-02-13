@@ -158,8 +158,8 @@ protected:
 	void ResetBanks();
 	void MapMprBanks();
 	
-	void RestoreMprMapping(uint8_t mprIndex, int16_t bankId);
-	void RestoreMprMappings(const FPCEGameConfig* pConfig);
+	void MapBankIdToMprSlot(uint8_t mprIndex, int16_t bankId);
+	void RestoreMprBankMappings(const FPCEGameConfig* pConfig);
 
 	void UpdatePalettes();
 
