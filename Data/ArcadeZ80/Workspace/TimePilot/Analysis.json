@@ -22228,131 +22228,131 @@
                 },
                 {
                     "Address": 206,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 207,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 208,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 209,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 210,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 211,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 212,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 213,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 214,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 215,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 216,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 217,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 218,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 219,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 220,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 221,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 222,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 223,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 224,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 225,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 226,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 227,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 228,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 229,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 230,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 231,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 232,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 233,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 234,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 235,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 236,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 237,
-                    "DisplayType": 11
+                    "DisplayType": 3
                 },
                 {
                     "Address": 238,
@@ -24636,7 +24636,9 @@
                 },
                 {
                     "Address": 587,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "palette for WW2 plane",
+                    "OperandType": 3
                 },
                 {
                     "Address": 589,
@@ -24648,7 +24650,8 @@
                 },
                 {
                     "Address": 593,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "sprite for WWII plane"
                 },
                 {
                     "Address": 595,
@@ -24661,19 +24664,22 @@
                 {
                     "Address": 599,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 7
                 },
                 {
                     "Address": 602,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "get facing angle"
                 },
                 {
                     "Address": 605,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "add to round"
                 },
                 {
                     "Address": 607,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "divide by 16"
                 },
                 {
                     "Address": 608,
@@ -24689,7 +24695,8 @@
                 },
                 {
                     "Address": 611,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "mask"
                 },
                 {
                     "Address": 613,
@@ -24704,7 +24711,8 @@
                 },
                 {
                     "Address": 617,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "get sprite no"
                 },
                 {
                     "Address": 618,
@@ -24712,7 +24720,8 @@
                 },
                 {
                     "Address": 619,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "get attribute"
                 },
                 {
                     "Address": 620,
@@ -24725,7 +24734,8 @@
                 },
                 {
                     "Address": 625,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "exit alt frames"
                 },
                 {
                     "Address": 626,
@@ -24733,7 +24743,8 @@
                 },
                 {
                     "Address": 627,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "animation frame"
                 },
                 {
                     "Address": 629,
@@ -24842,11 +24853,13 @@
                 },
                 {
                     "Address": 770,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "for rounding"
                 },
                 {
                     "Address": 772,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "shift down"
                 },
                 {
                     "Address": 773,
@@ -24862,7 +24875,8 @@
                 },
                 {
                     "Address": 776,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "mask"
                 },
                 {
                     "Address": 778,
@@ -24931,11 +24945,13 @@
                 },
                 {
                     "Address": 864,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "Y pos"
                 },
                 {
                     "Address": 867,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "sub pixel ypos?"
                 },
                 {
                     "Address": 870,
@@ -24948,7 +24964,8 @@
                 },
                 {
                     "Address": 875,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "store back"
                 },
                 {
                     "Address": 878,
@@ -24956,7 +24973,8 @@
                 },
                 {
                     "Address": 881,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "X pos"
                 },
                 {
                     "Address": 884,
@@ -24973,7 +24991,8 @@
                 },
                 {
                     "Address": 892,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "store back"
                 },
                 {
                     "Address": 895,
@@ -24986,7 +25005,7 @@
                 {
                     "Address": 899,
                     "ByteSize": 3,
-                    "Comment": "get enbemy sprite X pos"
+                    "Comment": "get enemy sprite Y pos"
                 },
                 {
                     "Address": 902,
@@ -25093,6 +25112,7 @@
                 {
                     "Address": 948,
                     "ByteSize": 3,
+                    "Comment": "decrement state countdown",
                     "Flags": 32
                 },
                 {
@@ -25254,6 +25274,12 @@
                     "ByteSize": 2
                 }
             ],
+            "CommentBlocks": [
+                {
+                    "Address": 647,
+                    "Comment": "biplane attributes for angles"
+                }
+            ],
             "DataInfo": [
                 {
                     "Address": 0,
@@ -25305,6 +25331,198 @@
                     "ByteSize": 2,
                     "DataType": 2,
                     "DisplayType": 1
+                },
+                {
+                    "Address": 631,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 632,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 633,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 634,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 635,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 636,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 637,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 638,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 639,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 640,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 641,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 642,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 643,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 644,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 645,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 646,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 647,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 648,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 649,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 650,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 651,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 652,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 653,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 654,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 655,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 656,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 657,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 658,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 659,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 660,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 661,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 662,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 792,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 793,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 794,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 795,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 796,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 797,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 798,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 799,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 800,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 801,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 802,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 803,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 804,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 805,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 806,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 807,
+                    "DisplayType": 3
                 }
             ],
             "LabelInfo": [
@@ -25463,19 +25681,31 @@
                     "Address": 572,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_2A3C"
+                    "Name": "SetBiplaneSpriteAndAttrib"
                 },
                 {
                     "Address": 583,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_2A47"
+                    "Name": "SetWWIIPlaneSpriteAndAttrib"
                 },
                 {
                     "Address": 599,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_2A57"
+                    "Name": "GetBiplaneSpriteAndAttribForAngle"
+                },
+                {
+                    "Address": 631,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "BiplaneSpriteLUT"
+                },
+                {
+                    "Address": 647,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "BiplaneAngleAttribLUT"
                 },
                 {
                     "Address": 663,
@@ -25497,13 +25727,13 @@
                     "Address": 764,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "UpdateEnemySpriteNo"
+                    "Name": "UpdateEnemyJetSpriteNo"
                 },
                 {
                     "Address": 792,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_2B18"
+                    "Name": "EnemyJetSpriteLUT"
                 },
                 {
                     "Address": 850,
@@ -25649,6 +25879,7 @@
                 {
                     "Address": 34,
                     "ByteSize": 3,
+                    "Comment": "set function to be called on next RET",
                     "OperandType": 1
                 },
                 {
@@ -25661,11 +25892,13 @@
                 },
                 {
                     "Address": 41,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "OperandType": 3
                 },
                 {
                     "Address": 43,
                     "ByteSize": 3,
+                    "Comment": "jump if >= 32",
                     "OperandType": 2
                 },
                 {
@@ -25676,24 +25909,30 @@
                 {
                     "Address": 49,
                     "ByteSize": 3,
+                    "Comment": "get countdown timer",
                     "Flags": 32
                 },
                 {
                     "Address": 52,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Flags": 32,
+                    "OperandType": 3
                 },
                 {
                     "Address": 54,
                     "ByteSize": 3,
+                    "Comment": "jump if A >= 42",
                     "OperandType": 2
                 },
                 {
                     "Address": 57,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "OperandType": 3
                 },
                 {
                     "Address": 59,
                     "ByteSize": 2,
+                    "Comment": "jump if >= 10",
                     "OperandType": 2
                 },
                 {
@@ -25748,11 +25987,14 @@
                 },
                 {
                     "Address": 90,
-                    "ByteSize": 4
+                    "ByteSize": 4,
+                    "Comment": "2000 score sprite",
+                    "OperandType": 3
                 },
                 {
                     "Address": 94,
-                    "ByteSize": 4
+                    "ByteSize": 4,
+                    "Comment": "attrib"
                 },
                 {
                     "Address": 98,
@@ -25764,12 +26006,14 @@
                 },
                 {
                     "Address": 103,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "exit if not on final frame"
                 },
                 {
                     "Address": 104,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "Comment": "function 4, param 12",
+                    "OperandType": 4
                 },
                 {
                     "Address": 107,
@@ -25792,7 +26036,8 @@
                 },
                 {
                     "Address": 113,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "get attrib"
                 },
                 {
                     "Address": 116,
@@ -25800,7 +26045,9 @@
                 },
                 {
                     "Address": 117,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "mask flip bits",
+                    "OperandType": 5
                 },
                 {
                     "Address": 119,
@@ -25817,11 +26064,14 @@
                 },
                 {
                     "Address": 125,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "re-apply flip params"
                 },
                 {
                     "Address": 126,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "flash attrib",
+                    "Flags": 32
                 },
                 {
                     "Address": 129,
@@ -25829,19 +26079,23 @@
                 },
                 {
                     "Address": 130,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "sub for 0-32 range"
                 },
                 {
                     "Address": 132,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "0-15 range"
                 },
                 {
                     "Address": 133,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "mask to be sure"
                 },
                 {
                     "Address": 135,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "store in B"
                 },
                 {
                     "Address": 136,
@@ -25856,11 +26110,13 @@
                 },
                 {
                     "Address": 140,
-                    "ByteSize": 3
+                    "ByteSize": 3,
+                    "Comment": "set sprite"
                 },
                 {
                     "Address": 143,
-                    "ByteSize": 4
+                    "ByteSize": 4,
+                    "Comment": "attrib"
                 },
                 {
                     "Address": 147,
@@ -26618,6 +26874,70 @@
                     "DisplayType": 11
                 },
                 {
+                    "Address": 148,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 149,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 150,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 151,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 152,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 153,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 154,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 155,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 156,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 157,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 158,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 159,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 160,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 161,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 162,
+                    "DisplayType": 3
+                },
+                {
+                    "Address": 163,
+                    "DisplayType": 3
+                },
+                {
                     "Address": 164,
                     "ByteSize": 2,
                     "DataType": 2,
@@ -26728,13 +27048,13 @@
                     "Address": 34,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_2C22"
+                    "Name": "EnemyDeathFunction"
                 },
                 {
                     "Address": 49,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_2C31"
+                    "Name": "UpdateEnemyDeath"
                 },
                 {
                     "Address": 90,
@@ -26744,18 +27064,18 @@
                 {
                     "Address": 113,
                     "LabelType": 2,
-                    "Name": "label_2C71"
+                    "Name": "flash_sprite"
                 },
                 {
                     "Address": 130,
                     "LabelType": 2,
-                    "Name": "label_2C82"
+                    "Name": "set_explosion_sprite"
                 },
                 {
                     "Address": 148,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_2C94"
+                    "Name": "ExplosionSpriteLUT"
                 },
                 {
                     "Address": 164,
@@ -47918,6 +48238,10 @@
                     "DisplayType": 11
                 },
                 {
+                    "Address": 33,
+                    "DisplayType": 11
+                },
+                {
                     "Address": 68,
                     "DisplayType": 11
                 },
@@ -47929,7 +48253,8 @@
                 {
                     "Address": 81,
                     "Comment": "target angle",
-                    "DisplayType": 11
+                    "DisplayType": 11,
+                    "Flags": 128
                 },
                 {
                     "Address": 82,
@@ -48139,6 +48464,7 @@
                 },
                 {
                     "Address": 133,
+                    "Comment": "sub-pixel X?",
                     "DisplayType": 11
                 },
                 {
@@ -48698,12 +49024,14 @@
                 {
                     "Address": 528,
                     "Comment": "x",
-                    "DisplayType": 3
+                    "DisplayType": 3,
+                    "Flags": 128
                 },
                 {
                     "Address": 529,
                     "Comment": "no",
-                    "DisplayType": 3
+                    "DisplayType": 3,
+                    "Flags": 128
                 },
                 {
                     "Address": 530,
@@ -48948,6 +49276,70 @@
                     "DisplayType": 11
                 },
                 {
+                    "Address": 584,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 585,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 586,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 587,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 588,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 589,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 590,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 591,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 592,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 593,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 594,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 595,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 596,
+                    "DisplayType": 4
+                },
+                {
+                    "Address": 597,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 598,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 599,
+                    "DisplayType": 11
+                },
+                {
                     "Address": 608,
                     "Comment": "atrib",
                     "DisplayType": 11
@@ -49085,13 +49477,13 @@
                     "Address": 8,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "WorldXOffset"
+                    "Name": "World_YOffset"
                 },
                 {
                     "Address": 10,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "WorldYOffset"
+                    "Name": "World_XOffset"
                 },
                 {
                     "Address": 16,
@@ -49620,43 +50012,85 @@
                     "Address": 538,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot0_sprite"
+                    "Name": "EnemySlot0_Sprite_XPos"
+                },
+                {
+                    "Address": 539,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot0_Sprite_No"
                 },
                 {
                     "Address": 540,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot1_sprite"
+                    "Name": "EnemySlot1_Sprite_XPos"
+                },
+                {
+                    "Address": 541,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot1_Sprite_No"
                 },
                 {
                     "Address": 542,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot2_sprite"
+                    "Name": "EnemySlot2_Sprite_XPos"
+                },
+                {
+                    "Address": 543,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot2_Sprite_No"
                 },
                 {
                     "Address": 544,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot3_sprite"
+                    "Name": "EnemySlot3_Sprite_XPos"
+                },
+                {
+                    "Address": 545,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot3_Sprite_No"
                 },
                 {
                     "Address": 546,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot4_sprite"
+                    "Name": "EnemySlot4_Sprite_XPos"
+                },
+                {
+                    "Address": 547,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot4_Sprite_No"
                 },
                 {
                     "Address": 548,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot5_sprite"
+                    "Name": "EnemySlot5_Sprite_XPos"
+                },
+                {
+                    "Address": 549,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot5_Sprite_No"
                 },
                 {
                     "Address": 550,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "EnemySlot6_sprite"
+                    "Name": "EnemySlot6_Sprite_XPos"
+                },
+                {
+                    "Address": 551,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot6_Sprite_No"
                 },
                 {
                     "Address": 552,
@@ -49683,12 +50117,6 @@
                     "Name": "SpriteData1_19To23"
                 },
                 {
-                    "Address": 575,
-                    "Global": true,
-                    "LabelType": 0,
-                    "Name": "data_AA3F"
-                },
-                {
                     "Address": 576,
                     "Global": true,
                     "LabelType": 0,
@@ -49701,10 +50129,88 @@
                     "Name": "PlayerSprite_Y"
                 },
                 {
+                    "Address": 586,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_0_Attrib"
+                },
+                {
+                    "Address": 587,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_0_YPos"
+                },
+                {
+                    "Address": 588,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_1_Attrib"
+                },
+                {
+                    "Address": 589,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_1_YPos"
+                },
+                {
+                    "Address": 590,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_2_Attrib"
+                },
+                {
+                    "Address": 591,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_2_YPos"
+                },
+                {
+                    "Address": 592,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_3_Attrib"
+                },
+                {
+                    "Address": 593,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_3_YPos"
+                },
+                {
+                    "Address": 594,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_4_Attrib"
+                },
+                {
+                    "Address": 595,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_4_YPos"
+                },
+                {
+                    "Address": 596,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_5_Attrib"
+                },
+                {
                     "Address": 597,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_AA55"
+                    "Name": "EnemySlot_5_YPos"
+                },
+                {
+                    "Address": 598,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_6_Attrib"
+                },
+                {
+                    "Address": 599,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "EnemySlot_6_YPos"
                 },
                 {
                     "Address": 601,
@@ -50318,6 +50824,7 @@
                 {
                     "Address": 996,
                     "ByteSize": 2,
+                    "Comment": "enemy AI/movement",
                     "DataType": 2
                 },
                 {
@@ -50328,6 +50835,7 @@
                 {
                     "Address": 1000,
                     "ByteSize": 2,
+                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
@@ -50953,31 +51461,31 @@
                     "Address": 55,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_B437"
+                    "Name": "HWSprite_B437"
                 },
                 {
                     "Address": 57,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_B439"
+                    "Name": "HWSprite_B439"
                 },
                 {
                     "Address": 59,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_B43B"
+                    "Name": "HWSprite_B43B"
                 },
                 {
                     "Address": 61,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_B43D"
+                    "Name": "HWSprite_B43D"
                 },
                 {
                     "Address": 63,
                     "Global": true,
                     "LabelType": 0,
-                    "Name": "data_B43F"
+                    "Name": "HWSprite_B43F"
                 }
             ],
             "PageId": 45
