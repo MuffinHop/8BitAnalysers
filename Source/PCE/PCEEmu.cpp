@@ -408,7 +408,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	FCodeAnalysisState& state = CodeAnalysis;
 
 	// Get the bank id of the bank we are about to map in.
-	const uint16_t newBankId = GetBankForMprSlot(newBankIndex, mprIndex);
+	const uint16_t newBankId = GetBankIdForMprSlot(newBankIndex, mprIndex);
 	FCodeAnalysisBank* pInBank = CodeAnalysis.GetBank(newBankId);
 	const int16_t outBankId = MprBankId[mprIndex];
 	// This can be null if a bank is getting mapped to this slot for the very first time.
@@ -546,7 +546,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	state.SetAddressRangeDirty();
 }
 
-int16_t FPCEEmu::GetBankForMprSlot(uint8_t bankIndex, uint8_t mprIndex)
+int16_t FPCEEmu::GetBankIdForMprSlot(uint8_t bankIndex, uint8_t mprIndex)
 {
 	if (Banks[bankIndex] == nullptr)
 		return -1;
@@ -761,6 +761,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	}
 
 	ResetBanks();
+	MapMprBanks();
 
 	// todo: move to loadproject
 	//CheckMemoryMap();
@@ -988,7 +989,10 @@ void FPCEEmu::ResetBanks()
 			pBank->bMachineROM = bIsCdRom;
 		}
 	}
+}
 
+void FPCEEmu::MapMprBanks()
+{
 #ifdef BANK_SWITCH_DEBUG
 	BANK_LOG("Mapping initial banks...");
 	bDoneInitialBankMapping = false;
@@ -1009,6 +1013,38 @@ void FPCEEmu::ResetBanks()
 	CheckDupeMprBankIds();
 	CheckPhysicalMemoryRangeIsMapped();
 #endif
+}
+
+void FPCEEmu::MapBankIdToMprSlot(uint8_t mprIndex, int16_t bankId)
+{
+	const int bankIndex = pMemory->GetMpr(mprIndex);
+	Banks[bankIndex]->ClaimSpecificBank(bankId);
+
+	FCodeAnalysisBank* pInBank = CodeAnalysis.GetBank(bankId);
+
+	assert(pInBank);
+	if (!pInBank)
+		return;
+
+	FCodeAnalysisState& state = CodeAnalysis;
+
+	// Hardcoding save ram to be RW. This is to work around the situation where save ram can be paged in but gg reports the memory as read only.
+	const EBankAccess bankAccess = (bankIndex == kBankHWPage || bankIndex == kBankSaveRAM) ? EBankAccess::ReadWrite : pMemory->GetMemoryMapWrite()[bankIndex] ? EBankAccess::ReadWrite : EBankAccess::Read;
+	const int pageNo = mprIndex * 8;
+	state.MapBank(bankId, pageNo, bankAccess);
+	pInBank->PrimaryMappedPage = pageNo;
+	MprBankId[mprIndex] = bankId;
+}
+
+void FPCEEmu::RestoreMprBankMappings(const FPCEGameConfig* pConfig)
+{
+	if (pConfig == nullptr)
+		return;
+
+	for (int i = 0; i < kNumMprSlots; i++)
+	{
+		MapBankIdToMprSlot(i, pConfig->MprBankId[i]);
+	}
 }
 
 void FPCEEmu::Shutdown()
@@ -1056,6 +1092,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	// Are we loading a previously saved game
 	if (bLoadGameData)
 	{
+		const FPCEGameConfig* pPCEGameConfig = static_cast<FPCEGameConfig*>(pGameConfig);
+
 		const std::string root = pGlobalConfig->WorkspaceRoot;
 		const std::string gameRoot = pGlobalConfig->WorkspaceRoot + pGameConfig->Name;
 		std::string analysisJsonFName = gameRoot + "/Analysis.json";
@@ -1079,6 +1117,9 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 		}
 
 		ResetBanks();
+		RestoreMprBankMappings(pPCEGameConfig);
+
+		// BANKS MUST BE MAPPED BY THIS POINT
 
 		if (FileExists(analysisJsonFName.c_str()))
 		{
@@ -1117,6 +1158,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 		}
 
 		ResetBanks();
+		MapMprBanks();
 
 		// we only want to do this once when create the project
 		// todo: put in a function	
@@ -1249,6 +1291,10 @@ bool FPCEEmu::SaveProject()
 		viewConfig.bEnabled = viewState.Enabled;
 		viewConfig.ViewAddress = viewState.GetCursorItem().IsValid() ? viewState.GetCursorItem().AddressRef : FAddressRef();
 	}
+
+	FPCEGameConfig* pPCEGameConfig = (FPCEGameConfig*)pCurrentProjectConfig;
+	for (int i = 0; i < kNumMprSlots; i++)
+		pPCEGameConfig->MprBankId[i] = MprBankId[i];
 
 	AddGameConfig(pCurrentProjectConfig);
 	SaveGameConfigToFile(*pCurrentProjectConfig, configFName.c_str());
@@ -1552,4 +1598,20 @@ int16_t FPCEEmu::FBankSet::GetBankId(int index) const
 		return -1;
 
 	return Banks[index].BankId;
+}
+
+bool FPCEEmu::FBankSet::ClaimSpecificBank(int16_t bankId)
+{
+	for (auto& entry : Banks)
+	{
+		if (entry.BankId == bankId)
+		{
+			if (entry.bMapped)
+				return false; // Already mapped (corrupt state)
+
+			entry.bMapped = true;
+			return true;
+		}
+	}
+	return false;
 }

@@ -95,7 +95,7 @@ public:
 	FSpriteViewer* GetSpriteViewer() const { return pSpriteViewer; }
 	FVRAMViewer* GetVRAMViewer() const { return pVRAMViewer; }
 
-	int16_t GetBankForMprSlot(uint8_t bankIndex, uint8_t mprIndex);
+	int16_t GetBankIdForMprSlot(uint8_t bankIndex, uint8_t mprIndex);
 	void MapMprBank(uint8_t mprIndex, uint8_t newBankIndex);
 
 	void CheckDupeMprBankIds();
@@ -121,6 +121,7 @@ public:
 	{
 		void SetPrimaryMappedPage(FCodeAnalysisState& state, int bankSetIndex, uint16_t pageAddr);
 		int16_t GetFreeBank(uint8_t mprSlot);
+		bool ClaimSpecificBank(int16_t bankId);
 		void SetBankFreed(uint8_t mprSlot);
 		void Reset();
 		void AddBankId(int16_t bankId);
@@ -155,7 +156,11 @@ protected:
 	void CheckPhysicalMemoryRangeIsMapped();
 	void CheckMemoryMap();
 	void ResetBanks();
+	void MapMprBanks();
 	
+	void RestoreMprMapping(uint8_t mprIndex, int16_t bankId);
+	void RestoreMprMappings(const FPCEGameConfig* pConfig);
+
 	void UpdatePalettes();
 
 protected:
