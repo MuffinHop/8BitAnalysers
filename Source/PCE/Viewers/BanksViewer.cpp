@@ -7,10 +7,10 @@
 
 enum class EBankTableColumn : int
 {
-	Name = 0,
+	EverMapped = 0,
 	Access,
+	Name,
 	Address,
-	EverMapped,
 	Content,
 };
 
@@ -129,7 +129,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 
 	ImGuiTableFlags flags =
 		ImGuiTableFlags_Borders |
-		ImGuiTableFlags_RowBg |
+		//ImGuiTableFlags_RowBg |
 		ImGuiTableFlags_Resizable |
 		ImGuiTableFlags_Reorderable |
 		ImGuiTableFlags_Sortable |
@@ -141,31 +141,11 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 	{
 		ImGui::TableSetupScrollFreeze(0, 1);
 
-		ImGui::TableSetupColumn("Name",
-			ImGuiTableColumnFlags_DefaultSort,
-			0.0f,
-			(int)EBankTableColumn::Name);
-
-		ImGui::TableSetupColumn("Access",
-			ImGuiTableColumnFlags_PreferSortDescending,
-			0.0f,
-			(int)EBankTableColumn::Access);
-
-		ImGui::TableSetupColumn("Mapped Address",
-			ImGuiTableColumnFlags_PreferSortDescending,
-			0.0f,
-			(int)EBankTableColumn::Address);
-
-		ImGui::TableSetupColumn("Ever Mapped",
-			ImGuiTableColumnFlags_PreferSortDescending,
-			0.0f,
-			(int)EBankTableColumn::EverMapped);
-
-		ImGui::TableSetupColumn("Content",
-			ImGuiTableColumnFlags_PreferSortDescending,
-			0.0f,
-			(int)EBankTableColumn::Content);
-
+		ImGui::TableSetupColumn("Mapping State", ImGuiTableColumnFlags_PreferSortDescending | ImGuiTableColumnFlags_WidthFixed, 10.f, (int)EBankTableColumn::EverMapped);
+		ImGui::TableSetupColumn("Access",	ImGuiTableColumnFlags_PreferSortDescending,	0.0f,	(int)EBankTableColumn::Access);
+		ImGui::TableSetupColumn("Name", ImGuiTableColumnFlags_DefaultSort, 0.0f, (int)EBankTableColumn::Name);
+		ImGui::TableSetupColumn("Mapped Address",	ImGuiTableColumnFlags_PreferSortDescending,	0.0f,	(int)EBankTableColumn::Address);
+		ImGui::TableSetupColumn("Content", ImGuiTableColumnFlags_PreferSortDescending, 0.0f, (int)EBankTableColumn::Content);
 		ImGui::TableHeadersRow();
 
 		// Handle sorting
@@ -188,40 +168,69 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 			constexpr ImVec4 mappedColour(0.0f, 1.0f, 0.0f, 1.0f);
 			constexpr ImVec4 previouslyMappedColour(1.0f, 1.0f, 1.0f, 1.0f);
 			constexpr ImVec4 neverMappedColour(0.56f, 0.56f, 0.56f, 1.0f);
+			//constexpr ImVec4 neverMappedColour(0.28f, 0.28f, 0.28f, 1.0f);
 
-			ImVec4 colour = neverMappedColour;
-			if (pBank->bEverBeenMapped)
+			ImVec4 colour = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+			const bool bUseColouredText = true;
+			if (bUseColouredText)
 			{
-				colour = pBank->Mapping != EBankAccess::None ? mappedColour : previouslyMappedColour;
+				colour = neverMappedColour;
+				if (pBank->bEverBeenMapped)
+				{
+					colour = pBank->Mapping != EBankAccess::None ? mappedColour : previouslyMappedColour;
+				}
 			}
 
+			// Mapping State
 			ImGui::TableSetColumnIndex(0);
-			ImGui::TextColored(colour, pBank->Name.c_str());
 
+			ImGuiSelectableFlags selectable_flags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap | ImGuiSelectableFlags_AllowDoubleClick;
+			if (ImGui::Selectable("##mappingstate", true, selectable_flags, ImVec2(0, 0.f)))
+			{
+				if (pBank->bEverBeenMapped)
+				{
+					const FAddressRef bankAddr(pBank->Id, pBank->GetMappedAddress());
+					if (ImGui::IsMouseDoubleClicked(0))
+						state.GetFocussedViewState().GoToAddress(bankAddr, false);
+				}
+			}
+
+			// Colour cell to show mapping state
+			{
+				ImVec4 cellBgColour = neverMappedColour;
+				if (pBank->bEverBeenMapped)
+				{
+					cellBgColour = pBank->Mapping != EBankAccess::None ? mappedColour : previouslyMappedColour;
+				}
+				ImU32 imU32CellBgColour = ImGui::ColorConvertFloat4ToU32(cellBgColour);
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_CellBg, imU32CellBgColour);
+			}
+
+			// Access
 			ImGui::TableSetColumnIndex(1);
 			ImGui::TextColored(colour, BankAccessToString(pBank->Mapping));
 
+			// Name
 			ImGui::TableSetColumnIndex(2);
+			ImGui::TextColored(colour, pBank->Name.c_str());
+			
+			// Mapped address
+			ImGui::TableSetColumnIndex(3);
 			if (pBank->bEverBeenMapped)
 			{
 				ImGui::TextColored(colour, "%s", NumStr(pBank->GetMappedAddress()));
-				const FAddressRef bankAddr(pBank->Id, pBank->GetMappedAddress());
 				if (ImGui::IsItemHovered())
 				{
+					const FAddressRef bankAddr(pBank->Id, pBank->GetMappedAddress());
 					DrawSnippetToolTip(state, state.GetFocussedViewState(), bankAddr, 11);
-
-					// todo make the whole row selectable?
-					if (ImGui::IsMouseDoubleClicked(0))
-						state.GetFocussedViewState().GoToAddress(bankAddr, false);
 				}
 			}
 			else
 			{
 				ImGui::TextColored(colour, "----");
 			}
-			ImGui::TableSetColumnIndex(3);
-			ImGui::TextColored(colour, pBank->bEverBeenMapped ? "Y" : "N");
 
+			// Content
 			ImGui::TableSetColumnIndex(4);
 			ImGui::TextColored(colour, pBank->bEverBeenMapped ? BankContentToString(GetBankContent(pBank->ItemList)) : "-");
 		}
@@ -252,7 +261,7 @@ void FBanksViewer::DrawUI()
 
 	for (int i = 0; i < 0x80; i++)
 	{
-		const int16_t bankId = pPCEEmu->Banks[i]->GetBankId();
+		const int16_t bankId = pPCEEmu->Banks[i]->GetBankId(0);
 		if (FCodeAnalysisBank* pBank = state.GetBank(bankId))
 		{
 			if (std::find(banksToView.begin(), banksToView.end(), pBank) == banksToView.end())
@@ -263,7 +272,7 @@ void FBanksViewer::DrawUI()
 	}
 
 	// WRAM
-	const int16_t ramBankId = pPCEEmu->Banks[0xf8]->GetBankId();
+	const int16_t ramBankId = pPCEEmu->Banks[0xf8]->GetBankId(0);
 	if (FCodeAnalysisBank* pBank = state.GetBank(ramBankId))
 	{
 		banksToView.push_back(pBank);
