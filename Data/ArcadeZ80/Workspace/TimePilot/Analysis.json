@@ -702,8 +702,8 @@
             "StartAddress": 200409088,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -718,8 +718,8 @@
             "StartAddress": 202309632,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -734,8 +734,8 @@
             "StartAddress": 203620352,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -11932,6 +11932,24 @@
                     "Name": "OutputString_CopyrightKonami"
                 },
                 {
+                    "Address": 109,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_086D"
+                },
+                {
+                    "Address": 112,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_0870"
+                },
+                {
+                    "Address": 116,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_0874"
+                },
+                {
                     "Address": 124,
                     "Global": true,
                     "LabelType": 0,
@@ -12081,7 +12099,7 @@
                     "Address": 1010,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "OutputString"
+                    "Name": "PrintString"
                 },
                 {
                     "Address": 1023,
@@ -13673,6 +13691,7 @@
                 {
                     "Address": 785,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -14568,13 +14587,13 @@
                     "Address": 15,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "OutputStringColoured"
+                    "Name": "PrintStringColoured"
                 },
                 {
                     "Address": 35,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "OutputStringColouredPlus10"
+                    "Name": "PrintStringColouredPlus10"
                 },
                 {
                     "Address": 57,
@@ -52876,6 +52895,7 @@
                 {
                     "Address": 1000,
                     "ByteSize": 2,
+                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
