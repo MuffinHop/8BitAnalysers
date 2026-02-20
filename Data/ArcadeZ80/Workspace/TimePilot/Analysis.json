@@ -377,8 +377,8 @@
             "StartAddress": 26869760,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -753,8 +753,8 @@
             "StartAddress": 205062144,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -802,8 +802,8 @@
             "StartAddress": 223805440,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -811,8 +811,8 @@
             "StartAddress": 224460800,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -840,8 +840,8 @@
             "StartAddress": 225116160,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -849,8 +849,8 @@
             "StartAddress": 225640448,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -873,8 +873,8 @@
             "StartAddress": 226557952,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -902,8 +902,8 @@
             "StartAddress": 227540992,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -926,8 +926,8 @@
             "StartAddress": 228589568,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -938,8 +938,8 @@
             "StartAddress": 229572608,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -4273,8 +4273,8 @@
             "StartAddress": 1277100034,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -12814,6 +12814,7 @@
                 {
                     "Address": 343,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -12833,6 +12834,7 @@
                 {
                     "Address": 353,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -13072,6 +13074,7 @@
                 {
                     "Address": 438,
                     "ByteSize": 3,
+                    "Comment": "0x0A",
                     "OperandType": 1
                 },
                 {
@@ -13112,7 +13115,8 @@
                 },
                 {
                     "Address": 452,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "write to video ram"
                 },
                 {
                     "Address": 453,
@@ -13124,7 +13128,8 @@
                 },
                 {
                     "Address": 456,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "write to attrib ram"
                 },
                 {
                     "Address": 457,
@@ -14849,13 +14854,13 @@
                     "Address": 343,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_0D57"
+                    "Name": "PrintPlayer1Score"
                 },
                 {
                     "Address": 353,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_0D61"
+                    "Name": "PrintPlayer2Score"
                 },
                 {
                     "Address": 363,
@@ -14885,13 +14890,13 @@
                     "Address": 416,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_0DA0"
+                    "Name": "Print2DigitNumberWithBlanks"
                 },
                 {
                     "Address": 431,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_0DAF"
+                    "Name": "PrintNumberDigitOrBlank"
                 },
                 {
                     "Address": 438,
@@ -18998,8 +19003,7 @@
                 },
                 {
                     "Address": 668,
-                    "ByteSize": 2,
-                    "Flags": 32
+                    "ByteSize": 2
                 },
                 {
                     "Address": 670,
@@ -19472,7 +19476,7 @@
                 {
                     "Address": 874,
                     "ByteSize": 3,
-                    "Flags": 40,
+                    "Flags": 8,
                     "OperandType": 2
                 },
                 {
@@ -19707,8 +19711,7 @@
                 },
                 {
                     "Address": 994,
-                    "ByteSize": 2,
-                    "Flags": 32
+                    "ByteSize": 2
                 },
                 {
                     "Address": 996,
@@ -53188,12 +53191,12 @@
                 {
                     "Address": 998,
                     "ByteSize": 2,
+                    "Comment": "return address?",
                     "DataType": 2
                 },
                 {
                     "Address": 1000,
                     "ByteSize": 2,
-                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
