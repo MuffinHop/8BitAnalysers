@@ -1670,8 +1670,8 @@
             "StartAddress": 395051008,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -1973,8 +1973,8 @@
             "StartAddress": 554565633,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -2064,8 +2064,8 @@
             "StartAddress": 657457153,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -2925,6 +2925,15 @@
         },
         {
             "Description": "",
+            "EndAddress": 775815169,
+            "StartAddress": 775815169,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
             "EndAddress": 810287105,
             "ExitPoints": [
                 810287105
@@ -3124,7 +3133,7 @@
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -3830,6 +3839,15 @@
                 1138425858
             ],
             "StartAddress": 1136066562,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
+            "EndAddress": 1139277826,
+            "StartAddress": 1139277826,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -13394,7 +13412,8 @@
                 {
                     "Address": 588,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "Comment": "attrib and char",
+                    "OperandType": 4
                 },
                 {
                     "Address": 591,
@@ -28360,6 +28379,7 @@
                 {
                     "Address": 337,
                     "ByteSize": 3,
+                    "Comment": "crash?",
                     "OperandType": 2
                 },
                 {
@@ -28770,168 +28790,6 @@
                 {
                     "Address": 573,
                     "ByteSize": 1
-                },
-                {
-                    "Address": 574,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 577,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 580,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 581,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 584,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 585,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 588,
-                    "ByteSize": 2,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 590,
-                    "ByteSize": 2
-                },
-                {
-                    "Address": 592,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 593,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 596,
-                    "ByteSize": 2,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 598,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 599,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 602,
-                    "ByteSize": 2
-                },
-                {
-                    "Address": 604,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 607,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 610,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 611,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 614,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 615,
-                    "ByteSize": 3,
-                    "OperandType": 1
-                },
-                {
-                    "Address": 618,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 619,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 620,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 621,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 622,
-                    "ByteSize": 3,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 625,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 626,
-                    "ByteSize": 3,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 629,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 630,
-                    "ByteSize": 3,
-                    "Flags": 8,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 633,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 634,
-                    "ByteSize": 3,
-                    "Flags": 8,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 637,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 638,
-                    "ByteSize": 3,
-                    "Flags": 8,
-                    "OperandType": 2
-                },
-                {
-                    "Address": 641,
-                    "ByteSize": 1
-                },
-                {
-                    "Address": 642,
-                    "ByteSize": 3,
-                    "Flags": 8,
-                    "OperandType": 2
                 }
             ],
             "CommentBlocks": [
@@ -29313,13 +29171,9 @@
                 },
                 {
                     "Address": 574,
-                    "LabelType": 2,
+                    "Global": true,
+                    "LabelType": 1,
                     "Name": "label_2E3E"
-                },
-                {
-                    "Address": 599,
-                    "LabelType": 2,
-                    "Name": "label_2E57"
                 },
                 {
                     "Address": 769,
@@ -30673,6 +30527,7 @@
                 {
                     "Address": 862,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -30704,6 +30559,7 @@
                 {
                     "Address": 876,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -37135,7 +36991,8 @@
                 },
                 {
                     "Address": 1000,
-                    "LabelType": 2,
+                    "Global": true,
+                    "LabelType": 1,
                     "Name": "label_43E8"
                 },
                 {
@@ -42357,7 +42214,7 @@
                 {
                     "Address": 401,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 404,
@@ -53326,7 +53183,6 @@
                 {
                     "Address": 996,
                     "ByteSize": 2,
-                    "Comment": "player bullet firing?",
                     "DataType": 2
                 },
                 {
