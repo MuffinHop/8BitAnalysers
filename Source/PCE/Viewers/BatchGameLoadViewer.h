@@ -25,11 +25,14 @@ private:
 	bool bLoadGame = false;
 	bool bPressRandomButtons = false;
 	bool bLoadExistingProject = false;
+	bool bExportAsm = false;
 	double NextButtonPressTime = DBL_MAX;
 	float InputDelay = 0.5f;
 	int GameIndex = 0;
 	int GameRunTime = 10;
 	double NextGameTime = DBL_MAX;
+	int NumAssembledOk = 0;
+	int NumFailedToAssemble = 0;
 
 	FPCEEmu* pPCEEmu = nullptr;
 };

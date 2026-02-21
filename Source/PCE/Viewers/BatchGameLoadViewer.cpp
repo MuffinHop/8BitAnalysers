@@ -33,6 +33,9 @@ void FBatchGameLoadViewer::StartAutomation()
 {
 	bAutomationActive = true;
 	bLoadGame = true;
+	NumAssembledOk = 0;
+	NumFailedToAssemble = 0;
+
 	if (bPressRandomButtons)
 		NextButtonPressTime = GetNextButtonPressTime();
 }
@@ -69,6 +72,7 @@ void FBatchGameLoadViewer::DrawUI()
 	ImGui::InputFloat("Input delay", &InputDelay);
 	
 	ImGui::Checkbox("Load existing project", &bLoadExistingProject);
+	ImGui::Checkbox("Export ASM after game has run", &bExportAsm);
 
 	float fGameTimeRemaining = 0;
 	if (bAutomationActive)
@@ -99,6 +103,14 @@ void FBatchGameLoadViewer::DrawUI()
 				}
 				else
 					bNextGame = true;
+
+				if (bExportAsm)
+				{
+					if (pPCEEmu->ExportAsmForCurrentGame())
+						NumAssembledOk++;
+					else
+						NumFailedToAssemble++;
+				}
 			}
 
 			if (bPressRandomButtons)
@@ -159,6 +171,9 @@ void FBatchGameLoadViewer::DrawUI()
 			ImGui::Text("(%d/%d) %s", GameIndex + 1, numGamesInList, game.DisplayName.c_str());
 			ImGui::InputInt("Game index", &GameIndex);
 		}
+
+		ImGui::Text("Assemble Success: %d", NumAssembledOk);
+		ImGui::Text("Assemble Failure: %d", NumFailedToAssemble);
 
 		if (ImGui::Button("Prev game") || ImGui::IsKeyPressed(ImGuiKey_F1))
 		{
