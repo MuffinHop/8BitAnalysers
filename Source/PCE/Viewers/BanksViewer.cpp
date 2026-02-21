@@ -165,7 +165,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 
 			ImGui::TableNextRow();
 
-			constexpr ImVec4 mappedColour(0.0f, 1.0f, 0.0f, 1.0f);
+			constexpr ImVec4 mappedColour(0.0f, 0.75f, 0.0f, 1.0f);
 			constexpr ImVec4 previouslyMappedColour(1.0f, 1.0f, 1.0f, 1.0f);
 			constexpr ImVec4 neverMappedColour(0.56f, 0.56f, 0.56f, 1.0f);
 			//constexpr ImVec4 neverMappedColour(0.28f, 0.28f, 0.28f, 1.0f);
@@ -177,7 +177,8 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 				colour = neverMappedColour;
 				if (pBank->bEverBeenMapped)
 				{
-					colour = pBank->Mapping != EBankAccess::None ? mappedColour : previouslyMappedColour;
+					//colour = pBank->Mapping != EBankAccess::None ? mappedColour : previouslyMappedColour;
+					colour = previouslyMappedColour;
 				}
 			}
 
@@ -185,7 +186,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 			ImGui::TableSetColumnIndex(0);
 
 			ImGuiSelectableFlags selectable_flags = ImGuiSelectableFlags_SpanAllColumns | ImGuiSelectableFlags_AllowOverlap | ImGuiSelectableFlags_AllowDoubleClick;
-			if (ImGui::Selectable("##mappingstate", true, selectable_flags, ImVec2(0, 0.f)))
+			if (ImGui::Selectable("##mappingstate", false, selectable_flags))
 			{
 				if (pBank->bEverBeenMapped)
 				{
@@ -231,6 +232,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 			}
 
 			// Content
+			// todo figure out why this doesn't work if the code analysis view is not active
 			ImGui::TableSetColumnIndex(4);
 			ImGui::TextColored(colour, pBank->bEverBeenMapped ? BankContentToString(GetBankContent(pBank->ItemList)) : "-");
 		}
