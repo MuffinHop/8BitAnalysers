@@ -359,7 +359,7 @@ void FEmuBase::FileMenu()
 		SaveProject();
 	}
 
-	if (pCurrentProjectConfig && ImGui::MenuItem("Export ASM File"))
+	if (pCurrentProjectConfig && ImGui::MenuItem("Export Physical Memory to ASM File"))
 	{
 		std::string exportPath;
 
@@ -383,7 +383,7 @@ void FEmuBase::FileMenu()
 		ExportAssembler(this, outputFname.c_str(), ExportStartAddress, ExportEndAddress);
 	}
 
-	if (ImGui::MenuItem("Export ASM Range"))
+	if (ImGui::MenuItem("Export Physical Memory ASM Range"))
 	{
 		bExportAsm = true;
 	}

@@ -150,6 +150,7 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 		{
 			int labelOffset = 0;
 			uint16_t labelAddress = 0;
+			std::vector<std::pair<FCodeAnalysisBank*, FLabelInfo*>> potentialLabels;
 			
 			for (int addrVal = val; addrVal >= 0; addrVal--)
 			{
@@ -161,8 +162,42 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 					break;
 				}
 
-				const FLabelInfo* pLabel = CodeAnalysisState->GetLabelForPhysicalAddress(addrVal);
-				const FLabelInfo* pScopeLabel = CodeAnalysisState->GetScopeLabelForPhysicalAddress(addrVal);
+				// sam todo: tidy this up. 
+				const FLabelInfo* pLabel = nullptr;
+				const FLabelInfo* pScopeLabel = nullptr;
+
+				// This address might not be in physical memory.
+				// Go through all banks with a matching address range and find candidates.
+				for (int b = 0; b < FCodeAnalysisState::BankCount; b++)
+				{
+					FCodeAnalysisBank& bank = CodeAnalysisState->GetBanks()[b];
+					if (bank.bEverBeenMapped)
+					{
+						const uint16_t start = bank.GetMappedAddress();
+						if (addrVal >= start && addrVal < start + bank.GetSizeBytes())
+						{
+							const FAddressRef addr(bank.Id, addrVal);
+							if (FLabelInfo* pTmpLabel = CodeAnalysisState->GetLabelForAddress(addr))
+							{
+								if (!pLabel)
+								{
+									pLabel = pTmpLabel;
+									pScopeLabel = CodeAnalysisState->GetScopeForAddress(addr);
+								}
+								potentialLabels.push_back(std::make_pair(&bank, pTmpLabel));
+							}
+						}
+					}
+				}
+
+				if (potentialLabels.size() > 1)
+				{
+					const FCodeAnalysisBank* pBank = CodeAnalysisState->GetBank(CurrentAddress.GetBankId());
+					LOGINFO("'%s': 0x%04x. Found %d labels for address 0x%x", pBank->Name.c_str(), CurrentAddress.GetAddress(), potentialLabels.size(), addrVal);
+					for (auto pair : potentialLabels)
+						LOGINFO("  %d '%s': '%s'", pair.first->Id, pair.first->Name.c_str(), pair.second->GetName());
+				}
+		
 				if (pLabel != nullptr)
 				{
 					std::string labelName = pLabel->GetName();
@@ -220,7 +255,11 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 			// referencing an address not in the disassembly but not null
 			if (labelAddress != 0 && (labelAddress < ExportMin || labelAddress > ExportMax))
 			{
-				LabelsOutsideRange.insert(labelAddress);
+				if (!potentialLabels.empty())
+				{
+					const FAddressRef addrRef(potentialLabels.front().first->Id, labelAddress);
+					LabelsOutsideRange.insert(addrRef);
+				}
 			}
 		}
 		else
@@ -268,7 +307,27 @@ uint8_t ExportDasmInputCB(void* pUserData)
 	FExportDasmState* pDasmState = (FExportDasmState*)pUserData;
 
 	const uint8_t val = pDasmState->CodeAnalysisState->ReadByte(pDasmState->CurrentAddress);
-	pDasmState->CurrentAddress.SetAddress(pDasmState->CurrentAddress.GetAddress() + 1);
+
+#ifndef NDEBUG
+	const int16_t oldBankId = pDasmState->CurrentAddress.GetBankId();
+#endif
+	
+	// sam. do we need to worry about ending up in another bank?
+	pDasmState->CodeAnalysisState->AdvanceAddressRef(pDasmState->CurrentAddress);
+	
+#ifndef NDEBUG
+	// sam. can we do this check somewhere else?
+	const uint16_t addr = pDasmState->CurrentAddress.GetAddress();
+	if (addr > pDasmState->ExportMax)
+	{
+		LOGERROR("Exporting past the export range. Current: 0x%x. Max: 0x%x", addr, pDasmState->ExportMax);
+	}
+
+	if (oldBankId != pDasmState->CurrentAddress.GetBankId())
+	{
+		LOGINFO("Advanced from bank %d to bank %d", oldBankId, pDasmState->CurrentAddress.GetBankId());
+	}
+#endif
 	return val;
 }
 

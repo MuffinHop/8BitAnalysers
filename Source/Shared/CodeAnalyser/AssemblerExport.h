@@ -9,6 +9,7 @@
 #include "Util/Misc.h"
 
 class FCodeAnalysisState;
+struct FCodeAnalysisBank;
 
 struct FAssemblerConfig
 {
@@ -32,9 +33,10 @@ public:
 	void		Output(const char* pFormat, ...);
 	virtual void	ExportDidBegin(){}
 	virtual void	ExportDidEnd(){}
-	virtual void	AddHeader(void){}
+	virtual void	AddHeader(void) {}
+	virtual void	AddBankSection(const FCodeAnalysisBank* pBank);
 	virtual void	ProcessLabelsOutsideExportedRange(void){}
-	bool		ExportAddressRange(uint16_t startAddr, uint16_t endAddr);
+	bool		ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr, uint16_t endAddr);
 
 	//std::string		GenerateAddressLabelString(FAddressRef addr);
 	void			ExportDataInfoASM(FAddressRef addr);
@@ -54,6 +56,8 @@ protected:
 	FILE* FilePtr = nullptr;
 	FEmuBase* pEmulator = nullptr;
 
+	std::set<FExportRange> ExportRanges;
+
 	FExportDasmState	DasmState;
 	std::string		HeaderText;
 	std::string		BodyText;
@@ -67,5 +71,8 @@ const std::map<std::string, FASMExporter*>&	GetAssemblerExporters();
 
 bool AddAssemblerExporter(const char* pName, FASMExporter* pExporter);
 
-// TODO: we should have a bank based approach?
+// Export physical address range
 bool ExportAssembler(class FEmuBase* pEmu, const char* pTextFileName, uint16_t startAddr, uint16_t endAddr);
+
+// Export selected banks. Passing in an empty bankList will export all banks. 
+bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, const std::vector<int16_t>& bankList = std::vector<int16_t>());

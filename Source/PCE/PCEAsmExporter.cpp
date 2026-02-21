@@ -7,22 +7,44 @@ class FPCEAsmExporterBase : public FASMExporter
 	public:
 		void ProcessLabelsOutsideExportedRange(void) override
 		{
-			FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
-
-			SetOutputToHeader();
-
-			Output("\n; HW Page Labels\n");
-
-			for (auto labelAddr : DasmState.LabelsOutsideRange)
+			if (!DasmState.LabelsOutsideRange.empty())
 			{
-				const FLabelInfo* pLabelInfo = state.GetLabelForPhysicalAddress(labelAddr);
-				if (pLabelInfo)
-					Output("%s: \t%s %s\n", pLabelInfo->GetName(), Config.EQUText, NumStr(labelAddr));
-				else
-					LOGINFO("Can't get label for address 0x%x", labelAddr);
+				std::set<FAddressRef> labels;
+
+				for (auto labelAddrRef : DasmState.LabelsOutsideRange)
+				{
+					bool bInRange = false;
+					for (const FExportRange& range : ExportRanges)
+					{
+						const uint16_t labelAddr = labelAddrRef.GetAddress();
+						if (labelAddr >= range.Min && labelAddr <= range.Max)
+						{
+							bInRange = true;
+							break;
+						}
+					}
+					if (!bInRange)
+					{
+						labels.insert(labelAddrRef);
+					}
+				}
+
+				FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
+				SetOutputToHeader();
+
+				Output("\n; Labels\n");
+
+				for (auto labelAddr : labels)
+				{
+					const FLabelInfo* pLabelInfo = state.GetLabelForAddress(labelAddr);
+					if (pLabelInfo)
+						Output("%s: \t%s %s\n", pLabelInfo->GetName(), Config.EQUText, NumStr(labelAddr.GetAddress()));
+					else
+						LOGINFO("Can't get label for address 0x%x", labelAddr);
+				}
+
+				Output("\n");
 			}
-			
-			Output("\n");
 		}
 		void	ExportDidEnd() override
 		{
@@ -30,7 +52,7 @@ class FPCEAsmExporterBase : public FASMExporter
 			FHuC6280DisassemblerConfig& config = GetHuC6280DisassemblerConfig();
 			config = GetHuC6280DisassemblerDefaultConfig();
 
-			// Update every code item to refresh the disassembly.
+			// Update every code item to refresh the disassembly back to the code analysis disassembly.
 			FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
 			int addr = 0x2000;
 			while (addr <= 0xffff)
@@ -56,7 +78,7 @@ public:
 		Config.DataBytePrefix = "db";
 		Config.DataWordPrefix = "dw";
 		Config.DataTextPrefix = "db";
-		Config.ORGText = "\torg";
+		Config.ORGText = "\t.org";
 		Config.EQUText = ".equ";
 
 		// PCEAS doesn't support labels with the function as a prefix, eg. EntryPoint.loop
@@ -78,6 +100,17 @@ public:
 	{
 		// needed?
 		//Output("\t.cpu 6280\n");
+	}
+	void AddBankSection(const FCodeAnalysisBank* pBank) override
+	{
+		FASMExporter::AddBankSection(pBank);
+
+		FPCEEmu* pPCEEmu = static_cast<FPCEEmu*>(pEmulator);
+		const uint8_t bankIndex = pPCEEmu->GetBankIndexForBankId(pBank->Id);
+		Output("\t.bank %d\n", bankIndex);
+
+		if (bankIndex == 0xff)
+			LOGERROR("Could not lookup bank index for bank id %d", pBank->Id);
 	}
 	std::string ZeroPagePrefix = "<";
 };

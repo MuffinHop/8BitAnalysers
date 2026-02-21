@@ -73,6 +73,8 @@ public:
 	ICPUEmulator* GetCPUEmulator(void) const override;
 	//ICPUInterface End
 
+	bool ExportAsmForCurrentGame();
+
 	const std::unordered_map<std::string, FGamesList>& GetGamesLists() const { return	GamesLists; }
 
 	const FPCEConfig* GetPCEGlobalConfig() { return (const FPCEConfig*)pGlobalConfig; }
@@ -97,6 +99,9 @@ public:
 
 	int16_t GetBankIdForMprSlot(uint8_t bankIndex, uint8_t mprIndex);
 	void MapMprBank(uint8_t mprIndex, uint8_t newBankIndex);
+	
+	// Get the PCE bank index (0-255) for a given bank id.
+	uint8_t GetBankIndexForBankId(uint16_t bankId);
 
 	void CheckDupeMprBankIds();
 
@@ -117,6 +122,8 @@ public:
 	// It is technically possible to map the same bank across the entire physical memory range.
 	// 8BA doesn't support a bank being mapped into >1 memory location at the same time, so 
 	// we need a set of banks that all point to the same memory.
+	// Todo: explore the idea of dupe banks sharing an item list.
+	// Actually this wouldn't work. The item list stores the address ref of each item.
 	struct FBankSet
 	{
 		void SetPrimaryMappedPage(FCodeAnalysisState& state, int bankSetIndex, uint16_t pageAddr);
@@ -125,7 +132,7 @@ public:
 		void SetBankFreed(uint8_t mprSlot);
 		void Reset();
 		void AddBankId(int16_t bankId);
-		int16_t GetBankId(int index) const;
+		int16_t GetBankId(int index = 0) const;
 
 		struct FBankSetEntry
 		{

@@ -57,6 +57,7 @@ bool FASMExporter::Init(const char* pFilename, FEmuBase* pEmu)
 	BodyText.clear();
 	DasmState.CodeAnalysisState = &pEmu->GetCodeAnalysis();
 	DasmState.HexDisplayMode = HexMode;
+	DasmState.LabelsOutsideRange.clear();
 
 	OldNumberMode = GetNumberDisplayMode();
 	SetNumberDisplayMode(HexMode);
@@ -101,6 +102,17 @@ void FASMExporter::Output(const char* pFormat, ...)
 	va_end(ap);
 }
 
+void FASMExporter::AddBankSection(const FCodeAnalysisBank* pBank)
+{
+	SetOutputToBody();
+
+	Output("\n;--------------------------------------------------------------------------------\n");
+	Output("; Bank name: %s\n", pBank->Name.c_str());
+	if (!pBank->Description.empty())
+		Output("; Bank description: %s\n", pBank->Description.c_str());
+	Output(";--------------------------------------------------------------------------------\n");
+}
+
 bool FASMExporter::IsLabelStubbed(const char* pLabelName) const
 {
 	const FProjectConfig* pConfig = pEmulator->GetProjectConfig();
@@ -114,7 +126,8 @@ bool FASMExporter::IsLabelStubbed(const char* pLabelName) const
 	return false;
 }
 
-uint16_t g_DbgAddress = 0xEA71;
+int16_t g_DbgBank = 76;
+uint16_t g_DbgAddress = 0x4000;
 
 void AppendCharToString(char ch, std::string& outString);
 
@@ -197,10 +210,11 @@ void FASMExporter::ExportDataInfoASM(FAddressRef addr)
 	{
 		const uint16_t val = state.ReadWord(addr);
 
-		const FLabelInfo* pLabel = (bOperandIsAddress && val != 0) ? state.GetLabelForPhysicalAddress(val) : nullptr;
+		const FLabelInfo* pLabel = (bOperandIsAddress && val != 0) ? state.GetLabelForAddress(addr) : nullptr;
 
 		if (pLabel != nullptr)
 		{
+			// todo: replace this physical address call
 			const FLabelInfo* pScopeLabel = pLabel->Global == false ? state.GetScopeLabelForPhysicalAddress(val) : nullptr;
 			const FLabelInfo* pCurrentScope = state.GetScopeForAddress(addr);
 
@@ -267,23 +281,28 @@ void FASMExporter::ExportDataInfoASM(FAddressRef addr)
 	}
 }
 
-bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
+bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr , uint16_t endAddr)
 {
+	if (itemList.empty())
+		return false;
+
 	FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
 
 	DasmState.ExportMin = startAddr;
 	DasmState.ExportMax = endAddr;
 	DasmState.pExporter = this;
-	DasmState.LabelsOutsideRange.clear();
+
+	// todo: extend the existing range instead of having multiple ranges?
+	ExportRanges.insert({ startAddr, endAddr });
 
 	// place an 'org' at the start
 	SetOutputToBody();
 
 	Output("%s %s\n", Config.ORGText, NumStr(startAddr));
 
-	uint16_t nextAddr = state.ItemList[0].AddressRef.GetAddress();
+	uint16_t nextAddr = itemList[0].AddressRef.GetAddress();
 
-	for (const FCodeAnalysisItem &item : state.ItemList)
+	for (const FCodeAnalysisItem &item : itemList)
 	{
 		const uint16_t addr = item.AddressRef.GetAddress();
 
@@ -319,11 +338,16 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 		{
 			const FCodeInfo* pCodeInfo = static_cast<FCodeInfo*>(item.Item);
 
+			// Sam. This breaks if we call it on a bank that is not mapped.
+			// It can end up setting the wrong bank's memory as code.
+			// todo: potentially rewrite using an address ref
 			WriteCodeInfoForAddress(state, addr);	// needed to refresh code info
+
+			//if (item.AddressRef.GetBankId() == g_DbgBank && addr == g_DbgAddress)
 			if (addr == g_DbgAddress)
 				LOGINFO("DebugAddress");
 
-			DasmState.CurrentAddress = state.AddressRefFromPhysicalAddress(addr);
+			DasmState.CurrentAddress = item.AddressRef;
 			DasmState.pCodeInfoItem = pCodeInfo;
 			DasmState.Text.clear();
 			DasmState.pCurrentScope = state.GetScopeForAddress(item.AddressRef);
@@ -372,9 +396,6 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 		Output("\n");
 	}
 
-	ProcessLabelsOutsideExportedRange();
-	
-	
 	return true;
 }
 
@@ -392,10 +413,66 @@ bool ExportAssembler(FEmuBase* pEmu, const char* pTextFileName, uint16_t startAd
 	pExporter->SetOutputToHeader();
 	pExporter->AddHeader();
 		
-	const bool bSuccess = pExporter->ExportAddressRange(startAddr,endAddr);
+	const bool bSuccess = pExporter->ExportAddressRange(state.ItemList, startAddr,endAddr);
 
+	pExporter->ProcessLabelsOutsideExportedRange();
 	pExporter->Finish();
 	return bSuccess;
+}
+
+bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, const std::vector<int16_t>& bankList)
+{
+	FCodeAnalysisState& state = pEmu->GetCodeAnalysis();
+	FASMExporter* pExporter = GetAssemblerExporter(state.pGlobalConfig->ExportAssembler.c_str());
+	if (pExporter == nullptr)
+		return false;
+
+	if (pExporter->Init(pTextFileName, pEmu) == false)
+		return false;
+
+	pExporter->SetOutputToHeader();
+	pExporter->AddHeader();
+
+	// Build bank list
+	std::vector<const FCodeAnalysisBank*> banks;
+	if (bankList.empty())
+	{
+		// Add all banks
+		for (int b = 0; b < FCodeAnalysisState::BankCount; b++)
+		{
+			FCodeAnalysisBank& bank = state.GetBanks()[b];
+			banks.emplace_back(&bank);
+		}
+	}
+	else
+	{
+		for (int16_t bankId : bankList)
+		{
+			if (const FCodeAnalysisBank* pBank = state.GetBank(bankId))
+			{
+				banks.emplace_back(pBank);
+			}
+		}
+	}
+
+	for (const FCodeAnalysisBank* pBank : banks)
+	{
+		if (pBank->PrimaryMappedPage != -1 && !pBank->bMachineROM && pBank->bEverBeenMapped)
+		{
+			LOGINFO("Exporting bank %03d '%s'", pBank->Id, pBank->Name.c_str());
+
+			pExporter->AddBankSection(pBank);
+			
+			const uint16_t startAddr = pBank->GetMappedAddress();
+			const uint16_t endAddr = pBank->GetMappedAddress() + pBank->GetSizeBytes() - 1;
+			pExporter->ExportAddressRange(pBank->ItemList, startAddr, endAddr);
+		}
+	}
+	
+	pExporter->ProcessLabelsOutsideExportedRange();
+
+	pExporter->Finish();
+	return true;
 }
 
 // Util functions

@@ -18,6 +18,7 @@
 #include "Viewers/SpriteViewer.h"
 #include "Viewers/VRAMViewer.h"
 #include "Viewers/PCEGraphicsViewer.h"
+#include "CodeAnalyser/AssemblerExport.h"
 #include "CodeAnalyser/UI/OverviewViewer.h"
 #include "CodeAnalyser/UI/GlobalsViewer.h"
 #include "Viewers/PCERegistersViewer.h"
@@ -63,7 +64,11 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 
 #ifndef NDEBUG
 //#define BANK_SWITCH_DEBUG
+#define ASSEMBLE_AFTER_ASM_EXPORT 1
+#else
+#define ASSEMBLE_AFTER_ASM_EXPORT 0
 #endif
+
 #ifdef BANK_SWITCH_DEBUG
 #define BANK_LOG(...)  LOGINFO("[BNK] " __VA_ARGS__)
 #define BANK_ERROR(...)  LOGERROR("[BNK] " __VA_ARGS__)
@@ -403,6 +408,21 @@ void FPCEEmu::OnInstructionExecuted(uint16_t pc)
 	PrevPC = pc;
 }
 
+// Bear in mind bankIds can be in multiple bank slots.
+// This will return the lowest bank index that matches the bankId.
+uint8_t FPCEEmu::GetBankIndexForBankId(uint16_t bankId)
+{
+	for (int i = 0; i < kNumBanks; i++)
+	{
+		if (Banks[i]->GetBankId() == bankId)
+			return i;
+	}
+
+	// Invalid index.
+	// This assumes that we will never ask for the bank index of the HW page
+	return 0xff;
+}
+
 void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 {
 	FCodeAnalysisState& state = CodeAnalysis;
@@ -463,7 +483,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		{
 			int& perGameCount = DebugStats.GamesWithDupeBanks[pCurrentProjectConfig->Name];
 			perGameCount = MAX(perGameCount, slotCount);
-			int& perBankCount = DebugStats.BankIdsWithDupes[Banks[newBankIndex]->GetBankId(0)];
+			int& perBankCount = DebugStats.BankIdsWithDupes[Banks[newBankIndex]->GetBankId()];
 			perBankCount = MAX(perBankCount, slotCount);
 		}
 	}
@@ -707,8 +727,9 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	// To the user, it should look like a normal memory location in the code analysis view.
 	for (int d = 0; d < kNumBankSetIds; d++)
 	{
+		// Creating as machine ROM, so it doesn't get exported by the asm exporter.
 		sprintf(bankName, "HW PAGE%s", bankPostFix[d].c_str());
-		BankSets[kBankHWPage].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pCore->GetMemory()->GetHWPageMemory(), false /*bMachineROM*/, 0x0));
+		BankSets[kBankHWPage].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pCore->GetMemory()->GetHWPageMemory(), true /*bMachineROM*/, 0x0));
 	}
 
 	// Working RAM
@@ -753,7 +774,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 		}
 	}
 
-	// Unused banks. Intentionally adding one for each mpr slot.
+	// Unused banks. One for each mpr slot.
 	for (int d = 0; d < kNumMprSlots; d++)
 	{
 		sprintf(bankName, "UNUSED %02d", d);
@@ -1071,7 +1092,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	LOGINFO("Load Project '%s'. bLoadGameData = %s", pGameConfig->Name.c_str(), bLoadGameData ? "True" : "False");
 
 	assert(pGameConfig != nullptr);
-	FPCEGameConfig *pPCEGameConfig = (FPCEGameConfig*)pGameConfig;
+	//FPCEGameConfig *pPCEGameConfig = (FPCEGameConfig*)pGameConfig;
 	
 	const std::string windowTitle = kAppTitle + " - " + pGameConfig->Name;
 	SetWindowTitle(windowTitle.c_str());
@@ -1203,7 +1224,9 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 		// Make a label for the entry point.
 		// Without this an exported asm file may not assemble.
-		AddLabel(CodeAnalysis, initialPC, "EntryPoint", ELabelType::Function);
+		char labelTxt[32];
+		snprintf(labelTxt, 32, "function_%04X_entry_point", initialPC.GetAddress());
+		AddLabel(CodeAnalysis, initialPC, labelTxt, ELabelType::Function);
 	}
 
 	//pGraphicsViewer->SetImagesRoot((pGlobalConfig->WorkspaceRoot + "/" + pGameConfig->Name + "/GraphicsSets/").c_str());
@@ -1242,18 +1265,20 @@ void FPCEEmu::AddLabels()
 			AddLabel(state, addr, name.c_str(), ELabelType::Function);
 		}
 	}
-
-	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(0), 0x2227), "joyena", ELabelType::Data, 1);
-	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(0), 0x2228), "joy", ELabelType::Data, 5);
-	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(0), 0x222d), "joytrg", ELabelType::Data, 5);
-	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(0), 0x2232), "joyold", ELabelType::Data, 5);
 #endif
+
+	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(), 0x2227), "joyena", ELabelType::Data, 1);
+	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(), 0x2228), "joy", ELabelType::Data, 5);
+	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(), 0x222d), "joytrg", ELabelType::Data, 5);
+	AddLabel(state, FAddressRef(BankSets[kBankWRAM0].GetBankId(), 0x2232), "joyold", ELabelType::Data, 5);
 
 	// Add labels for the memory mapped registers. These are locations in the hardware page memory bank. 
 	for (int i = 0; i < kDebugLabelCount; i++)
 	{
-		const FAddressRef addr = FAddressRef(BankSets[kBankHWPage].GetBankId(0), kDebugLabels[i].Address);
-		SetItemCode(state, addr);
+		const FAddressRef addr = FAddressRef(BankSets[kBankHWPage].GetBankId(), kDebugLabels[i].Address);
+		// This causes AnalyseAtPC to be called on memory addresses that are not code.
+		// An example of this is hello.pce at address 0xe001
+		//SetItemCode(state, addr);
 		const std::string name = std::string("_") + kDebugLabels[i].Label;
 		AddLabel(state, addr, kDebugLabels[i].Label, ELabelType::Data);
 	}
@@ -1354,7 +1379,80 @@ bool FPCEEmu::NewProjectFromEmulatorFile(const FEmulatorFile& snapshot)
 }
 
 void FPCEEmu::FileMenuAdditions(void)	
+{ 
+	if (ImGui::MenuItem("Export ASM For Banks"))
+	{
+		ExportAsmForCurrentGame();
+	}
+}
+
+// This only exports banks that have previously been mapped.
+// We won't know the correct mapped address otherwise.
+// todo: get this working on CD games
+bool FPCEEmu::ExportAsmForCurrentGame()
 {
+	if (pCurrentProjectConfig == nullptr)
+		return false;
+
+	std::string exportPath;
+
+	if (pCurrentProjectConfig->AsmExportPath.empty() == false)
+	{
+		exportPath = pCurrentProjectConfig->AsmExportPath;
+	}
+	else if (pGlobalConfig->DefaultAsmExportPath.empty() == false)
+	{
+		exportPath = pGlobalConfig->DefaultAsmExportPath;
+	}
+	else
+	{
+		exportPath = GetGameWorkspaceRoot();
+	}
+
+	if (exportPath.back() != '/')
+		exportPath += "/";
+
+	const std::string outputFname = exportPath + pCurrentProjectConfig->Name + ".asm";
+	std::vector<int16_t> banksToExport;
+	if (!pMedia->IsCDROM())
+	{
+		for (int i = 0; i < kBankCdRomRamStart; i++)
+		{
+			const int16_t bankId = Banks[i]->GetBankId();
+			if (std::find(banksToExport.begin(), banksToExport.end(), bankId) == banksToExport.end())
+			{
+				if (FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(bankId))
+				{
+					if (pBank->bEverBeenMapped)
+						banksToExport.push_back(Banks[i]->GetBankId());
+				}
+			}
+		}
+
+	}
+	
+	if (!ExportAssemblerForBanks(this, outputFname.c_str(), banksToExport))
+	{
+		return false;
+	}
+
+#if ASSEMBLE_AFTER_ASM_EXPORT
+	printf("--------------------------------------------------------------------------------------------------------\n");
+	LOGINFO("Assembling: %s", outputFname.c_str());
+
+	char cmdTxt[256];
+	snprintf(cmdTxt, 256, "pceas.exe \"%s\"", outputFname.c_str());
+	const int result = std::system(cmdTxt);
+
+	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), !result ? "SUCESS" : "FAILURE");
+	LOGINFO("Error code: %d", result);
+
+	printf("--------------------------------------------------------------------------------------------------------\n");
+
+	return result == 0 ? true: false;
+#else
+	return true;
+#endif
 }
 
 void FPCEEmu::SystemMenuAdditions(void)
@@ -1591,7 +1689,7 @@ void FPCEEmu::FBankSet::AddBankId(int16_t bankId)
 	Banks.push_back(FBankSetEntry({ bankId, false }));
 }
 	
-int16_t FPCEEmu::FBankSet::GetBankId(int index) const
+int16_t FPCEEmu::FBankSet::GetBankId(int index /* = 0 */) const
 {
 	assert(!Banks.empty());
 	if (index >= Banks.size())

@@ -53,6 +53,14 @@ public:
 uint8_t AnalysisDasmInputCB(void* pUserData);
 void AnalysisOutputCB(char c, void* pUserData);
 
+struct FExportRange
+{
+	bool operator<(const FExportRange& other) const { return Min < other.Min; }
+
+	uint16_t Min;
+	uint16_t Max;
+};
+
 class FExportDasmState : public FDasmStateBase
 {
 public:
@@ -69,7 +77,7 @@ public:
 	uint16_t	ExportMin = 0;
 	uint16_t	ExportMax = 0xffff;
 
-	std::set<uint16_t>	LabelsOutsideRange;
+	std::set<FAddressRef>	LabelsOutsideRange;
 };
 
 uint8_t ExportDasmInputCB(void* pUserData);
