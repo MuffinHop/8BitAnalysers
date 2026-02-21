@@ -415,7 +415,13 @@ uint8_t FPCEEmu::GetBankIndexForBankId(uint16_t bankId)
 	for (int i = 0; i < kNumBanks; i++)
 	{
 		if (Banks[i]->GetBankId() == bankId)
-			return i;
+		{
+			const Memory::MemoryBankType bankType = pMemory->GetBankType(i);
+			if (bankType == Memory::MEMORY_BANK_TYPE_ROM || bankType == Memory::MEMORY_BANK_TYPE_BIOS)
+				return pMedia->GetRomBankIndex(i);
+			else if (bankType == Memory::MEMORY_BANK_TYPE_CARD_RAM)
+				return i - pMemory->GetCardRAMStart();
+		}
 	}
 
 	// Invalid index.
@@ -1438,7 +1444,9 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 
 #if ASSEMBLE_AFTER_ASM_EXPORT
 	printf("--------------------------------------------------------------------------------------------------------\n");
-	LOGINFO("Assembling: %s", outputFname.c_str());
+	printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
+
+	LOGINFO("Assembling: %s. [%d banks]", outputFname.c_str(), (int)banksToExport.size());
 
 	char cmdTxt[256];
 	snprintf(cmdTxt, 256, "pceas.exe \"%s\"", outputFname.c_str());
