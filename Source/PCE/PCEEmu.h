@@ -14,14 +14,22 @@ class FPCEViewer;
 class FBatchGameLoadViewer;
 class FSpriteViewer;
 class FVRAMViewer;
-//class HuC6280_State;
+class FPCEEmu;
+
+struct FGameDebugStats
+{
+	int NumDupeBanks = 0;
+	int NumBanks = 0;
+	int NumBanksMapped = 0;
+};
 
 struct FEmuDebugStats
 {
-	void Reset()
-	{
-	}
-	std::map<std::string, int> GamesWithDupeBanks;
+	void Reset();
+	void InitForGame(FPCEEmu* pEmu, const std::string& gameName);
+
+	// Debug stats for each game. Uses project name as key
+	std::map<std::string, FGameDebugStats> GameDebugStats;
 	std::map<uint16_t, int> BankIdsWithDupes;
 };
 

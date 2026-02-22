@@ -72,11 +72,12 @@ void FDebugStatsViewer::DrawUI()
 
 	int maxDupeBanks = 0;
 	std::string gameWithMaxDupes;
-	for (auto pair : pPCEEmu->DebugStats.GamesWithDupeBanks)
+	for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
 	{
-		if (pair.second > maxDupeBanks)
+		const FGameDebugStats& debugStats = pair.second;
+		if (debugStats.NumDupeBanks > maxDupeBanks)
 		{
-			maxDupeBanks = pair.second;
+			maxDupeBanks = debugStats.NumDupeBanks;
 			gameWithMaxDupes = pair.first;
 		}
 	}
@@ -95,14 +96,35 @@ void FDebugStatsViewer::DrawUI()
 	ImGui::Text("Max dupe banks: %d", maxDupeBanks);
 	ImGui::Text("Num bank sets: %d", pPCEEmu->kNumBankSetIds);
 
-	if (ImGui::TreeNode("Dupe Banks"))
-	{
-		ImGui::Text("Bank ids with dupes:", maxDupeBanks);
+	std::vector<std::string> gamesWithAllBanksMapped;
 
-		for (auto it : pPCEEmu->DebugStats.BankIdsWithDupes)
+
+	if (ImGui::TreeNode("Game Stats"))
+	{
+		if (ImGui::Button("Reset"))
 		{
-			const FCodeAnalysisBank* pBank = state.GetBank(it.first);
-			ImGui::Text("  %d '%s': %d", it.first, pBank ? pBank->Name.c_str() : "null", it.second);
+			pPCEEmu->DebugStats.Reset();
+		}
+
+		for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
+		{
+			const FGameDebugStats& debugStats = pair.second;
+			ImGui::Text("%s", pair.first.c_str());
+			ImGui::Text("  Num Banks:        %d", debugStats.NumBanks);
+			ImGui::Text("  Num Banks Mapped: %d / %d", debugStats.NumBanksMapped, debugStats.NumBanks);
+			ImGui::Text("  Num Dupe Banks:   %d", debugStats.NumDupeBanks);
+
+			if (debugStats.NumBanksMapped == debugStats.NumBanks)
+				gamesWithAllBanksMapped.push_back(pair.first);
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Games with all banks mapped"))
+	{
+		for (std::string& str : gamesWithAllBanksMapped)
+		{
+			ImGui::Text("%s", str.c_str());
 		}
 		ImGui::TreePop();
 	}
