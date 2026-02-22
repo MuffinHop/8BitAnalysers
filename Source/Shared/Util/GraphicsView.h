@@ -41,6 +41,8 @@ public:
 	// image is arranged chat by char
 	void Draw1BppImageFromCharsAt(const uint8_t* pSrc, int xp, int yp, int widthChars, int heightChars, const uint32_t* cols);
 
+	void Draw4bpp16x16PlanarSpriteImage(const uint8_t* pSrc, int xp, int yp, int width, int height, const uint32_t* cols);
+
     void DrawOtherGraphicsViewScaled(const FGraphicsView* pView, int xp, int yp, int xsize, int ysize);
     
 	uint32_t* GetPixelBuffer() { return PixelBuffer; }
