@@ -410,8 +410,8 @@
             "StartAddress": 31522816,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -498,8 +498,8 @@
             "StartAddress": 125042688,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -1001,7 +1001,7 @@
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -5195,8 +5195,8 @@
             "StartAddress": 1540816898,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -6301,6 +6301,7 @@
                 {
                     "Address": 450,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -6431,6 +6432,7 @@
                 {
                     "Address": 509,
                     "ByteSize": 3,
+                    "Comment": "tamper check?",
                     "Flags": 8,
                     "OperandType": 2
                 },
@@ -7534,12 +7536,12 @@
                     "Address": 481,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_01E1"
+                    "Name": "TamperCheck_01E1"
                 },
                 {
                     "Address": 503,
                     "LabelType": 2,
-                    "Name": "label_01F7"
+                    "Name": "checksum_loop"
                 },
                 {
                     "Address": 513,
@@ -10309,11 +10311,14 @@
                 {
                     "Address": 903,
                     "ByteSize": 2,
+                    "Flags": 32,
                     "OperandType": 2
                 },
                 {
                     "Address": 905,
                     "ByteSize": 4,
+                    "Comment": "0x0209",
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -10333,12 +10338,13 @@
                 {
                     "Address": 915,
                     "ByteSize": 1,
-                    "Comment": "inc param"
+                    "Comment": "inc param for player 2"
                 },
                 {
                     "Address": 916,
                     "ByteSize": 1,
-                    "Flags": 8,
+                    "Comment": "draw player <n>",
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
@@ -10357,7 +10363,8 @@
                 },
                 {
                     "Address": 923,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "command 7 - ?"
                 },
                 {
                     "Address": 925,
@@ -10373,11 +10380,12 @@
                 {
                     "Address": 928,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 931,
                     "ByteSize": 1,
+                    "Comment": "draw 'ready' string",
                     "Flags": 8,
                     "OperandType": 2
                 },
@@ -10648,7 +10656,7 @@
                 {
                     "Address": 916,
                     "LabelType": 2,
-                    "Name": "label_0794"
+                    "Name": "draw_player_num"
                 },
                 {
                     "Address": 923,
@@ -12814,7 +12822,6 @@
                 {
                     "Address": 343,
                     "ByteSize": 3,
-                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -12854,6 +12861,7 @@
                 {
                     "Address": 363,
                     "ByteSize": 3,
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -12954,7 +12962,8 @@
                 },
                 {
                     "Address": 400,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Flags": 32
                 },
                 {
                     "Address": 402,
@@ -12978,7 +12987,8 @@
                 {
                     "Address": 408,
                     "ByteSize": 1,
-                    "Comment": "char"
+                    "Comment": "char",
+                    "Flags": 32
                 },
                 {
                     "Address": 409,
@@ -21191,7 +21201,7 @@
                 {
                     "Address": 496,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 499,
@@ -35042,7 +35052,7 @@
                     "Address": 13,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_3C0D"
+                    "Name": "ResetEnemyData"
                 },
                 {
                     "Address": 37,
@@ -41672,6 +41682,7 @@
                 {
                     "Address": 174,
                     "ByteSize": 3,
+                    "Comment": "harmless tamper fail action",
                     "OperandType": 1
                 },
                 {
@@ -43521,7 +43532,7 @@
                 {
                     "Address": 168,
                     "LabelType": 2,
-                    "Name": "label_4CA8"
+                    "Name": "tamper_check_loop"
                 },
                 {
                     "Address": 180,
@@ -53191,12 +53202,12 @@
                 {
                     "Address": 998,
                     "ByteSize": 2,
-                    "Comment": "return address?",
                     "DataType": 2
                 },
                 {
                     "Address": 1000,
                     "ByteSize": 2,
+                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
