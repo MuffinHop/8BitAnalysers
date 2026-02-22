@@ -477,21 +477,38 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	}
 
 #ifndef NDEBUG
-	int slotCount = 0;
-	for (int i = 0; i < kNumMprSlots; i++)
+	// Keep track of bank related debug stats
+	if (pCurrentProjectConfig)
 	{
-		if (pMemory->GetMpr(i) == newBankIndex)
-			slotCount++;
-	}
-	if (slotCount > 1)
-	{
-		if (pCurrentProjectConfig)
+		// Track banks mapped to multiple physical memory ranges
+		int slotCount = 0;
+		for (int i = 0; i < kNumMprSlots; i++)
 		{
-			int& perGameCount = DebugStats.GamesWithDupeBanks[pCurrentProjectConfig->Name];
+			if (pMemory->GetMpr(i) == newBankIndex)
+				slotCount++;
+		}
+	
+		FGameDebugStats& debugStats = DebugStats.GameDebugStats[pCurrentProjectConfig->Name];
+		if (slotCount > 1)
+		{
+			int& perGameCount = debugStats.NumDupeBanks;
 			perGameCount = MAX(perGameCount, slotCount);
 			int& perBankCount = DebugStats.BankIdsWithDupes[Banks[newBankIndex]->GetBankId()];
 			perBankCount = MAX(perBankCount, slotCount);
 		}
+
+		// Track number of banks ever mapped
+		std::set<uint16_t> bankIdsPreviouslyMapped;
+		for (int i = 0; i < kBankCdRomRamStart; i++)
+		{
+			const int16_t bankId = Banks[i]->GetBankId(0);
+			if (FCodeAnalysisBank* pBank = state.GetBank(bankId))
+			{
+				if (pBank->bEverBeenMapped)
+					bankIdsPreviouslyMapped.insert(bankId);
+			}
+		}
+		debugStats.NumBanksMapped = bankIdsPreviouslyMapped.size();
 	}
 #endif
 
@@ -1098,7 +1115,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	LOGINFO("Load Project '%s'. bLoadGameData = %s", pGameConfig->Name.c_str(), bLoadGameData ? "True" : "False");
 
 	assert(pGameConfig != nullptr);
-	//FPCEGameConfig *pPCEGameConfig = (FPCEGameConfig*)pGameConfig;
+	pCurrentProjectConfig = nullptr;
 	
 	const std::string windowTitle = kAppTitle + " - " + pGameConfig->Name;
 	SetWindowTitle(windowTitle.c_str());
@@ -1216,7 +1233,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	GenerateGlobalInfo(CodeAnalysis);
 	CodeAnalysis.SetAddressRangeDirty();
 
-	DebugStats.Reset();
+	DebugStats.InitForGame(this, pGameConfig->Name);
 
 	CodeAnalysis.Debugger.Break();
 	PrevPC = p6280State->PC->GetValue();
@@ -1720,4 +1737,19 @@ bool FPCEEmu::FBankSet::ClaimSpecificBank(int16_t bankId)
 		}
 	}
 	return false;
+}
+
+void FEmuDebugStats::InitForGame(FPCEEmu* pEmu, const std::string& gameName)
+{
+	const bool bIsCdRom = pEmu->GetMedia()->IsCDROM();
+	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pEmu->GetMedia()->GetROMSize();
+	const int romBankCount = (romSize / 0x2000) + (romSize % 0x2000 ? 1 : 0);
+
+	GameDebugStats[gameName].NumBanks = romBankCount;
+}
+
+void FEmuDebugStats::Reset()
+{
+	GameDebugStats.clear();
+	BankIdsWithDupes.clear();
 }
