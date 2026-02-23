@@ -1565,8 +1565,8 @@
             "StartAddress": 380567552,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -4949,8 +4949,8 @@
             "StartAddress": 1452539906,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
