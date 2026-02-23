@@ -241,7 +241,9 @@ void HuC6270::WriteRegister(u16 address, u8 value)
                             u16 vram_addr = m_register[HUC6270_REG_MAWR] & 0x7FFF;
                             u16 value = m_register[HUC6270_REG_VWR];
 
-                            m_vram_write_callback(m_callback_context, vram_addr, value); 
+														// sam. added guard here. I have seen games write into m_huc6270_2 - which doesn't have a callback set for it.
+														if (m_vram_write_callback)
+															m_vram_write_callback(m_callback_context, vram_addr, value); 
                             m_vram[vram_addr] = value;
                         }
 

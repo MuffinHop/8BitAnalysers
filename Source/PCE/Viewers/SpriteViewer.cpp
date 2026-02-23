@@ -94,51 +94,55 @@ void FSpriteViewer::UpdateSpriteBuffers()
 				const int tile_x_offset = tile_x * 64;
 				const int line = line_start + tile_x_offset + mode1_offset;
 
-				const u16 plane1 = vram[line + 0];
-				const u16 plane2 = vram[line + 16];
-				const u16 plane3 = mode1 ? 0 : vram[line + 32];
-				const u16 plane4 = mode1 ? 0 : vram[line + 48];
-
-				const int pixel_x = 15 - (flipped_x & 0xF);
-				u16 pixel = ((plane1 >> pixel_x) & 0x01) | (((plane2 >> pixel_x) & 0x01) << 1) | (((plane3 >> pixel_x) & 0x01) << 2) | (((plane4 >> pixel_x) & 0x01) << 3);
-				pixel |= (palette << 4);
-				pixel |= 0x100;
-
-				const int color = color_table[pixel & 0x1FF];
-				u8 green = ((color >> 6) & 0x07) * 255 / 7;
-				u8 red = ((color >> 3) & 0x07) * 255 / 7;
-				u8 blue = (color & 0x07) * 255 / 7;
-
-				if (!(pixel & 0x0F))
+				// sam. was crashing here going out of bounds 
+				if ((line + 48) < HUC6270_VRAM_SIZE)
 				{
-					if (BackgroundColour == 0)
-					{
-						// Grey
-						red = 128;
-						green = 128;
-						blue = 128;
-					}
-					else if (BackgroundColour == 1)
-					{
-						// Black
-						red = 0;
-						green = 0;
-						blue = 0;
-					}
-					else
-					{
-						// Magenta
-						red = 255;
-						green = 0;
-						blue = 255;
-					}
-				}
+					const u16 plane1 = vram[line + 0];
+					const u16 plane2 = vram[line + 16];
+					const u16 plane3 = mode1 ? 0 : vram[line + 32];
+					const u16 plane4 = mode1 ? 0 : vram[line + 48];
 
-				int pixel_index = ((y * width) + x) << 2;
-				SpriteBuffers[i][pixel_index + 0] = red;
-				SpriteBuffers[i][pixel_index + 1] = green;
-				SpriteBuffers[i][pixel_index + 2] = blue;
-				SpriteBuffers[i][pixel_index + 3] = 255;
+					const int pixel_x = 15 - (flipped_x & 0xF);
+					u16 pixel = ((plane1 >> pixel_x) & 0x01) | (((plane2 >> pixel_x) & 0x01) << 1) | (((plane3 >> pixel_x) & 0x01) << 2) | (((plane4 >> pixel_x) & 0x01) << 3);
+					pixel |= (palette << 4);
+					pixel |= 0x100;
+
+					const int color = color_table[pixel & 0x1FF];
+					u8 green = ((color >> 6) & 0x07) * 255 / 7;
+					u8 red = ((color >> 3) & 0x07) * 255 / 7;
+					u8 blue = (color & 0x07) * 255 / 7;
+
+					if (!(pixel & 0x0F))
+					{
+						if (BackgroundColour == 0)
+						{
+							// Grey
+							red = 128;
+							green = 128;
+							blue = 128;
+						}
+						else if (BackgroundColour == 1)
+						{
+							// Black
+							red = 0;
+							green = 0;
+							blue = 0;
+						}
+						else
+						{
+							// Magenta
+							red = 255;
+							green = 0;
+							blue = 255;
+						}
+					}
+
+					int pixel_index = ((y * width) + x) << 2;
+					SpriteBuffers[i][pixel_index + 0] = red;
+					SpriteBuffers[i][pixel_index + 1] = green;
+					SpriteBuffers[i][pixel_index + 2] = blue;
+					SpriteBuffers[i][pixel_index + 3] = 255;
+				}
 			}
 		}
 	}
