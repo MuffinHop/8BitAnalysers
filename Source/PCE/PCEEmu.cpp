@@ -1435,7 +1435,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 	if (exportPath.back() != '/')
 		exportPath += "/";
 
-	const std::string outputFname = exportPath + pCurrentProjectConfig->Name + ".asm";
+	const std::string outputAsmFname = exportPath + pCurrentProjectConfig->Name + ".asm";
 	std::vector<int16_t> banksToExport;
 	if (!pMedia->IsCDROM())
 	{
@@ -1454,27 +1454,75 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 
 	}
 	
-	if (!ExportAssemblerForBanks(this, outputFname.c_str(), banksToExport))
+	if (!ExportAssemblerForBanks(this, outputAsmFname.c_str(), banksToExport))
 	{
 		return false;
 	}
 
 #if ASSEMBLE_AFTER_ASM_EXPORT
+#ifdef _WIN32
 	printf("--------------------------------------------------------------------------------------------------------\n");
 	printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
 
-	LOGINFO("Assembling: %s. [%d banks]", outputFname.c_str(), (int)banksToExport.size());
+	LOGINFO("Assembling: %s. [%d banks]", outputAsmFname.c_str(), (int)banksToExport.size());
 
+	// todo:export to temp directory?
+	const std::string outputPceFname = RemoveFileExtension(outputAsmFname.c_str()) + ".pce";
+
+	// This presumes pceas.exe is in your windows path.
 	char cmdTxt[256];
-	snprintf(cmdTxt, 256, "pceas.exe \"%s\"", outputFname.c_str());
+	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\"", outputAsmFname.c_str());
 	const int result = std::system(cmdTxt);
 
 	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), !result ? "SUCESS" : "FAILURE");
-	LOGINFO("Error code: %d", result);
+	//LOGINFO("Error code: %d", result);
 
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
+	size_t newFileSize = 0;
+	{
+		void* pData = LoadBinaryFile(outputPceFname.c_str(), newFileSize);
+		if (pData == nullptr)
+		{
+			LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
+		}
+		else
+		{
+			LOGINFO("Produced .pce is %d bytes", newFileSize);
+			free(pData);
+		}
+	}
+
+	size_t origFileSize = 0;
+	{
+		auto findIt = GamesLists.find(pCurrentProjectConfig->EmulatorFile.ListName);
+		if (findIt != GamesLists.end())
+		{
+			const std::string origFname = findIt->second.GetRootDir() + pCurrentProjectConfig->EmulatorFile.FileName;
+			void* pData = LoadBinaryFile(origFname.c_str(), newFileSize);
+			if (pData == nullptr)
+			{
+				LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
+			}
+			else
+			{
+				LOGINFO("Original .pce is %d bytes", newFileSize);
+				free(pData);
+			}
+		}
+	}
+
+	if (newFileSize == origFileSize)
+	{
+		LOGINFO(".pce files are the same size! :)");
+	}
+	else
+	{
+		LOGINFO(".pce files size do not match");
+	}
+
 	return result == 0 ? true: false;
+#endif
 #else
 	return true;
 #endif
