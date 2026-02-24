@@ -66,6 +66,9 @@ bool FTimePilotMachine::InitMachine(const FArcadeZ80MachineDesc& desc)
 		(4 << 4) |	// medium difficulty
 		(1 << 7);	// demo sounds on 
 
+	DSW0 = 0xff;
+	DSW1 = 0xff;
+
 	pDebug = CreateTimePilotDebug(this);
 
 	return true;
