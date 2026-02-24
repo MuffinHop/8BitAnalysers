@@ -251,6 +251,8 @@ void DrawFunctionDetails(FCodeAnalysisState& state, FFunctionInfo* pFunctionInfo
 	{
 		ImGui::SameLine();
 		ImGui::Checkbox("Stub Implemented", &pFunctionInfo->bStubImplemented);
+		ImGui::SameLine();
+		ImGui::Checkbox("Comment Out Function", &pFunctionInfo->bCommentedOut);
 	}
 
 	bChanged |= DrawFunctionParamTable(state,"Parameters", pFunctionInfo->Params, historyOffset);

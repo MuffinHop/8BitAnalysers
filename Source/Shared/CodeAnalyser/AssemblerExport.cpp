@@ -177,6 +177,28 @@ void FASMExporter::OutputDataItemBytes(FAddressRef addr, const FDataInfo* pDataI
 	Output("%s %s", Config.DataBytePrefix, textString.c_str());
 }
 
+int FASMExporter::OutputOpcodeBytes(FAddressRef addr, const FCodeInfo* pCodeInfo)
+{
+	FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
+	std::string textString;
+	FAddressRef byteAddress = addr;
+	for (int i = 0; i < pCodeInfo->ByteSize; i++)
+	{
+		const uint8_t val = state.ReadByte(byteAddress);
+		char valTxt[16];
+
+		snprintf(valTxt, 16, "%s", NumStr(val, HexMode));
+
+		textString += valTxt;
+		if (i < pCodeInfo->ByteSize - 1)
+			textString += ',';
+
+		state.AdvanceAddressRef(byteAddress, 1);
+	}
+	Output("%s %s", Config.DataBytePrefix, textString.c_str());
+	return textString.size();
+}
+
 void FASMExporter::ExportDataInfoASM(FAddressRef addr)
 {
 	FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
@@ -367,6 +389,7 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 		case EItemType::Code:
 		{
 			const FCodeInfo* pCodeInfo = static_cast<FCodeInfo*>(item.Item);
+			FFunctionInfo* pFunc = pEmulator->GetCodeAnalysis().pFunctions->FindFunction(item.AddressRef);
 
 			WriteCodeInfoForAddress(state, addr);	// needed to refresh code info
 			if (addr == g_DbgAddress)
@@ -382,8 +405,23 @@ bool FASMExporter::ExportAddressRange(uint16_t startAddr , uint16_t endAddr)
 
 			Markup::SetCodeInfo(pCodeInfo);
 			const std::string expString = Markup::ExpandString(state,DasmState.Text.c_str());
-			Output("\t%s", expString.c_str());
 
+			if (pFunc != nullptr && pFunc->bCommentedOut)
+			{
+				Output("\t");
+				int stringSize = OutputOpcodeBytes(item.AddressRef, pCodeInfo);
+				int noTabs = (24 - stringSize) / 4;
+
+				for (int i = 0; i < noTabs; i++)
+					Output("\t");
+
+				// Show commented out instruction for reference
+				Output("; %s", expString.c_str());
+			}
+			else
+			{
+				Output("\t%s", expString.c_str());
+			}
 			/*if (pCodeInfo->OperandAddress.IsValid())
 			{
 				const std::string labelStr = GenerateAddressLabelString(pCodeInfo->OperandAddress);

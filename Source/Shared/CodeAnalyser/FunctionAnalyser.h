@@ -107,6 +107,7 @@ struct FFunctionInfo : FMemoryRegion
 	bool bROMFunction = false;
 	bool bStubbedOut = false;
 	bool bStubImplemented = false;
+	bool bCommentedOut = false;
 
 	bool IsVisited() const { return StartAddress != EndAddress; }
 

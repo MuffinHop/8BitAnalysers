@@ -141,6 +141,7 @@ bool ExportAnalysisJson(FCodeAnalysisState& state, const char* pJsonFileName, EE
 		functionJson["bManualEdit"] = function.bManualEdit;
 		functionJson["bStubbedOut"] = function.bStubbedOut;
 		functionJson["bStubImplemented"] = function.bStubImplemented;
+		functionJson["bCommentedOut"] = function.bCommentedOut;
 
 		// output params
 		for (const auto& param : function.Params)
@@ -429,6 +430,8 @@ bool ImportAnalysisJson(FCodeAnalysisState& state, const char* pJsonFileName)
 				function.bStubbedOut = functionJson["bStubbedOut"];
 			if (functionJson.contains("bStubImplemented"))
 				function.bStubImplemented = functionJson["bStubImplemented"];
+			if (functionJson.contains("bCommentedOut"))
+				function.bCommentedOut = functionJson["bCommentedOut"];
 
 			// read params
 			if(functionJson.contains("Params"))

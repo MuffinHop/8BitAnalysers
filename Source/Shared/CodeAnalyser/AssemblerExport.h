@@ -43,7 +43,8 @@ public:
 	bool			IsLabelStubbed(const char* pLabelName) const;
 
 protected:
-	void				OutputDataItemBytes(FAddressRef addr, const FDataInfo* pDataInfo);
+	void			OutputDataItemBytes(FAddressRef addr, const FDataInfo* pDataInfo);
+	int				OutputOpcodeBytes(FAddressRef addr, const FCodeInfo* pCodeInfo);
 	ENumberDisplayMode	GetNumberDisplayModeForDataItem(const FDataInfo* pDataInfo);
 
 	bool			bInitialised = false;
