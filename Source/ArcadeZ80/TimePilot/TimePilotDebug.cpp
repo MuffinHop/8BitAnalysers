@@ -416,6 +416,7 @@ void FTimePilotDebug::StringViewer()
 
 	}
 
+	float scale = ImGui_GetScaling();
 	ImVec2 pos = ImGui::GetCursorScreenPos();
 	ImDrawList* pDrawList = ImGui::GetWindowDrawList();
 	pCharacterView->Draw();
@@ -424,16 +425,17 @@ void FTimePilotDebug::StringViewer()
 	if (ImGui::IsItemHovered())
 	{
 		ImVec2 mousePos = ImGui::GetIO().MousePos;
-		int localX = (int)(mousePos.x - pos.x);
-		int localY = (int)(mousePos.y - pos.y);
-		int charX = localX / 8;
-		int charY = localY / 8;
-		int characterNo = charX + (charY * 16);
+		float localX = mousePos.x - pos.x;
+		float localY = mousePos.y - pos.y;
+		const float charSize = (8 * scale);
+		const int charX = localX / charSize;
+		const int charY = localY / charSize;
+		const int characterNo = charX + (charY * 16);
 		ImGui::BeginTooltip();
 		ImGui::Text("Character No: %d (%02Xh)", characterNo, characterNo);
 		ImGui::EndTooltip();
 		// draw a rectangle round the character
-		pDrawList->AddRect(ImVec2(pos.x + charX * 8, pos.y + charY * 8), ImVec2(pos.x + (charX + 1) * 8, pos.y + (charY + 1) * 8), IM_COL32(255, 255, 0, 255));
+		pDrawList->AddRect(ImVec2(pos.x + charX * charSize, pos.y + charY * charSize), ImVec2(pos.x + (charX + 1) * charSize, pos.y + (charY + 1) * charSize), IM_COL32(255, 255, 0, 255));
 	}
 
 	if (ImGui::Button("Export Characters"))
