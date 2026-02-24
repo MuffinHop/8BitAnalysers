@@ -196,7 +196,7 @@ int FASMExporter::OutputOpcodeBytes(FAddressRef addr, const FCodeInfo* pCodeInfo
 		state.AdvanceAddressRef(byteAddress, 1);
 	}
 	Output("%s %s", Config.DataBytePrefix, textString.c_str());
-	return textString.size();
+	return (int)textString.size();
 }
 
 void FASMExporter::ExportDataInfoASM(FAddressRef addr)
