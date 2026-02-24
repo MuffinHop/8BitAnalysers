@@ -106,13 +106,27 @@ void FDebugStatsViewer::DrawUI()
 			pPCEEmu->DebugStats.Reset();
 		}
 
+		bool bDump = false;
+		if (ImGui::Button("Dump"))
+		{
+			bDump = true;
+		}
+
 		for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
 		{
 			const FGameDebugStats& debugStats = pair.second;
 			ImGui::Text("%s", pair.first.c_str());
 			ImGui::Text("  Num Banks:        %d", debugStats.NumBanks);
-			ImGui::Text("  Num Banks Mapped: %d / %d", debugStats.NumBanksMapped, debugStats.NumBanks);
+			ImGui::TextColored(debugStats.NumBanksMapped == debugStats.NumBanks ? ImVec4(0.f, 0.75f, 0.f, 1.0f) : ImVec4(1.f, 1.0f, 1.f, 1.0f), "  Num Banks Mapped: %d / %d", debugStats.NumBanksMapped, debugStats.NumBanks);
 			ImGui::Text("  Num Dupe Banks:   %d", debugStats.NumDupeBanks);
+
+			if (bDump)
+			{
+				LOGINFO("%s", pair.first.c_str());
+				LOGINFO("  Num Banks:        %d", debugStats.NumBanks);
+				LOGINFO("  Num Banks Mapped: %d / %d", debugStats.NumBanksMapped, debugStats.NumBanks);
+				LOGINFO("  Num Dupe Banks:   %d", debugStats.NumDupeBanks);
+			}
 
 			if (debugStats.NumBanksMapped == debugStats.NumBanks)
 				gamesWithAllBanksMapped.push_back(pair.first);

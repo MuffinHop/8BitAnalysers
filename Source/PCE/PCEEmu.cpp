@@ -1579,17 +1579,20 @@ void FPCEEmu::Tick()
 	pPCEViewer->Tick();
 	pVRAMViewer->Tick();
 
-	FDebugger& debugger = CodeAnalysis.Debugger;
-	if (debugger.IsStopped() == false)
+	for (int i = 0; i < EmuFramesToRun; i++)
 	{
-		CodeAnalysis.OnFrameStart();
-		//CodeAnalysis.OnMachineFrameStart();
+		FDebugger& debugger = CodeAnalysis.Debugger;
+		if (debugger.IsStopped() == false)
+		{
+			CodeAnalysis.OnFrameStart();
+			//CodeAnalysis.OnMachineFrameStart();
 
-		int audioSampleCount = 0;
-		pCore->RunToVBlank(pFrameBuffer, pAudioBuf, &audioSampleCount);
-		
-		CodeAnalysis.OnFrameEnd();
-		//CodeAnalysis.OnMachineFrameStart();
+			int audioSampleCount = 0;
+			pCore->RunToVBlank(pFrameBuffer, pAudioBuf, &audioSampleCount);
+
+			CodeAnalysis.OnFrameEnd();
+			//CodeAnalysis.OnMachineFrameStart();
+		}
 	}
 
 	UpdatePalettes();

@@ -164,6 +164,8 @@ public:
 
 	uint16_t PrevPC = 0;
 
+	int EmuFramesToRun = 1;
+
 protected:
 	bool LoadMachineState(const char* path, int index = -1);
 	bool SaveMachineState(const char* path, int index = -1);
