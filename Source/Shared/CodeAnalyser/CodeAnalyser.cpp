@@ -15,6 +15,7 @@
 
 #include "Z80/CodeAnalyserZ80.h"
 #include "6502/CodeAnalyser6502.h"
+#include "6502/CodeAnalyserHuC6280.h"
 #include <Debug/DebugLog.h>
 #include "Commands/CommandProcessor.h"
 #include "Commands/SetItemDataCommand.h"
@@ -634,8 +635,9 @@ bool CheckPointerIndirectionInstruction(FCodeAnalysisState& state, uint16_t pc, 
 	case ECPUType::Z80:
 		return CheckPointerIndirectionInstructionZ80(state, pc, out_addr);
 	case ECPUType::M6502:
-	case ECPUType::HuC6280:
 		return CheckPointerIndirectionInstruction6502(state, pc, out_addr);
+	case ECPUType::HuC6280:
+		return CheckPointerIndirectionInstructionHuC6280(state, pc, out_addr);
 	default:
 		return false;	// unsupported CPU type
 	}
@@ -649,8 +651,9 @@ bool CheckPointerRefInstruction(FCodeAnalysisState& state, uint16_t pc, uint16_t
 	case ECPUType::Z80:
 		return CheckPointerRefInstructionZ80(state, pc, out_addr);
 	case ECPUType::M6502:
-	case ECPUType::HuC6280:
 		return CheckPointerRefInstruction6502(state, pc, out_addr);
+	case ECPUType::HuC6280:
+		return CheckPointerRefInstructionHuC6280(state, pc, out_addr);
 	default:
 		return false;	// unsupported CPU type
 	}
@@ -665,8 +668,9 @@ bool CheckJumpInstruction(FCodeAnalysisState& state, uint16_t pc, uint16_t* out_
 		case ECPUType::Z80:
 			return CheckJumpInstructionZ80(state, pc, out_addr);
 		case ECPUType::M6502:
-		case ECPUType::HuC6280:
 			return CheckJumpInstruction6502(state, pc, out_addr);
+		case ECPUType::HuC6280:
+			return CheckJumpInstructionHuC6280(state, pc, out_addr);
 		default:
 			return false;	// unsupported CPU type
 	}
@@ -680,8 +684,9 @@ EInstructionType GetInstructionType(FCodeAnalysisState& state, FAddressRef addr)
 		case ECPUType::Z80:
 			return GetInstructionTypeZ80(state, addr);
 		case ECPUType::M6502:
-		case ECPUType::HuC6280:
 			return GetInstructionType6502(state, addr);
+		case ECPUType::HuC6280:
+			return GetInstructionTypeHuC6280(state, addr);
 		default:
 			return EInstructionType::Unknown;	// unsupported CPU type
 	}
@@ -696,8 +701,9 @@ bool CheckCallInstruction(FCodeAnalysisState& state, uint16_t pc)
 		case ECPUType::Z80:
 			return CheckCallInstructionZ80(state, pc);
 		case ECPUType::M6502:
-		case ECPUType::HuC6280:
 			return CheckCallInstruction6502(state, pc);
+		case ECPUType::HuC6280:
+			return CheckCallInstructionHuC6280(state, pc);
 		default:
 			return false;	// unsupported CPU type
 	}
@@ -713,8 +719,9 @@ bool CheckStopInstruction(FCodeAnalysisState& state, uint16_t pc)
 	case ECPUType::Z80:
 		return CheckStopInstructionZ80(state, pc);
 	case ECPUType::M6502:
-	case ECPUType::HuC6280:
 		return CheckStopInstruction6502(state, pc);
+	case ECPUType::HuC6280:
+		return CheckStopInstructionHuC6280(state, pc);
 	default:
 		return false;	// unsupported CPU type
 	}
