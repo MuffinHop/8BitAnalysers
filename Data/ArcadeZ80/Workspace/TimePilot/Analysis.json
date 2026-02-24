@@ -129,6 +129,7 @@
                 }
             ],
             "StartAddress": 524288,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -141,6 +142,7 @@
                 1441792
             ],
             "StartAddress": 1048576,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -154,6 +156,7 @@
                 1835008
             ],
             "StartAddress": 1572864,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -167,6 +170,7 @@
                 2490368
             ],
             "StartAddress": 2097152,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -180,6 +184,7 @@
                 3014656
             ],
             "StartAddress": 2621440,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -196,6 +201,7 @@
                 }
             ],
             "StartAddress": 3145728,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -220,6 +226,7 @@
                 }
             ],
             "StartAddress": 3670016,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -229,6 +236,7 @@
             "Description": "",
             "EndAddress": 6684672,
             "StartAddress": 6684672,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -238,6 +246,7 @@
             "Description": "",
             "EndAddress": 10813440,
             "StartAddress": 6881280,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -247,6 +256,7 @@
             "Description": "",
             "EndAddress": 11403264,
             "StartAddress": 11010048,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -266,6 +276,7 @@
                 12976128
             ],
             "StartAddress": 11599872,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -278,6 +289,7 @@
                 14090240
             ],
             "StartAddress": 13041664,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -304,6 +316,7 @@
             "Description": "This is called by the NMI hadler (caused by VBLank) starts after initial tests are done",
             "EndAddress": 22937600,
             "StartAddress": 14155776,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -313,6 +326,7 @@
             "Description": "",
             "EndAddress": 23527424,
             "StartAddress": 23527424,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -332,6 +346,7 @@
                 25886720
             ],
             "StartAddress": 24379392,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -363,6 +378,7 @@
                 }
             ],
             "StartAddress": 25952256,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -375,6 +391,7 @@
                 28573696
             ],
             "StartAddress": 26869760,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -384,6 +401,7 @@
             "Description": "",
             "EndAddress": 28639232,
             "StartAddress": 28639232,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -396,10 +414,11 @@
                 31457280
             ],
             "StartAddress": 29491200,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -408,6 +427,7 @@
                 33554432
             ],
             "StartAddress": 31522816,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -432,6 +452,7 @@
                 40763392
             ],
             "StartAddress": 33619968,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -444,6 +465,7 @@
                 42926080
             ],
             "StartAddress": 40828928,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -459,6 +481,7 @@
                 80478208
             ],
             "StartAddress": 56950784,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -475,6 +498,7 @@
             "Description": "",
             "EndAddress": 124846080,
             "StartAddress": 122355712,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -496,6 +520,7 @@
             "Description": "",
             "EndAddress": 128581632,
             "StartAddress": 125042688,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -505,6 +530,7 @@
             "Description": "",
             "EndAddress": 131006464,
             "StartAddress": 129040384,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -517,6 +543,7 @@
                 132448256
             ],
             "StartAddress": 131203072,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -526,6 +553,7 @@
             "Description": "",
             "EndAddress": 132513792,
             "StartAddress": 132513792,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -538,6 +566,7 @@
                 138215424
             ],
             "StartAddress": 134807552,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -562,6 +591,7 @@
                 145948672
             ],
             "StartAddress": 138280960,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -586,6 +616,7 @@
                 146210816
             ],
             "StartAddress": 146014208,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -598,6 +629,7 @@
                 187301888
             ],
             "StartAddress": 184942592,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -610,6 +642,7 @@
                 188219392
             ],
             "StartAddress": 187367424,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -619,6 +652,7 @@
             "Description": "This queues different commands on alternate frames",
             "EndAddress": 189333504,
             "StartAddress": 188284928,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -631,6 +665,7 @@
                 189923328
             ],
             "StartAddress": 189530112,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -640,6 +675,7 @@
             "Description": "",
             "EndAddress": 193986560,
             "StartAddress": 193986560,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -656,6 +692,7 @@
             "Description": "",
             "EndAddress": 196804608,
             "StartAddress": 194183168,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -665,6 +702,7 @@
             "Description": "",
             "EndAddress": 198967296,
             "StartAddress": 198967296,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -674,6 +712,7 @@
             "Description": "",
             "EndAddress": 199032832,
             "StartAddress": 199032832,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -700,6 +739,7 @@
                 }
             ],
             "StartAddress": 200409088,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -716,6 +756,7 @@
             "Description": "",
             "EndAddress": 203489280,
             "StartAddress": 202309632,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -732,6 +773,7 @@
             "Description": "",
             "EndAddress": 204931072,
             "StartAddress": 203620352,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -751,6 +793,7 @@
                 206045184
             ],
             "StartAddress": 205062144,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -791,6 +834,7 @@
                 218693632
             ],
             "StartAddress": 210763776,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -800,6 +844,7 @@
             "Description": "",
             "EndAddress": 224329728,
             "StartAddress": 223805440,
+            "bCommentedOut": true,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -807,9 +852,10 @@
         },
         {
             "Description": "",
-            "EndAddress": 224460800,
+            "EndAddress": 224985088,
             "StartAddress": 224460800,
-            "bManualEdit": false,
+            "bCommentedOut": true,
+            "bManualEdit": true,
             "bROMFunction": true,
             "bStubImplemented": true,
             "bStubbedOut": true
@@ -838,6 +884,7 @@
                 226492416
             ],
             "StartAddress": 225116160,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -847,6 +894,7 @@
             "Description": "",
             "EndAddress": 225640448,
             "StartAddress": 225640448,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -871,6 +919,7 @@
                 227475456
             ],
             "StartAddress": 226557952,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -900,6 +949,7 @@
                 }
             ],
             "StartAddress": 227540992,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -924,6 +974,7 @@
                 229507072
             ],
             "StartAddress": 228589568,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -936,6 +987,7 @@
                 231407616
             ],
             "StartAddress": 229572608,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -960,6 +1012,7 @@
                 242155520
             ],
             "StartAddress": 232194048,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -969,6 +1022,7 @@
             "Description": "",
             "EndAddress": 242221056,
             "StartAddress": 242221056,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -998,6 +1052,7 @@
                 }
             ],
             "StartAddress": 244121600,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1007,6 +1062,7 @@
             "Description": "",
             "EndAddress": 245104640,
             "StartAddress": 245104640,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1036,6 +1092,7 @@
                 250216448
             ],
             "StartAddress": 246153216,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1049,6 +1106,7 @@
                 251527168
             ],
             "StartAddress": 250281984,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1058,6 +1116,7 @@
             "Description": "",
             "EndAddress": 252772352,
             "StartAddress": 252772352,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1070,6 +1129,7 @@
                 253624320
             ],
             "StartAddress": 253362176,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1079,6 +1139,7 @@
             "Description": "",
             "EndAddress": 254279680,
             "StartAddress": 253689856,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1099,6 +1160,7 @@
                 257425408
             ],
             "StartAddress": 257163264,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1111,6 +1173,7 @@
                 260833280
             ],
             "StartAddress": 259719168,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1120,6 +1183,7 @@
             "Description": "",
             "EndAddress": 260898816,
             "StartAddress": 260898816,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1132,6 +1196,7 @@
                 278331392
             ],
             "StartAddress": 261554176,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1144,6 +1209,7 @@
                 295174144
             ],
             "StartAddress": 278396928,
+            "bCommentedOut": true,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -1301,6 +1367,7 @@
                 309985280
             ],
             "StartAddress": 295239680,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1310,6 +1377,7 @@
             "Description": "",
             "EndAddress": 309395456,
             "StartAddress": 309395456,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1322,6 +1390,7 @@
                 317063168
             ],
             "StartAddress": 316801024,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1334,6 +1403,7 @@
                 320339968
             ],
             "StartAddress": 318439424,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1343,6 +1413,7 @@
             "Description": "",
             "EndAddress": 320405504,
             "StartAddress": 320405504,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1352,6 +1423,7 @@
             "Description": "",
             "EndAddress": 321060864,
             "StartAddress": 321060864,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1361,6 +1433,7 @@
             "Description": "",
             "EndAddress": 325517312,
             "StartAddress": 325517312,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1370,6 +1443,7 @@
             "Description": "",
             "EndAddress": 328400896,
             "StartAddress": 328400896,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1379,6 +1453,7 @@
             "Description": "",
             "EndAddress": 332136448,
             "StartAddress": 332136448,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1388,6 +1463,7 @@
             "Description": "",
             "EndAddress": 338296832,
             "StartAddress": 338296832,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1397,6 +1473,7 @@
             "Description": "",
             "EndAddress": 348454912,
             "StartAddress": 348454912,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1406,6 +1483,7 @@
             "Description": "",
             "EndAddress": 358809600,
             "StartAddress": 358809600,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1415,6 +1493,7 @@
             "Description": "",
             "EndAddress": 361496576,
             "StartAddress": 361496576,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1424,6 +1503,7 @@
             "Description": "",
             "EndAddress": 364183552,
             "StartAddress": 364183552,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1436,6 +1516,7 @@
                 364969984
             ],
             "StartAddress": 364249088,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1445,6 +1526,7 @@
             "Description": "",
             "EndAddress": 365363200,
             "StartAddress": 365035520,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1476,6 +1558,7 @@
                 373161984
             ],
             "StartAddress": 367132672,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1485,6 +1568,7 @@
             "Description": "",
             "EndAddress": 368967680,
             "StartAddress": 368967680,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1494,6 +1578,7 @@
             "Description": "Seems to be called when user is on title screen",
             "EndAddress": 374865920,
             "StartAddress": 374407168,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1513,6 +1598,7 @@
                 378273792
             ],
             "StartAddress": 377159680,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1522,6 +1608,7 @@
             "Description": "",
             "EndAddress": 379322368,
             "StartAddress": 379322368,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1563,6 +1650,7 @@
                 385220608
             ],
             "StartAddress": 380567552,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -1575,6 +1663,7 @@
                 389218304
             ],
             "StartAddress": 387514368,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1594,6 +1683,7 @@
                 389480448
             ],
             "StartAddress": 389283840,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1618,6 +1708,7 @@
                 391249920
             ],
             "StartAddress": 390594560,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1639,6 +1730,7 @@
             "Description": "",
             "EndAddress": 394854400,
             "StartAddress": 392822784,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -1668,6 +1760,7 @@
                 395706368
             ],
             "StartAddress": 395051008,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -1677,6 +1770,7 @@
             "Description": "",
             "EndAddress": 399179776,
             "StartAddress": 398000128,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1698,6 +1792,7 @@
             "Description": "",
             "EndAddress": 402128896,
             "StartAddress": 400687104,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1707,6 +1802,7 @@
             "Description": "",
             "EndAddress": 402325504,
             "StartAddress": 402325504,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1716,6 +1812,7 @@
             "Description": "",
             "EndAddress": 402522112,
             "StartAddress": 402522112,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1725,6 +1822,7 @@
             "Description": "",
             "EndAddress": 404553728,
             "StartAddress": 404553728,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1734,6 +1832,7 @@
             "Description": "",
             "EndAddress": 404619264,
             "StartAddress": 404619264,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1743,6 +1842,17 @@
             "Description": "",
             "EndAddress": 405798912,
             "StartAddress": 405798912,
+            "bCommentedOut": false,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
+            "EndAddress": 411697152,
+            "StartAddress": 411697152,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1778,6 +1888,7 @@
                 433258496
             ],
             "StartAddress": 415432704,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1790,6 +1901,7 @@
                 433258496
             ],
             "StartAddress": 427819008,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1802,6 +1914,7 @@
                 435093504
             ],
             "StartAddress": 433717248,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1856,6 +1969,7 @@
                 451084288
             ],
             "StartAddress": 435159040,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1868,6 +1982,7 @@
                 452657152
             ],
             "StartAddress": 451149824,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1877,6 +1992,7 @@
             "Description": "",
             "EndAddress": 452722688,
             "StartAddress": 452722688,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1889,6 +2005,7 @@
                 517865472
             ],
             "StartAddress": 517013504,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1905,6 +2022,7 @@
             "Description": "",
             "EndAddress": 527695872,
             "StartAddress": 517931008,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1930,6 +2048,7 @@
                 543293441
             ],
             "StartAddress": 537657345,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1946,6 +2065,7 @@
                 }
             ],
             "StartAddress": 537919489,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1958,6 +2078,7 @@
                 550305793
             ],
             "StartAddress": 548339713,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -1971,6 +2092,7 @@
                 557580289
             ],
             "StartAddress": 554565633,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -1980,6 +2102,7 @@
             "Description": "",
             "EndAddress": 562626561,
             "StartAddress": 558563329,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2014,6 +2137,7 @@
                 620429313
             ],
             "StartAddress": 602079233,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2053,6 +2177,7 @@
                 659816449
             ],
             "StartAddress": 621871105,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2062,6 +2187,7 @@
             "Description": "",
             "EndAddress": 657457153,
             "StartAddress": 657457153,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -2074,6 +2200,7 @@
                 661651457
             ],
             "StartAddress": 659881985,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2105,6 +2232,7 @@
             "Description": "This appears to reset a lot of things",
             "EndAddress": 681443329,
             "StartAddress": 665911297,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2154,6 +2282,7 @@
                 683016193
             ],
             "StartAddress": 681639937,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2163,6 +2292,7 @@
             "Description": "",
             "EndAddress": 683606017,
             "StartAddress": 683081729,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2172,6 +2302,7 @@
             "Description": "",
             "EndAddress": 684326913,
             "StartAddress": 683802625,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2181,6 +2312,7 @@
             "Description": "",
             "EndAddress": 685047809,
             "StartAddress": 684523521,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2190,6 +2322,7 @@
             "Description": "",
             "EndAddress": 685768705,
             "StartAddress": 685244417,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2199,6 +2332,7 @@
             "Description": "",
             "EndAddress": 686489601,
             "StartAddress": 685965313,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2211,6 +2345,7 @@
                 686948353
             ],
             "StartAddress": 686686209,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2223,6 +2358,7 @@
                 687996929
             ],
             "StartAddress": 687734785,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2244,6 +2380,7 @@
                 }
             ],
             "StartAddress": 688783361,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2256,6 +2393,7 @@
                 690356225
             ],
             "StartAddress": 689831937,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2301,6 +2439,7 @@
                 692781057
             ],
             "StartAddress": 690421761,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2348,6 +2487,7 @@
                 }
             ],
             "StartAddress": 692846593,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2393,6 +2533,7 @@
                 699334657
             ],
             "StartAddress": 696516609,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2402,6 +2543,7 @@
             "Description": "",
             "EndAddress": 699400193,
             "StartAddress": 699400193,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2411,6 +2553,7 @@
             "Description": "",
             "EndAddress": 700383233,
             "StartAddress": 700383233,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2420,6 +2563,7 @@
             "Description": "",
             "EndAddress": 701825025,
             "StartAddress": 701825025,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2439,6 +2583,7 @@
                 709230593
             ],
             "StartAddress": 708575233,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2458,6 +2603,7 @@
                 710279169
             ],
             "StartAddress": 709296129,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2471,6 +2617,7 @@
                 712376321
             ],
             "StartAddress": 710344705,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2483,6 +2630,7 @@
                 716636161
             ],
             "StartAddress": 714539009,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2492,6 +2640,7 @@
             "Description": "Updates an enemy sprite based on angle",
             "EndAddress": 721158145,
             "StartAddress": 721158145,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2506,6 +2655,7 @@
                 727121921
             ],
             "StartAddress": 726794241,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2515,6 +2665,7 @@
             "Description": "",
             "EndAddress": 727711745,
             "StartAddress": 727711745,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2528,6 +2679,7 @@
                 730464257
             ],
             "StartAddress": 730005505,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2558,6 +2710,7 @@
                 732626945
             ],
             "StartAddress": 731054081,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2579,6 +2732,7 @@
                 735903745
             ],
             "StartAddress": 733609985,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2591,6 +2745,7 @@
                 737017857
             ],
             "StartAddress": 735969281,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2605,6 +2760,7 @@
                 740032513
             ],
             "StartAddress": 737083393,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2614,6 +2770,7 @@
             "Description": "",
             "EndAddress": 741212161,
             "StartAddress": 740425729,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2629,6 +2786,7 @@
                 745537537
             ],
             "StartAddress": 741408769,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2663,6 +2821,7 @@
                 752484353
             ],
             "StartAddress": 750518273,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2697,10 +2856,11 @@
                 755040257
             ],
             "StartAddress": 752549889,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "CallPoints": [
@@ -2723,6 +2883,7 @@
             "Description": "",
             "EndAddress": 756940801,
             "StartAddress": 756350977,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2749,6 +2910,7 @@
             "Description": "",
             "EndAddress": 757727233,
             "StartAddress": 757137409,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2758,6 +2920,7 @@
             "Description": "",
             "EndAddress": 757923841,
             "StartAddress": 757923841,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2779,6 +2942,7 @@
             "Description": "",
             "EndAddress": 758906881,
             "StartAddress": 758513665,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2788,6 +2952,7 @@
             "Description": "",
             "EndAddress": 759365633,
             "StartAddress": 759103489,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2797,6 +2962,7 @@
             "Description": "",
             "EndAddress": 761397249,
             "StartAddress": 761397249,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2813,6 +2979,7 @@
             "Description": "",
             "EndAddress": 761987073,
             "StartAddress": 761790465,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2837,6 +3004,7 @@
                 764542977
             ],
             "StartAddress": 762183681,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2861,6 +3029,7 @@
                 766967809
             ],
             "StartAddress": 764608513,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2873,6 +3042,7 @@
                 770899969
             ],
             "StartAddress": 767033345,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2897,6 +3067,7 @@
                 773324801
             ],
             "StartAddress": 770965505,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2906,6 +3077,7 @@
             "Description": "",
             "EndAddress": 773390337,
             "StartAddress": 773390337,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2918,6 +3090,7 @@
                 775749633
             ],
             "StartAddress": 774963201,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2927,6 +3100,7 @@
             "Description": "",
             "EndAddress": 775815169,
             "StartAddress": 775815169,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2939,6 +3113,7 @@
                 810287105
             ],
             "StartAddress": 809369601,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2951,6 +3126,7 @@
                 811008001
             ],
             "StartAddress": 810352641,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2960,6 +3136,7 @@
             "Description": "",
             "EndAddress": 812056577,
             "StartAddress": 811073537,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2972,6 +3149,7 @@
                 816054273
             ],
             "StartAddress": 814350337,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -2988,6 +3166,7 @@
             "Description": "",
             "EndAddress": 827523073,
             "StartAddress": 816119809,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3021,6 +3200,17 @@
                 840171521
             ],
             "StartAddress": 833880065,
+            "bCommentedOut": false,
+            "bManualEdit": false,
+            "bROMFunction": true,
+            "bStubImplemented": false,
+            "bStubbedOut": false
+        },
+        {
+            "Description": "",
+            "EndAddress": 840237057,
+            "StartAddress": 840237057,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3034,6 +3224,7 @@
                 842924033
             ],
             "StartAddress": 842661889,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3059,6 +3250,7 @@
                 854196225
             ],
             "StartAddress": 844234753,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3075,6 +3267,7 @@
             "Description": "",
             "EndAddress": 856162305,
             "StartAddress": 854261761,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3109,6 +3302,7 @@
                 856621057
             ],
             "StartAddress": 856358913,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3130,6 +3324,7 @@
             "Description": "",
             "EndAddress": 865665025,
             "StartAddress": 861798401,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3139,6 +3334,7 @@
             "Description": "",
             "EndAddress": 865861633,
             "StartAddress": 865861633,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3152,6 +3348,7 @@
                 873725953
             ],
             "StartAddress": 867696641,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3168,6 +3365,7 @@
             "Description": "",
             "EndAddress": 875888641,
             "StartAddress": 874577921,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3218,6 +3416,7 @@
                 917700609
             ],
             "StartAddress": 917438465,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3241,6 +3440,7 @@
                 945225729
             ],
             "StartAddress": 942473217,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3250,6 +3450,7 @@
             "Description": "",
             "EndAddress": 946733057,
             "StartAddress": 946733057,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3298,6 +3499,7 @@
                 996343809
             ],
             "StartAddress": 996081665,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3321,6 +3523,7 @@
                 1010171905
             ],
             "StartAddress": 1007484929,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3333,6 +3536,7 @@
                 1021837313
             ],
             "StartAddress": 1019478017,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3367,6 +3571,7 @@
                 1024720897
             ],
             "StartAddress": 1021902849,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3387,6 +3592,7 @@
                 1037959169
             ],
             "StartAddress": 1037697025,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3412,6 +3618,7 @@
                 1039794177
             ],
             "StartAddress": 1038811137,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3431,6 +3638,7 @@
                 1040449537
             ],
             "StartAddress": 1039859713,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3443,6 +3651,7 @@
                 1043660801
             ],
             "StartAddress": 1040515073,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3477,6 +3686,7 @@
                 1046609921
             ],
             "StartAddress": 1043726337,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3502,6 +3712,7 @@
                 1048182785
             ],
             "StartAddress": 1046675457,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3526,6 +3737,7 @@
                 1048182785
             ],
             "StartAddress": 1047265281,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3535,6 +3747,7 @@
             "Description": "",
             "EndAddress": 1049952257,
             "StartAddress": 1048444929,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3582,6 +3795,7 @@
                 }
             ],
             "StartAddress": 1054212097,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3591,6 +3805,7 @@
             "Description": "",
             "EndAddress": 1066926081,
             "StartAddress": 1066598401,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3603,6 +3818,7 @@
                 1070137345
             ],
             "StartAddress": 1068433409,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3616,6 +3832,7 @@
                 1075183618
             ],
             "StartAddress": 1072300033,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3628,6 +3845,7 @@
                 1080754178
             ],
             "StartAddress": 1075249154,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3653,6 +3871,7 @@
                 1082195970
             ],
             "StartAddress": 1080819714,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3662,6 +3881,7 @@
             "Description": "",
             "EndAddress": 1084751874,
             "StartAddress": 1084030978,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3674,6 +3894,7 @@
                 1085734914
             ],
             "StartAddress": 1084948482,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3688,6 +3909,7 @@
                 1086849026
             ],
             "StartAddress": 1085800450,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3713,6 +3935,7 @@
                 1091960834
             ],
             "StartAddress": 1087766530,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3752,6 +3975,7 @@
                 1094189058
             ],
             "StartAddress": 1092026370,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3777,6 +4001,7 @@
                 1095892994
             ],
             "StartAddress": 1094451202,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3791,6 +4016,7 @@
                 1108869122
             ],
             "StartAddress": 1107361794,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3819,6 +4045,7 @@
                 1118371842
             ],
             "StartAddress": 1111687170,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3839,6 +4066,7 @@
                 1138425858
             ],
             "StartAddress": 1136066562,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3848,6 +4076,7 @@
             "Description": "",
             "EndAddress": 1139277826,
             "StartAddress": 1139277826,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3884,6 +4113,7 @@
                 1167261698
             ],
             "StartAddress": 1145503746,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3909,6 +4139,7 @@
                 1175257090
             ],
             "StartAddress": 1167785986,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3937,6 +4168,7 @@
                 1190723586
             ],
             "StartAddress": 1186594818,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3977,6 +4209,7 @@
                 1213661186
             ],
             "StartAddress": 1202913282,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -3989,6 +4222,7 @@
                 1220345858
             ],
             "StartAddress": 1219297282,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4028,6 +4262,7 @@
                 1221394434
             ],
             "StartAddress": 1220411394,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4040,6 +4275,7 @@
                 1224146946
             ],
             "StartAddress": 1223098370,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4052,6 +4288,7 @@
                 1226833922
             ],
             "StartAddress": 1225850882,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4064,6 +4301,7 @@
                 1229914114
             ],
             "StartAddress": 1228996610,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4076,6 +4314,7 @@
                 1233649666
             ],
             "StartAddress": 1233387522,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4092,6 +4331,7 @@
             "Description": "",
             "EndAddress": 1238564866,
             "StartAddress": 1235746818,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4104,6 +4344,7 @@
                 1239023618
             ],
             "StartAddress": 1238761474,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4113,6 +4354,7 @@
             "Description": "",
             "EndAddress": 1242497026,
             "StartAddress": 1242497026,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4122,6 +4364,7 @@
             "Description": "",
             "EndAddress": 1251803138,
             "StartAddress": 1251803138,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4134,6 +4377,7 @@
                 1257897986
             ],
             "StartAddress": 1254883330,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4143,6 +4387,7 @@
             "Description": "",
             "EndAddress": 1257963522,
             "StartAddress": 1257963522,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4152,6 +4397,7 @@
             "Description": "",
             "EndAddress": 1261240322,
             "StartAddress": 1259929602,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4161,6 +4407,7 @@
             "Description": "",
             "EndAddress": 1261436930,
             "StartAddress": 1261436930,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4173,6 +4420,7 @@
                 1264975874
             ],
             "StartAddress": 1263206402,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4185,6 +4433,7 @@
                 1266876418
             ],
             "StartAddress": 1265041410,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4197,6 +4446,7 @@
                 1269825538
             ],
             "StartAddress": 1269104642,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4206,6 +4456,7 @@
             "Description": "",
             "EndAddress": 1272512514,
             "StartAddress": 1272512514,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4245,6 +4496,7 @@
                 1276313602
             ],
             "StartAddress": 1272709122,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4271,6 +4523,7 @@
                 }
             ],
             "StartAddress": 1277100034,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -4287,6 +4540,7 @@
             "Description": "",
             "EndAddress": 1286668290,
             "StartAddress": 1282736130,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4306,6 +4560,7 @@
                 1294270466
             ],
             "StartAddress": 1287847938,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4319,6 +4574,7 @@
                 1294925826
             ],
             "StartAddress": 1294663682,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4344,6 +4600,7 @@
                 1297219586
             ],
             "StartAddress": 1295646722,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4364,6 +4621,7 @@
                 }
             ],
             "StartAddress": 1298595842,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4388,6 +4646,7 @@
                 1303248898
             ],
             "StartAddress": 1299316738,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4400,6 +4659,7 @@
                 1305346050
             ],
             "StartAddress": 1303314434,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4412,6 +4672,7 @@
                 1306329090
             ],
             "StartAddress": 1305411586,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4426,6 +4687,7 @@
                 1310326786
             ],
             "StartAddress": 1306394626,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4502,6 +4764,7 @@
             "Description": "",
             "EndAddress": 1331298306,
             "StartAddress": 1313800194,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4511,6 +4774,7 @@
             "Description": "",
             "EndAddress": 1333460994,
             "StartAddress": 1331494914,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4543,6 +4807,7 @@
                 1344929794
             ],
             "StartAddress": 1333657602,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4558,6 +4823,7 @@
                 1350959106
             ],
             "StartAddress": 1350434818,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4573,6 +4839,7 @@
                 1354956802
             ],
             "StartAddress": 1353777154,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4593,6 +4860,7 @@
                 1361379330
             ],
             "StartAddress": 1361117186,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4613,6 +4881,7 @@
                 1364590594
             ],
             "StartAddress": 1364328450,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4628,6 +4897,7 @@
                 1370947586
             ],
             "StartAddress": 1367670786,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4641,6 +4911,7 @@
                 1375272962
             ],
             "StartAddress": 1373503490,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4662,6 +4933,7 @@
                 1376583682
             ],
             "StartAddress": 1376059394,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4674,6 +4946,7 @@
                 1383464962
             ],
             "StartAddress": 1382678530,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4698,6 +4971,7 @@
                 1386807298
             ],
             "StartAddress": 1384513538,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4714,6 +4988,7 @@
             "Description": "",
             "EndAddress": 1389297666,
             "StartAddress": 1386872834,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4728,10 +5003,11 @@
                 1392640002
             ],
             "StartAddress": 1389494274,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "Erases previous bullets",
@@ -4742,10 +5018,11 @@
                 1396047874
             ],
             "StartAddress": 1393426434,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
-            "bStubImplemented": false,
-            "bStubbedOut": false
+            "bStubImplemented": true,
+            "bStubbedOut": true
         },
         {
             "Description": "",
@@ -4754,6 +5031,7 @@
                 1406337026
             ],
             "StartAddress": 1396113410,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4775,6 +5053,7 @@
                 1441529858
             ],
             "StartAddress": 1439956994,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4787,6 +5066,7 @@
                 1443561474
             ],
             "StartAddress": 1442316290,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4799,6 +5079,7 @@
                 1444282370
             ],
             "StartAddress": 1443627010,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4811,6 +5092,7 @@
                 1445396482
             ],
             "StartAddress": 1444347906,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4823,6 +5105,7 @@
                 1446182914
             ],
             "StartAddress": 1445462018,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4869,6 +5152,7 @@
             "Description": "",
             "EndAddress": 1450639362,
             "StartAddress": 1446248450,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4878,6 +5162,7 @@
             "Description": "",
             "EndAddress": 1450967042,
             "StartAddress": 1450770434,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4887,6 +5172,7 @@
             "Description": "",
             "EndAddress": 1451294722,
             "StartAddress": 1451098114,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4903,6 +5189,7 @@
             "Description": "",
             "EndAddress": 1452343298,
             "StartAddress": 1451425794,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4947,6 +5234,7 @@
                 1455161346
             ],
             "StartAddress": 1452539906,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -4978,6 +5266,7 @@
             "Description": "",
             "EndAddress": 1458372610,
             "StartAddress": 1456603138,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4987,6 +5276,7 @@
             "Description": "",
             "EndAddress": 1457782786,
             "StartAddress": 1457782786,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -4996,6 +5286,7 @@
             "Description": "",
             "EndAddress": 1476132866,
             "StartAddress": 1475411970,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5005,6 +5296,7 @@
             "Description": "",
             "EndAddress": 1476526082,
             "StartAddress": 1476329474,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5014,6 +5306,7 @@
             "Description": "",
             "EndAddress": 1478098946,
             "StartAddress": 1477115906,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5023,6 +5316,7 @@
             "Description": "",
             "EndAddress": 1477509122,
             "StartAddress": 1477509122,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5032,6 +5326,7 @@
             "Description": "",
             "EndAddress": 1479999490,
             "StartAddress": 1479802882,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5041,6 +5336,7 @@
             "Description": "",
             "EndAddress": 1480392706,
             "StartAddress": 1480196098,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5050,6 +5346,7 @@
             "Description": "",
             "EndAddress": 1480785922,
             "StartAddress": 1480589314,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5059,6 +5356,7 @@
             "Description": "",
             "EndAddress": 1482096642,
             "StartAddress": 1481900034,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5068,6 +5366,7 @@
             "Description": "",
             "EndAddress": 1486946306,
             "StartAddress": 1483079682,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5077,6 +5376,7 @@
             "Description": "",
             "EndAddress": 1487142914,
             "StartAddress": 1487142914,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5086,6 +5386,7 @@
             "Description": "",
             "EndAddress": 1487732738,
             "StartAddress": 1487536130,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5099,6 +5400,7 @@
                 1497432066
             ],
             "StartAddress": 1488715778,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5108,6 +5410,7 @@
             "Description": "",
             "EndAddress": 1499987970,
             "StartAddress": 1497497602,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5121,6 +5424,7 @@
                 1506017282
             ],
             "StartAddress": 1500381186,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5133,6 +5437,7 @@
                 1506017282
             ],
             "StartAddress": 1502478338,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5142,6 +5447,7 @@
             "Description": "",
             "EndAddress": 1506279426,
             "StartAddress": 1506082818,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5151,6 +5457,7 @@
             "Description": "",
             "EndAddress": 1506672642,
             "StartAddress": 1506476034,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5160,6 +5467,7 @@
             "Description": "",
             "EndAddress": 1507065858,
             "StartAddress": 1506869250,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5169,6 +5477,7 @@
             "Description": "",
             "EndAddress": 1507262466,
             "StartAddress": 1507262466,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": false,
@@ -5193,6 +5502,7 @@
                 1541210114
             ],
             "StartAddress": 1540816898,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": true,
             "bStubImplemented": true,
@@ -5202,6 +5512,7 @@
             "Description": "",
             "EndAddress": 3218538499,
             "StartAddress": 3218538499,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5211,6 +5522,7 @@
             "Description": "",
             "EndAddress": 3355443203,
             "StartAddress": 3355443203,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5220,6 +5532,7 @@
             "Description": "",
             "EndAddress": 3422552067,
             "StartAddress": 3422552067,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5229,6 +5542,7 @@
             "Description": "",
             "EndAddress": 3452764163,
             "StartAddress": 3452764163,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5238,6 +5552,7 @@
             "Description": "",
             "EndAddress": 3506438147,
             "StartAddress": 3506438147,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5247,6 +5562,7 @@
             "Description": "",
             "EndAddress": 3640655875,
             "StartAddress": 3640655875,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5256,6 +5572,7 @@
             "Description": "",
             "EndAddress": 3741319171,
             "StartAddress": 3741319171,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -5265,6 +5582,7 @@
             "Description": "",
             "EndAddress": 4257480707,
             "StartAddress": 4257480707,
+            "bCommentedOut": false,
             "bManualEdit": false,
             "bROMFunction": false,
             "bStubImplemented": false,
@@ -6287,6 +6605,8 @@
                 {
                     "Address": 443,
                     "ByteSize": 3,
+                    "Comment": "1Bh",
+                    "Flags": 32,
                     "OperandType": 1
                 },
                 {
@@ -7519,13 +7839,13 @@
                     "Address": 437,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_01B5"
+                    "Name": "SetupScreenClear"
                 },
                 {
                     "Address": 450,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "PostBootClearScreenWipe"
+                    "Name": "ClearScreenWipe"
                 },
                 {
                     "Address": 458,
@@ -10570,7 +10890,13 @@
                 {
                     "Address": 1018,
                     "ByteSize": 3,
+                    "Comment": "jump if bit set",
                     "OperandType": 2
+                },
+                {
+                    "Address": 1021,
+                    "ByteSize": 3,
+                    "OperandType": 1
                 }
             ],
             "DataInfo": [
@@ -10719,19 +11045,45 @@
                     "Address": 998,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_07E6"
+                    "Name": "Check1PlayerStart"
                 },
                 {
-                    "Address": 1022,
-                    "Global": true,
+                    "Address": 1021,
                     "LabelType": 0,
-                    "Name": "data_07FE"
+                    "Name": "operand_07FD"
                 }
             ],
             "PageId": 1
         },
         {
             "CodeInfo": [
+                {
+                    "Address": 0,
+                    "ByteSize": 1
+                },
+                {
+                    "Address": 1,
+                    "ByteSize": 1,
+                    "Comment": "return if one credit"
+                },
+                {
+                    "Address": 2,
+                    "ByteSize": 3,
+                    "Comment": "draw 'One or Two Players'",
+                    "OperandType": 4
+                },
+                {
+                    "Address": 5,
+                    "ByteSize": 1,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 6,
+                    "ByteSize": 3,
+                    "Comment": "advance to 1 or 2 player start",
+                    "OperandType": 2
+                },
                 {
                     "Address": 9,
                     "ByteSize": 3,
@@ -11324,7 +11676,7 @@
                 {
                     "Address": 814,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 817,
@@ -11336,11 +11688,13 @@
                 },
                 {
                     "Address": 820,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "set sprite Y to 0"
                 },
                 {
                     "Address": 821,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "skip to next sprite"
                 },
                 {
                     "Address": 822,
@@ -12133,7 +12487,7 @@
                 {
                     "Address": 820,
                     "LabelType": 2,
-                    "Name": "label_0B34"
+                    "Name": "sprite_loop"
                 },
                 {
                     "Address": 825,
@@ -14481,6 +14835,48 @@
                     "DisplayType": 1
                 },
                 {
+                    "Address": 283,
+                    "ByteSize": 2,
+                    "DataType": 2,
+                    "DisplayType": 1
+                },
+                {
+                    "Address": 285,
+                    "DisplayType": 1
+                },
+                {
+                    "Address": 286,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 287,
+                    "ByteSize": 2,
+                    "DataType": 2,
+                    "DisplayType": 1
+                },
+                {
+                    "Address": 289,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 290,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 291,
+                    "ByteSize": 2,
+                    "DataType": 2,
+                    "DisplayType": 1
+                },
+                {
+                    "Address": 293,
+                    "DisplayType": 11
+                },
+                {
+                    "Address": 294,
+                    "DisplayType": 11
+                },
+                {
                     "Address": 295,
                     "ByteSize": 3,
                     "DataType": 1,
@@ -14841,6 +15237,12 @@
                     "Address": 266,
                     "LabelType": 2,
                     "Name": "label_0D0A"
+                },
+                {
+                    "Address": 283,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_0D1B"
                 },
                 {
                     "Address": 295,
@@ -18726,7 +19128,7 @@
                 {
                     "Address": 510,
                     "ByteSize": 3,
-                    "Flags": 40,
+                    "Flags": 8,
                     "OperandType": 2
                 },
                 {
@@ -19774,7 +20176,7 @@
                 {
                     "Address": 1022,
                     "ByteSize": 3,
-                    "Flags": 32,
+                    "Comment": "set return point",
                     "OperandType": 1
                 }
             ],
@@ -20383,7 +20785,7 @@
                     "Address": 1022,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_17FE"
+                    "Name": "StartScreenFunctionDispatcher"
                 }
             ],
             "PageId": 5
@@ -20412,12 +20814,13 @@
                 {
                     "Address": 30,
                     "ByteSize": 3,
-                    "Flags": 8,
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
                     "Address": 33,
                     "ByteSize": 3,
+                    "Comment": "'M' of Konami",
                     "OperandType": 1
                 },
                 {
@@ -20603,7 +21006,7 @@
                 {
                     "Address": 100,
                     "ByteSize": 3,
-                    "Comment": "advance phase twice?",
+                    "Comment": "advance to 2 player start check",
                     "Flags": 8,
                     "OperandType": 2
                 },
@@ -20611,6 +21014,47 @@
                     "Address": 103,
                     "ByteSize": 3,
                     "OperandType": 2
+                },
+                {
+                    "Address": 138,
+                    "ByteSize": 3,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 141,
+                    "ByteSize": 3,
+                    "Flags": 8,
+                    "OperandType": 2
+                },
+                {
+                    "Address": 144,
+                    "ByteSize": 3,
+                    "OperandType": 1
+                },
+                {
+                    "Address": 147,
+                    "ByteSize": 2
+                },
+                {
+                    "Address": 149,
+                    "ByteSize": 3,
+                    "Comment": "jump if pressed",
+                    "OperandType": 2
+                },
+                {
+                    "Address": 152,
+                    "ByteSize": 2
+                },
+                {
+                    "Address": 154,
+                    "ByteSize": 3,
+                    "Comment": "jump if pressed",
+                    "OperandType": 2
+                },
+                {
+                    "Address": 157,
+                    "ByteSize": 1
                 },
                 {
                     "Address": 195,
@@ -21705,7 +22149,8 @@
                 },
                 {
                     "Address": 764,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "read video ram char"
                 },
                 {
                     "Address": 765,
@@ -21717,11 +22162,13 @@
                 },
                 {
                     "Address": 767,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "shift to colour RAM"
                 },
                 {
                     "Address": 769,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "read attrib"
                 },
                 {
                     "Address": 770,
@@ -22377,13 +22824,13 @@
                     "Address": 30,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_181E"
+                    "Name": "StoreCharsSetupScreenClear"
                 },
                 {
                     "Address": 48,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_1830"
+                    "Name": "DrawStartScreen"
                 },
                 {
                     "Address": 73,
@@ -22404,8 +22851,13 @@
                 {
                     "Address": 138,
                     "Global": true,
-                    "LabelType": 0,
-                    "Name": "data_188A"
+                    "LabelType": 1,
+                    "Name": "Check1or2PlayerStart"
+                },
+                {
+                    "Address": 158,
+                    "LabelType": 2,
+                    "Name": "label_189E"
                 },
                 {
                     "Address": 195,
@@ -22526,7 +22978,7 @@
                     "Address": 764,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "function_1AFC"
+                    "Name": "StoreVideoCharAndAttrib"
                 },
                 {
                     "Address": 772,
@@ -28147,7 +28599,7 @@
                 {
                     "Address": 219,
                     "ByteSize": 3,
-                    "Flags": 8,
+                    "Flags": 40,
                     "OperandType": 2
                 },
                 {
@@ -28157,7 +28609,7 @@
                 {
                     "Address": 223,
                     "ByteSize": 3,
-                    "OperandType": 1
+                    "OperandType": 4
                 },
                 {
                     "Address": 226,
@@ -28197,6 +28649,7 @@
                 {
                     "Address": 239,
                     "ByteSize": 3,
+                    "Comment": "tamper failed action",
                     "OperandType": 2
                 },
                 {
@@ -29057,12 +29510,12 @@
                     "Address": 219,
                     "Global": true,
                     "LabelType": 1,
-                    "Name": "label_2CDB"
+                    "Name": "ClearScreenAndTamperCheck"
                 },
                 {
                     "Address": 230,
                     "LabelType": 2,
-                    "Name": "label_2CE6"
+                    "Name": "tamper_check_loop"
                 },
                 {
                     "Address": 245,
@@ -29843,6 +30296,7 @@
                 {
                     "Address": 537,
                     "ByteSize": 3,
+                    "Comment": "0x00",
                     "OperandType": 1
                 },
                 {
@@ -29857,6 +30311,7 @@
                 {
                     "Address": 544,
                     "ByteSize": 3,
+                    "Comment": "0xff",
                     "OperandType": 1
                 },
                 {
@@ -29876,7 +30331,8 @@
                 },
                 {
                     "Address": 556,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "subtract 1 credit"
                 },
                 {
                     "Address": 557,
@@ -31263,7 +31719,8 @@
                 },
                 {
                     "Address": 533,
-                    "LabelType": 2,
+                    "Global": true,
+                    "LabelType": 1,
                     "Name": "label_3215"
                 },
                 {
@@ -40394,6 +40851,7 @@
                 {
                     "Address": 816,
                     "ByteSize": 3,
+                    "Comment": "pointer to colour ram?",
                     "OperandType": 1
                 },
                 {
@@ -40402,7 +40860,8 @@
                 },
                 {
                     "Address": 821,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "get pointer"
                 },
                 {
                     "Address": 822,
@@ -40418,7 +40877,8 @@
                 },
                 {
                     "Address": 825,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "read byte from pointer"
                 },
                 {
                     "Address": 826,
@@ -40426,7 +40886,8 @@
                 },
                 {
                     "Address": 827,
-                    "ByteSize": 2
+                    "ByteSize": 2,
+                    "Comment": "advance 4 pages - video ram?"
                 },
                 {
                     "Address": 829,
@@ -40438,11 +40899,13 @@
                 },
                 {
                     "Address": 831,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": " read byte from video ram"
                 },
                 {
                     "Address": 832,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "read byte"
                 },
                 {
                     "Address": 833,
@@ -40450,7 +40913,8 @@
                 },
                 {
                     "Address": 834,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "read byte"
                 },
                 {
                     "Address": 835,
@@ -40458,7 +40922,8 @@
                 },
                 {
                     "Address": 836,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "store byte in video ram"
                 },
                 {
                     "Address": 837,
@@ -40470,7 +40935,8 @@
                 },
                 {
                     "Address": 839,
-                    "ByteSize": 1
+                    "ByteSize": 1,
+                    "Comment": "store another byte in video ram"
                 },
                 {
                     "Address": 840,
@@ -53207,7 +53673,6 @@
                 {
                     "Address": 1000,
                     "ByteSize": 2,
-                    "Comment": "return address for below?",
                     "DataType": 2
                 },
                 {
@@ -53303,6 +53768,12 @@
                     "Global": true,
                     "LabelType": 0,
                     "Name": "data_AC7F"
+                },
+                {
+                    "Address": 190,
+                    "Global": true,
+                    "LabelType": 0,
+                    "Name": "data_ACBE"
                 },
                 {
                     "Address": 192,
