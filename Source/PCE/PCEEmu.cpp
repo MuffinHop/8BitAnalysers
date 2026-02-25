@@ -508,7 +508,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 					bankIdsPreviouslyMapped.insert(bankId);
 			}
 		}
-		debugStats.NumBanksMapped = bankIdsPreviouslyMapped.size();
+		debugStats.NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
 	}
 #endif
 

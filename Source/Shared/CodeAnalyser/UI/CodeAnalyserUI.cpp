@@ -2727,28 +2727,20 @@ std::string ExpandString(FCodeAnalysisState& state, const char* pText)
 	bool bInTag = false;
 	std::string outString;
 
-	// temp string on stack
-	const int kMaxStringSize = 64;
-	char str[kMaxStringSize + 1];
-	int strPos = 0;
-
 	std::string tag;
 
 	while (*pTxtPtr != 0)
 	{
 		const char ch = *pTxtPtr++;
 
-		// dont write escape character
-		/*if (ch == '\\')	
+		if (ch == '\\')
 		{
-			*pTxtPtr++;
-			if (strPos == kMaxStringSize)
-			{
-				str[strPos] = 0;
-				strPos = 0;
-			}
+			if (*pTxtPtr == 0)
+				break; // Deal with dangling escape at end
+
+			outString += *pTxtPtr++;
 			continue;
-		}*/
+		}
 
 		if (bInTag == false)
 		{
@@ -2759,29 +2751,20 @@ std::string ExpandString(FCodeAnalysisState& state, const char* pText)
 			}
 			else
 			{
-				str[strPos++] = ch;	// add to string
+				outString += ch;
 			}
 		}
 		else
 		{
 			if (ch == '#')	// finish tag
 			{
-				outString += ExpandTag(state,tag);
+				outString += ExpandTag(state, tag);
 				bInTag = false;
 			}
 			else
 			{
 				tag += ch;	// add to tag
 			}
-		}
-
-		if (strPos == kMaxStringSize || (bInTag && strPos != 0) || *pTxtPtr == 0)
-		{
-			str[strPos] = 0;
-			strPos = 0;
-			outString += str;
-			//ImGui::SameLine(0, 0);
-			//ImGui::Text("%s", str);
 		}
 	}
 
