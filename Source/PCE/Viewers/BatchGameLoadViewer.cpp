@@ -69,16 +69,25 @@ void FBatchGameLoadViewer::DrawUI()
 	{
 		NextButtonPressTime = GetNextButtonPressTime();
 	}
+	if (ImGui::InputInt("Time until button presses", &TimeUntilButtonPresses))
+	{
+		if (TimeUntilButtonPresses)
+			NextButtonPressTime = GetNextButtonPressTime();
+	}
+
 	ImGui::InputFloat("Input delay", &InputDelay);
 	
 	ImGui::Checkbox("Load existing project", &bLoadExistingProject);
 	ImGui::Checkbox("Export ASM after game has run", &bExportAsm);
 
 	float fGameTimeRemaining = 0;
+	float fGameTimeElapsed = 0.f;
 	if (bAutomationActive)
 	{
 		fGameTimeRemaining = (float)(NextGameTime - time);
 		ImGui::Text("Game time remaining: %.1fs", MAX(fGameTimeRemaining, 0.f));
+		fGameTimeElapsed = GameRunTime - fGameTimeRemaining;
+		ImGui::Text("Game time elapsed: %.1fs", fGameTimeElapsed);
 	}
 
 	auto findIt = pPCEEmu->GetGamesLists().find("Snapshot File");
@@ -113,7 +122,7 @@ void FBatchGameLoadViewer::DrawUI()
 				}
 			}
 
-			if (bPressRandomButtons)
+			if (bPressRandomButtons && fGameTimeElapsed > TimeUntilButtonPresses)
 			{
 				if (time >= NextButtonPressTime)
 				{

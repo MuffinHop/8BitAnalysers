@@ -30,6 +30,7 @@ private:
 	float InputDelay = 0.5f;
 	int GameIndex = 0;
 	int GameRunTime = 10;
+	int TimeUntilButtonPresses = 0;
 	double NextGameTime = DBL_MAX;
 	int NumAssembledOk = 0;
 	int NumFailedToAssemble = 0;
