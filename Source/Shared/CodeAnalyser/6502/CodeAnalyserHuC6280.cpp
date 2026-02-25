@@ -216,6 +216,7 @@ bool CheckJumpInstructionHuC6280(const FCodeAnalysisState& state, uint16_t pc, u
 		// to relative address
 		case 0x10:	// BPL
 		case 0x30:	// BMI
+		case 0x44:	// BSR
 		case 0x50:	// BVC
 		case 0x70:	// BVS
 		case 0x90:	// BCC
@@ -332,7 +333,8 @@ EInstructionType GetInstructionTypeHuC6280(FCodeAnalysisState& state, FAddressRe
 		
 		// JSR
 		case 0x20:	
-		// todo add BSR
+		// BSR
+		case 0x44:
 			return EInstructionType::FunctionCall;
 
 		default:
