@@ -36,7 +36,7 @@ public:
 	virtual void	AddHeader(void) {}
 	virtual void	AddBankSection(const FCodeAnalysisBank* pBank);
 	virtual void	ProcessLabelsOutsideExportedRange(void){}
-	bool		ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr, uint16_t endAddr);
+	bool		ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr, uint16_t endAddr, bool bIsPhysicalMem);
 
 	//std::string		GenerateAddressLabelString(FAddressRef addr);
 	void			ExportDataInfoASM(FAddressRef addr);

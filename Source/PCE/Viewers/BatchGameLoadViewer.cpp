@@ -80,7 +80,14 @@ void FBatchGameLoadViewer::DrawUI()
 	ImGui::Checkbox("Load existing project", &bLoadExistingProject);
 	
 	ImGui::SeparatorText("ASM");
-	ImGui::Checkbox("Export ASM after game has run", &bExportAsm);
+	if (ImGui::Checkbox("Export ASM after game has run", &bExportAsm))
+	{
+		// make sure hack for correct asm export is turned on
+		pPCEEmu->bWriteCodeInfoWhenCodeExecuted = bExportAsm;
+	}
+
+	if (bExportAsm)
+		ImGui::Text("THIS WILL AFFECT PERFORMANCE");
 
 	ImGui::Text("Assemble Success: %d", NumAssembledOk);
 	ImGui::Text("Assemble Failure: %d", NumFailedToAssemble);

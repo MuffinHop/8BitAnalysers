@@ -152,6 +152,8 @@ public:
 	bool		bXCoordChars = false;
 	bool		bYCoordChars = false;
 	bool		bShowCoordinates = false;
+	bool		bWriteCodeInfoWhenCodeExecuted = false;
+
 protected:
 	bool		bShowDebugLog = false;
 	bool		bReplaceGamePopup = false;

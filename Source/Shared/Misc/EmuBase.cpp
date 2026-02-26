@@ -554,6 +554,9 @@ void FEmuBase::OptionsMenu()
 	ImGui::MenuItem("ImPlot Demo", 0, &bShowImPlotDemo);
 #endif // NDEBUG
 
+	// sam. hack to workaround a bug
+	ImGui::MenuItem("Write Code Info When Code Executed", 0, &bWriteCodeInfoWhenCodeExecuted);
+
 	OptionsMenuAdditions();
 	ImGui::Separator();
 	if (ImGui::MenuItem("Edit Global Config"))

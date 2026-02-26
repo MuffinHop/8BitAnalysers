@@ -281,7 +281,7 @@ void FASMExporter::ExportDataInfoASM(FAddressRef addr)
 	}
 }
 
-bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr , uint16_t endAddr)
+bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr , uint16_t endAddr, bool bIsPhysicalMem)
 {
 	if (itemList.empty())
 		return false;
@@ -340,8 +340,11 @@ bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& item
 
 			// Sam. This breaks if we call it on a bank that is not mapped.
 			// It can end up setting the wrong bank's memory as code.
-			// todo: potentially rewrite using an address ref
-			WriteCodeInfoForAddress(state, addr);	// needed to refresh code info
+			// This is impossible to rewrite using address refs for banks that are not mapped .
+			if (bIsPhysicalMem)
+			{
+				WriteCodeInfoForAddress(state, addr);	// needed to refresh code info
+			}
 
 			//if (item.AddressRef.GetBankId() == g_DbgBank && addr == g_DbgAddress)
 			if (addr == g_DbgAddress)
@@ -413,7 +416,7 @@ bool ExportAssembler(FEmuBase* pEmu, const char* pTextFileName, uint16_t startAd
 	pExporter->SetOutputToHeader();
 	pExporter->AddHeader();
 		
-	const bool bSuccess = pExporter->ExportAddressRange(state.ItemList, startAddr,endAddr);
+	const bool bSuccess = pExporter->ExportAddressRange(state.ItemList, startAddr,endAddr, true);
 
 	pExporter->ProcessLabelsOutsideExportedRange();
 	pExporter->Finish();
@@ -465,7 +468,7 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 			
 			const uint16_t startAddr = pBank->GetMappedAddress();
 			const uint16_t endAddr = pBank->GetMappedAddress() + pBank->GetSizeBytes() - 1;
-			pExporter->ExportAddressRange(pBank->ItemList, startAddr, endAddr);
+			pExporter->ExportAddressRange(pBank->ItemList, startAddr, endAddr, false);
 		}
 	}
 	

@@ -1020,6 +1020,25 @@ bool AnalyseAtPC(FCodeAnalysisState &state, uint16_t& pc)
 				}					
 			}
 		}
+		
+		// sam. Hack to workaround a potential bug.
+		// The assembler export relies on WriteCodeInfoForAddress() being called
+		// on every code item before we export. This is possible on physical memory
+		// but is impossible on banks that are not currently mapped.
+		// 
+		// I am not fully sure why the assembler exporter relies on calling
+		// WriteCodeInfoForAddress() but my suspicion is it was to workaround a bug
+		// I noticed where labels for jump destinations can go missing.
+		// Calling WriteCodeInfoForAddress will restore these labels.
+		// Perhaps once the missing label bug is fixed, all this will no longer be
+		// needed?
+		//
+		// So to workaround this I am calling WriteCodeInfoForAddress every time code is executed.
+		// Note: This has a big performance penalty.
+		if (state.GetEmulator()->bWriteCodeInfoWhenCodeExecuted)
+		{
+			WriteCodeInfoForAddress(state, pc);
+		}
 		return false;
 	}
 
