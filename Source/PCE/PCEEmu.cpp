@@ -1486,47 +1486,57 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
 	size_t newFileSize = 0;
+	uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
+	if (pOrigData == nullptr)
 	{
-		void* pData = LoadBinaryFile(outputPceFname.c_str(), newFileSize);
-		if (pData == nullptr)
-		{
-			LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
-		}
-		else
-		{
-			LOGINFO("Produced .pce is %d bytes", newFileSize);
-			free(pData);
-		}
+		LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
 	}
-
-	size_t origFileSize = 0;
+	else
 	{
+		LOGINFO("Produced .pce is %d bytes", newFileSize);
+	
+		size_t origFileSize = 0;
+		uint8_t* pNewData = nullptr;
 		auto findIt = GamesLists.find(pCurrentProjectConfig->EmulatorFile.ListName);
 		if (findIt != GamesLists.end())
 		{
 			const std::string origFname = findIt->second.GetRootDir() + pCurrentProjectConfig->EmulatorFile.FileName;
-			void* pData = LoadBinaryFile(origFname.c_str(), newFileSize);
-			if (pData == nullptr)
+			pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
+			if (pNewData == nullptr)
 			{
 				LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
 			}
 			else
 			{
-				LOGINFO("Original .pce is %d bytes", newFileSize);
-				free(pData);
+				LOGINFO("Original .pce is %d bytes", origFileSize);
+	
+				if (newFileSize == origFileSize)
+				{
+					LOGINFO(".pce files are the same size! :)");
+					int numDiffs = 0;
+					for (int i = 0; i < newFileSize; i++)
+					{
+						if (pNewData[i] != pOrigData[i])
+							numDiffs++;
+					}
+					if (!numDiffs)
+						LOGINFO("Files are identical!");
+					else
+						LOGINFO("Found %d bytes that are different.", numDiffs);
+				}
+				else
+				{
+					LOGINFO(".pce files size do not match. Difference is %d bytes", abs((long)(newFileSize - origFileSize)));
+				}
 			}
 		}
-	}
 
-	if (newFileSize == origFileSize)
-	{
-		LOGINFO(".pce files are the same size! :)");
+		if (pNewData)
+			free(pNewData);
+	
+		if (pOrigData)
+			free(pOrigData);
 	}
-	else
-	{
-		LOGINFO(".pce files size do not match");
-	}
-
 	return result == 0 ? true: false;
 #endif
 #else
