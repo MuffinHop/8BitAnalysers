@@ -28,6 +28,7 @@ private:
 	bool bPressRandomButtons = false;
 	bool bLoadExistingProject = false;
 	bool bExportAsm = false;
+	bool bSkipWhenMapped = false;
 	double NextButtonPressTime = DBL_MAX;
 	float InputDelay = 0.5f;
 	int GameIndex = 0;

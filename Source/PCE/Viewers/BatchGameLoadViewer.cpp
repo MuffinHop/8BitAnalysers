@@ -78,7 +78,23 @@ void FBatchGameLoadViewer::DrawUI()
 	ImGui::InputFloat("Input delay", &InputDelay);
 	
 	ImGui::Checkbox("Load existing project", &bLoadExistingProject);
+	
+	ImGui::SeparatorText("ASM");
 	ImGui::Checkbox("Export ASM after game has run", &bExportAsm);
+
+	ImGui::Text("Assemble Success: %d", NumAssembledOk);
+	ImGui::Text("Assemble Failure: %d", NumFailedToAssemble);
+
+	ImGui::SeparatorText("Bank Mapping");
+	bool bMapped = false;
+	if (const FProjectConfig* pConfig = pPCEEmu->GetProjectConfig())
+	{
+		bMapped = pPCEEmu->DebugStats.GameDebugStats[pConfig->Name].NumBanks == pPCEEmu->DebugStats.GameDebugStats[pConfig->Name].NumBanksMapped;
+		ImGui::Text("Fully mapped: %s", bMapped ? "Yes" : "No");
+	}
+	ImGui::Checkbox("Skip game when fully mapped", &bSkipWhenMapped);
+
+	ImGui::SeparatorText("Status");
 
 	float fGameTimeRemaining = 0;
 	ElapsedGameRunTime = 0.f;
@@ -112,14 +128,6 @@ void FBatchGameLoadViewer::DrawUI()
 				}
 				else
 					bNextGame = true;
-
-				if (bExportAsm)
-				{
-					if (pPCEEmu->ExportAsmForCurrentGame())
-						NumAssembledOk++;
-					else
-						NumFailedToAssemble++;
-				}
 			}
 
 			if (bPressRandomButtons && ElapsedGameRunTime > TimeUntilButtonPresses)
@@ -181,9 +189,6 @@ void FBatchGameLoadViewer::DrawUI()
 			ImGui::InputInt("Game index", &GameIndex);
 		}
 
-		ImGui::Text("Assemble Success: %d", NumAssembledOk);
-		ImGui::Text("Assemble Failure: %d", NumFailedToAssemble);
-
 		if (ImGui::Button("Prev game") || ImGui::IsKeyPressed(ImGuiKey_F1))
 		{
 			if (GameIndex > 0)
@@ -193,12 +198,20 @@ void FBatchGameLoadViewer::DrawUI()
 			}
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Next game") || ImGui::IsKeyPressed(ImGuiKey_F2) || bNextGame)
+		if (ImGui::Button("Next game") || ImGui::IsKeyPressed(ImGuiKey_F2) || bNextGame || (bSkipWhenMapped && bMapped))
 		{
 			if (!bIsLastGameInList)
 			{
 				GameIndex++;
 				bLoadGame = true;
+
+				if (bExportAsm && bNextGame)
+				{
+					if (pPCEEmu->ExportAsmForCurrentGame())
+						NumAssembledOk++;
+					else
+						NumFailedToAssemble++;
+				}
 			}
 		}
 		if (ImGui::IsKeyPressed(ImGuiKey_F3))
