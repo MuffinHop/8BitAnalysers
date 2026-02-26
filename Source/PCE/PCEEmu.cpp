@@ -65,8 +65,12 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 #ifndef NDEBUG
 //#define BANK_SWITCH_DEBUG
 #define ASSEMBLE_AFTER_ASM_EXPORT 1
+#define BATCH_GAME_VIEWER 1
+#define DEBUG_STATS_VIEWER 1
 #else
 #define ASSEMBLE_AFTER_ASM_EXPORT 0
+#define BATCH_GAME_VIEWER 0
+#define DEBUG_STATS_VIEWER 0
 #endif
 
 #ifdef BANK_SWITCH_DEBUG
@@ -476,7 +480,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		}
 	}
 
-#ifndef NDEBUG
+#if DEBUG_STATS_VIEWER
 	// Keep track of bank related debug stats
 	if (pCurrentProjectConfig)
 	{
@@ -511,7 +515,6 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		debugStats.NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
 	}
 #endif
-
 
 #ifdef BANK_SWITCH_DEBUG
 	// Check we only have 8 banks mapped.
@@ -845,9 +848,12 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	pGraphicsViewer = new FPCEGraphicsViewer(this);
 	AddViewer(pGraphicsViewer);
 	AddViewer(new FBanksViewer(this));
-#ifndef NDEBUG
+
+#if BATCH_GAME_VIEWER
 	pBatchGameLoadViewer = new FBatchGameLoadViewer(this);
 	AddViewer(pBatchGameLoadViewer);
+#endif
+#if DEBUG_STATS_VIEWER
 	AddViewer(new FDebugStatsViewer(this));
 #endif
 

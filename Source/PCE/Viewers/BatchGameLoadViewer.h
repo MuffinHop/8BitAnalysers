@@ -15,6 +15,8 @@ public:
 
 	bool IsAutomationActive() const { return bAutomationActive; }
 
+	float GetElapsedGameRunTime() const { return ElapsedGameRunTime; }
+
 private:
 	double GetNextButtonPressTime() const;
 
@@ -30,6 +32,7 @@ private:
 	float InputDelay = 0.5f;
 	int GameIndex = 0;
 	int GameRunTime = 10;
+	float ElapsedGameRunTime = 0.f;
 	int TimeUntilButtonPresses = 0;
 	double NextGameTime = DBL_MAX;
 	int NumAssembledOk = 0;

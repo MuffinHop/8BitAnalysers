@@ -1,6 +1,7 @@
 #pragma once
 
 #include "CodeAnalyser/UI/ViewerBase.h"
+#include <map>
 
 class FPCEEmu;
 
@@ -12,6 +13,10 @@ public:
 	virtual bool Init() override;
 	virtual void Shutdown() override {}
 	virtual void DrawUI() override;
+
+protected:
+	
+	std::map<std::string, float> MappedGames;
 
 	FPCEEmu* pPCEEmu = nullptr;
 };

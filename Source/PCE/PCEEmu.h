@@ -104,6 +104,7 @@ public:
 
 	FSpriteViewer* GetSpriteViewer() const { return pSpriteViewer; }
 	FVRAMViewer* GetVRAMViewer() const { return pVRAMViewer; }
+	FBatchGameLoadViewer* GetBatchGameLoadViewer() const { return pBatchGameLoadViewer;	}
 
 	int16_t GetBankIdForMprSlot(uint8_t bankIndex, uint8_t mprIndex);
 	void MapMprBank(uint8_t mprIndex, uint8_t newBankIndex);

@@ -3,6 +3,8 @@
 #include <imgui.h>
 
 #include "../PCEEmu.h"
+#include "BatchGameLoadViewer.h"
+
 #include <geargrafx_core.h>
 
 
@@ -94,9 +96,6 @@ void FDebugStatsViewer::DrawUI()
 	ImGui::Text("Max dupe banks: %d", maxDupeBanks);
 	ImGui::Text("Num bank sets: %d", pPCEEmu->kNumBankSetIds);
 
-	std::vector<std::string> gamesWithAllBanksMapped;
-
-
 	if (ImGui::TreeNode("Game Stats"))
 	{
 		if (ImGui::Button("Reset"))
@@ -112,36 +111,53 @@ void FDebugStatsViewer::DrawUI()
 
 		for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
 		{
-			const FGameDebugStats& debugStats = pair.second;
-			const ImVec4 txtColour = debugStats.NumBanksMapped == debugStats.NumBanks ? ImVec4(0.f, 0.75f, 0.f, 1.0f) : ImVec4(1.f, 1.0f, 1.f, 1.0f);
+			const FGameDebugStats& gameStats = pair.second;
+			const ImVec4 txtColour = gameStats.NumBanksMapped == gameStats.NumBanks ? ImVec4(0.f, 0.75f, 0.f, 1.0f) : ImVec4(1.f, 1.0f, 1.f, 1.0f);
 			ImGui::Text("%s", pair.first.c_str());
-			ImGui::Text("  Num Banks:        %d", debugStats.NumBanks);
-			ImGui::TextColored(txtColour, "  Num Banks Mapped: %d / %d", debugStats.NumBanksMapped, debugStats.NumBanks);
-			ImGui::Text("  Num Dupe Banks:   %d", debugStats.NumDupeBanks);
+			ImGui::Text("  Num Banks:        %d", gameStats.NumBanks);
+			ImGui::TextColored(txtColour, "  Num Banks Mapped: %d / %d", gameStats.NumBanksMapped, gameStats.NumBanks);
+			ImGui::Text("  Num Dupe Banks:   %d", gameStats.NumDupeBanks);
 
 			if (bDump)
 			{
 				LOGINFO("%s", pair.first.c_str());
-				LOGINFO("  Num Banks:        %d", debugStats.NumBanks);
-				LOGINFO("  Num Banks Mapped: %d/%d (%.2f%%)", debugStats.NumBanksMapped, debugStats.NumBanks, ((float)debugStats.NumBanksMapped / (float)debugStats.NumBanks) * 100.f);
-				LOGINFO("  Num Dupe Banks:   %d", debugStats.NumDupeBanks);
+				LOGINFO("  Num Banks:        %d", gameStats.NumBanks);
+				LOGINFO("  Num Banks Mapped: %d/%d (%.2f%%)", gameStats.NumBanksMapped, gameStats.NumBanks, ((float)gameStats.NumBanksMapped / (float)gameStats.NumBanks) * 100.f);
+				LOGINFO("  Num Dupe Banks:   %d", gameStats.NumDupeBanks);
 			}
 
-			if (debugStats.NumBanksMapped == debugStats.NumBanks)
-				gamesWithAllBanksMapped.push_back(pair.first);
+			if (gameStats.NumBanksMapped == gameStats.NumBanks)
+			{
+				std::map<std::string, float>::iterator it = MappedGames.find(pair.first);
+				if (it == MappedGames.end())
+				{
+					MappedGames[pair.first] = pPCEEmu->GetBatchGameLoadViewer()->GetElapsedGameRunTime();
+				}
+			}
 		}
-		ImGui::TreePop();
-	}
 
-	if (ImGui::TreeNode("Games with all banks mapped"))
-	{
-		for (std::string& str : gamesWithAllBanksMapped)
+		if (ImGui::TreeNode("Games with all banks mapped"))
 		{
-			ImGui::Text("%s", str.c_str());
+			if (bDump)
+			{
+				LOGINFO("Mapped games");
+			}
+
+			for (auto pair : MappedGames)
+			{
+				ImGui::Text("%s [%.2f secs]", pair.first.c_str(), pair.second);
+
+				if (bDump)
+				{
+					LOGINFO("  %s [%.2f secs]", pair.first.c_str(), pair.second);
+				}
+			}
+			ImGui::TreePop();
 		}
+
 		ImGui::TreePop();
 	}
-
+	
 	if (ImGui::TreeNode("Bank list"))
 	{
 		constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);

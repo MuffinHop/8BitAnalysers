@@ -81,13 +81,13 @@ void FBatchGameLoadViewer::DrawUI()
 	ImGui::Checkbox("Export ASM after game has run", &bExportAsm);
 
 	float fGameTimeRemaining = 0;
-	float fGameTimeElapsed = 0.f;
+	ElapsedGameRunTime = 0.f;
 	if (bAutomationActive)
 	{
 		fGameTimeRemaining = (float)(NextGameTime - time);
 		ImGui::Text("Game time remaining: %.1fs", MAX(fGameTimeRemaining, 0.f));
-		fGameTimeElapsed = GameRunTime - fGameTimeRemaining;
-		ImGui::Text("Game time elapsed: %.1fs", fGameTimeElapsed);
+		ElapsedGameRunTime = GameRunTime - fGameTimeRemaining;
+		ImGui::Text("Game time elapsed: %.1fs", ElapsedGameRunTime);
 	}
 
 	auto findIt = pPCEEmu->GetGamesLists().find("Snapshot File");
@@ -122,7 +122,7 @@ void FBatchGameLoadViewer::DrawUI()
 				}
 			}
 
-			if (bPressRandomButtons && fGameTimeElapsed > TimeUntilButtonPresses)
+			if (bPressRandomButtons && ElapsedGameRunTime > TimeUntilButtonPresses)
 			{
 				if (time >= NextButtonPressTime)
 				{
