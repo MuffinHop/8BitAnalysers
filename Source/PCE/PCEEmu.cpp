@@ -63,17 +63,19 @@ constexpr uint16_t kDefaultPrimaryMappedPage = 8;
 constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAnalysisPage::kPageSize;
 
 #ifndef NDEBUG
-//#define BANK_SWITCH_DEBUG
+#define BANK_SWITCH_DEBUG 0
 #define ASSEMBLE_AFTER_ASM_EXPORT 1
+#define LITE_MODE 0
 #define BATCH_GAME_VIEWER 1
 #define DEBUG_STATS_VIEWER 1
 #else
 #define ASSEMBLE_AFTER_ASM_EXPORT 0
+#define LITE_MODE 0
 #define BATCH_GAME_VIEWER 0
 #define DEBUG_STATS_VIEWER 0
 #endif
 
-#ifdef BANK_SWITCH_DEBUG
+#if BANK_SWITCH_DEBUG
 #define BANK_LOG(...)  LOGINFO("[BNK] " __VA_ARGS__)
 #define BANK_ERROR(...)  LOGERROR("[BNK] " __VA_ARGS__)
 #else
@@ -294,12 +296,15 @@ void OnVRAMWritten(void* pContext, u16 vramAddr, u16 value)
 
 void FPCEEmu::OnVRAMWritten(uint16_t vramAddr, uint16_t value)
 {
-	const uint16_t curInstructionAddr = PrevPC;
-	GetVRAMViewer()->RegisterWrite  (vramAddr, GetCodeAnalysis().AddressRefFromPhysicalAddress(curInstructionAddr));
-
-	if (GetCodeAnalysis().Debugger.GetStepMode() == EDebugStepMode::ScreenWrite)
+	if (pVRAMViewer)
 	{
-		GetCodeAnalysis().Debugger.Break();
+		const uint16_t curInstructionAddr = PrevPC;
+		pVRAMViewer->RegisterWrite(vramAddr, CodeAnalysis.AddressRefFromPhysicalAddress(curInstructionAddr));
+
+		if (CodeAnalysis.Debugger.GetStepMode() == EDebugStepMode::ScreenWrite)
+		{
+			CodeAnalysis.Debugger.Break();
+		}
 	}
 }
 
@@ -502,6 +507,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		}
 
 		// Track number of banks ever mapped
+		// Do this in the Tick function?
 		std::set<uint16_t> bankIdsPreviouslyMapped;
 		for (int i = 0; i < kBankCdRomRamStart; i++)
 		{
@@ -516,7 +522,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	}
 #endif
 
-#ifdef BANK_SWITCH_DEBUG
+#if BANK_SWITCH_DEBUG
 	// Check we only have 8 banks mapped.
 	// If we have any other number then something has gone wrong.
 	int mappedBanks = 0;
@@ -713,9 +719,14 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	pCore->Init(CodeAnalysis.Debugger.GetDebuggerStoppedPtr());
 	
 	pMemory = pCore->GetMemory();
+
+#if LITE_MODE
+	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
+#else
 	pCore->SetInstructionExecutedCallback(::OnInstructionExecuted, this);
 	pMemory->SetMemoryCallbacks(OnMemoryRead, OnMemoryWritten, BankChangeCallback, this);
 	pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
+#endif
 
 	pMedia = pCore->GetMedia();
 	//pMedia->PreloadCdRom(true);
@@ -833,7 +844,11 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	// This is where we add the viewers we want
 	pPCEViewer = new FPCEViewer(this);
 	AddViewer(pPCEViewer);
+	AddViewer(new FBanksViewer(this));
 
+#if LITE_MODE
+	// do nothing
+#else
 	FOverviewViewer* pOverviewViewer = new FOverviewViewer(this);
 	pOverviewViewer->SetRomOptionEnabled(false); // this enables showing the entire physical address range.
 	AddViewer(pOverviewViewer);
@@ -847,13 +862,13 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	AddViewer(pVRAMViewer);
 	pGraphicsViewer = new FPCEGraphicsViewer(this);
 	AddViewer(pGraphicsViewer);
-	AddViewer(new FBanksViewer(this));
+#endif
 
-#if BATCH_GAME_VIEWER
+#if BATCH_GAME_VIEWER || LITE_MODE
 	pBatchGameLoadViewer = new FBatchGameLoadViewer(this);
 	AddViewer(pBatchGameLoadViewer);
 #endif
-#if DEBUG_STATS_VIEWER
+#if DEBUG_STATS_VIEWER  || LITE_MODE
 	AddViewer(new FDebugStatsViewer(this));
 #endif
 
@@ -917,7 +932,7 @@ void FPCEEmu::ResetBanks()
 	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pMedia->GetROMSize();
 	const int romBankCount = (romSize / 0x2000) + (romSize % 0x2000 ? 1 : 0);
 
-#ifdef BANK_SWITCH_DEBUG
+#if BANK_SWITCH_DEBUG
 	BANK_LOG("ResetBanks()");
 	BANK_LOG("Rom size is %d bytes. Bank count is %d", romSize, romBankCount);
 #endif
@@ -1043,7 +1058,7 @@ void FPCEEmu::ResetBanks()
 
 void FPCEEmu::MapMprBanks()
 {
-#ifdef BANK_SWITCH_DEBUG
+#if BANK_SWITCH_DEBUG
 	BANK_LOG("Mapping initial banks...");
 	bDoneInitialBankMapping = false;
 #endif
@@ -1054,7 +1069,7 @@ void FPCEEmu::MapMprBanks()
 		MapMprBank(mprNum, pMemory->GetMpr(mprNum));
 	}
 
-#ifdef BANK_SWITCH_DEBUG
+#if BANK_SWITCH_DEBUG
 	bDoneInitialBankMapping = true;
 	BANK_LOG("Done mapping initial banks");
 #endif
@@ -1130,7 +1145,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	CodeAnalysis.Init(this);
 	
 	GetGlobalsViewer()->Reset();
-	pVRAMViewer->Reset();
+	if (pVRAMViewer)
+		pVRAMViewer->Reset();
 
 	// Set options from config
 	for (int i = 0; i < FCodeAnalysisState::kNoViewStates; i++)
@@ -1593,7 +1609,8 @@ void FPCEEmu::Tick()
 	FEmuBase::Tick();
 
 	pPCEViewer->Tick();
-	pVRAMViewer->Tick();
+	if (pVRAMViewer)
+		pVRAMViewer->Tick();
 
 	for (int i = 0; i < EmuFramesToRun; i++)
 	{
@@ -1614,7 +1631,103 @@ void FPCEEmu::Tick()
 	UpdatePalettes();
 
 	// Draw UI
+#if LITE_MODE
+	DrawDockingViewLite();
+#else
 	DrawDockingView();
+#endif
+}
+
+bool FPCEEmu::DrawDockingViewLite()
+{
+#if LITE_MODE
+	OPTICK_EVENT();
+
+	static bool opt_fullscreen_persistant = true;
+	bool opt_fullscreen = opt_fullscreen_persistant;
+	bool bOpen = false;
+	ImGuiDockNodeFlags dockFlags = 0;
+
+	// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
+	// because it would be confusing to have two docking targets within each others.
+	ImGuiWindowFlags window_flags = ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking;
+	if (opt_fullscreen)
+	{
+		ImGuiViewport* viewport = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewport->Pos);
+		ImGui::SetNextWindowSize(viewport->Size);
+		ImGui::SetNextWindowViewport(viewport->ID);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+		window_flags |= ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove;
+		window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+	}
+
+	// When using ImGuiDockNodeFlags_PassthruCentralNode, DockSpace() will render our background and handle the pass-thru hole, so we ask Begin() to not render a background.
+	if (dockFlags & ImGuiDockNodeFlags_PassthruCentralNode)
+		window_flags |= ImGuiWindowFlags_NoBackground;
+
+	// Important: note that we proceed even if Begin() returns false (aka window is collapsed).
+	// This is because we want to keep our DockSpace() active. If a DockSpace() is inactive, 
+	// all active windows docked into it will lose their parent and become undocked.
+	// We cannot preserve the docking relationship between an active window and an inactive docking, otherwise 
+	// any change of dockspace/settings would lead to windows being stuck in limbo and never being visible.
+	bool bQuit = false;
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+	if (ImGui::Begin("PCE Docking View", &bOpen, window_flags))
+	{
+		ImGui::PopStyleVar();
+
+		if (opt_fullscreen)
+			ImGui::PopStyleVar(2);
+
+		// DockSpace
+		ImGuiIO& io = ImGui::GetIO();
+		if (io.ConfigFlags & ImGuiConfigFlags_DockingEnable)
+		{
+			const ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockFlags);
+		}
+
+		DrawMainMenu();
+		DrawUILite();
+		ImGui::End();
+	}
+	else
+	{
+		ImGui::PopStyleVar();
+		bQuit = true;
+	}
+
+	return bQuit;
+#else
+	return false;
+#endif
+}
+
+void FPCEEmu::DrawUILite()
+{
+#if LITE_MODE
+	// Draw registered viewers
+	for (auto Viewer : Viewers)
+	{
+		if (Viewer->bOpen)
+		{
+			if (Viewer->bCreateImGuiWindow)
+			{
+				if (ImGui::Begin(Viewer->GetName(), &Viewer->bOpen))
+					Viewer->DrawUI();
+				ImGui::End();
+			}
+			else
+			{
+				Viewer->DrawUI();
+			}
+		}
+	}
+
+	DrawEmulatorUI();
+#endif
 }
 
 void FPCEEmu::Reset()

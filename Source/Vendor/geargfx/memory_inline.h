@@ -52,7 +52,7 @@ INLINE u8 Memory::Read(u16 address, bool is_cpu, bool block_transfer)
     // analyser to register the read has happened.
     // Memory::Read() is also called from the code analysis UI code to display the memory.
     // we dont want this callback to fire in that case.
-    if (is_cpu) 
+    if (is_cpu && IsValidPointer(m_memory_read_callback))
       m_memory_read_callback(m_callback_context, address);
 
     if (bank != 0xFF)
@@ -203,7 +203,7 @@ INLINE void Memory::Write(u16 address, u8 value, bool is_cpu, bool block_transfe
         if (can_write && (offset < 0x800))
         {
             m_memory_map[bank][offset] = value;
-            if (is_cpu)
+            if (is_cpu && IsValidPointer(m_memory_write_callback))
                m_memory_write_callback(m_callback_context, address, value);
         }
     }
@@ -212,13 +212,13 @@ INLINE void Memory::Write(u16 address, u8 value, bool is_cpu, bool block_transfe
         if (m_memory_map_write[bank] || !is_cpu)
         {
             m_memory_map[bank][offset] = value;
-            if (is_cpu)
+            if (is_cpu && IsValidPointer(m_memory_write_callback))
                m_memory_write_callback(m_callback_context, address, value);
         }
     }
     else
     {
-       if (is_cpu)
+       if (is_cpu && IsValidPointer(m_memory_write_callback))
           m_memory_write_callback(m_callback_context, address, value);
 
         // Hardware Page

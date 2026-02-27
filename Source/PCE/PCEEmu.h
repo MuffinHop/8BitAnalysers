@@ -66,6 +66,9 @@ public:
 	void	DrawEmulatorUI() override;
 	// FEmuBase End
 
+	bool DrawDockingViewLite();
+	void DrawUILite();
+
 	// disable copy & assign because this class is big!
 	FPCEEmu(const FPCEEmu&) = delete;
 	FPCEEmu& operator= (const FPCEEmu&) = delete;

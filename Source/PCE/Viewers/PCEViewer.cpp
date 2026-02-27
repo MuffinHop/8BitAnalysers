@@ -67,43 +67,46 @@ void FPCEViewer::DrawUI()
 
 void FPCEViewer::DrawHighlightedSprite(ImVec2 cursorPos, float scale)
 {
-	const int spriteIndex = pPCEEmu->GetSpriteViewer()->HighlightSprite;
-	if (spriteIndex != -1)
+	if (pPCEEmu->GetSpriteViewer())
 	{
-		GeargrafxCore* pCore = pPCEEmu->GetCore();
-		HuC6270* pHuc6270 = pCore->GetHuC6270_1();
-		u16* pSat = pHuc6270->GetSAT();
-		const float screen_scale = scale;
+		const int spriteIndex = pPCEEmu->GetSpriteViewer()->HighlightSprite;
+		if (spriteIndex != -1)
+		{
+			GeargrafxCore* pCore = pPCEEmu->GetCore();
+			HuC6270* pHuc6270 = pCore->GetHuC6270_1();
+			u16* pSat = pHuc6270->GetSAT();
+			const float screen_scale = scale;
 
-		const u16 sprite_flags = pSat[(spriteIndex * 4) + 3] & 0xB98F;
-		const int width = k_huc6270_sprite_width[(sprite_flags >> 8) & 0x01];
-		const int height = k_huc6270_sprite_height[(sprite_flags >> 12) & 0x03];
+			const u16 sprite_flags = pSat[(spriteIndex * 4) + 3] & 0xB98F;
+			const int width = k_huc6270_sprite_width[(sprite_flags >> 8) & 0x01];
+			const int height = k_huc6270_sprite_height[(sprite_flags >> 12) & 0x03];
 
-		const int sprite_y = (pSat[spriteIndex * 4] & 0x03FF) + 3;
-		const int sprite_x = pSat[(spriteIndex * 4) + 1] & 0x03FF;
-		const u16 pattern = (pSat[(spriteIndex * 4) + 2] >> 1) & 0x03FF;
+			const int sprite_y = (pSat[spriteIndex * 4] & 0x03FF) + 3;
+			const int sprite_x = pSat[(spriteIndex * 4) + 1] & 0x03FF;
+			const u16 pattern = (pSat[(spriteIndex * 4) + 2] >> 1) & 0x03FF;
 
-		const bool h_flip = (sprite_flags & 0x0800) != 0;
-		const bool v_flip = (sprite_flags & 0x8000) != 0;
+			const bool h_flip = (sprite_flags & 0x0800) != 0;
+			const bool v_flip = (sprite_flags & 0x8000) != 0;
 
-		const int palette = sprite_flags & 0x0F;
-		const bool priority = (sprite_flags & 0x0080) != 0;
+			const int palette = sprite_flags & 0x0F;
+			const bool priority = (sprite_flags & 0x0080) != 0;
 
-		const float real_x = (float)(sprite_x - 32);
-		const float real_y = (float)(sprite_y - 64);
+			const float real_x = (float)(sprite_x - 32);
+			const float real_y = (float)(sprite_y - 64);
 
-		float rectx_min = cursorPos.x + (real_x * screen_scale);
-		float rectx_max = cursorPos.x + ((real_x + width) * screen_scale);
-		float recty_min = cursorPos.y + (real_y * screen_scale);
-		float recty_max = cursorPos.y + ((real_y + height) * screen_scale);
+			float rectx_min = cursorPos.x + (real_x * screen_scale);
+			float rectx_max = cursorPos.x + ((real_x + width) * screen_scale);
+			float recty_min = cursorPos.y + (real_y * screen_scale);
+			float recty_max = cursorPos.y + ((real_y + height) * screen_scale);
 
-		rectx_min = fminf(fmaxf(rectx_min, cursorPos.x), cursorPos.x + (TextureWidth * screen_scale));
-		rectx_max = fminf(fmaxf(rectx_max, cursorPos.x), cursorPos.x + (TextureWidth * screen_scale));
-		recty_min = fminf(fmaxf(recty_min, cursorPos.y), cursorPos.y + (TextureHeight * screen_scale));
-		recty_max = fminf(fmaxf(recty_max, cursorPos.y), cursorPos.y + (TextureHeight * screen_scale));
+			rectx_min = fminf(fmaxf(rectx_min, cursorPos.x), cursorPos.x + (TextureWidth * screen_scale));
+			rectx_max = fminf(fmaxf(rectx_max, cursorPos.x), cursorPos.x + (TextureWidth * screen_scale));
+			recty_min = fminf(fmaxf(recty_min, cursorPos.y), cursorPos.y + (TextureHeight * screen_scale));
+			recty_max = fminf(fmaxf(recty_max, cursorPos.y), cursorPos.y + (TextureHeight * screen_scale));
 
-		ImDrawList* draw_list = ImGui::GetWindowDrawList();
-		draw_list->AddRect(ImVec2(rectx_min, recty_min), ImVec2(rectx_max, recty_max), Colours::GetFlashColour(), 0.f, 0, 2.f);
+			ImDrawList* draw_list = ImGui::GetWindowDrawList();
+			draw_list->AddRect(ImVec2(rectx_min, recty_min), ImVec2(rectx_max, recty_max), Colours::GetFlashColour(), 0.f, 0, 2.f);
+		}
 	}
 }
 
