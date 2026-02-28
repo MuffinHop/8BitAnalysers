@@ -96,7 +96,7 @@ void FDebugStatsViewer::DrawUI()
 	ImGui::Text("Game with most dupe banks: %s", gameWithMaxDupes.c_str());
 	ImGui::Text("Max dupe banks: %d", maxDupeBanks);
 	ImGui::Text("Num bank sets: %d", pPCEEmu->kNumBankSetIds);
-	ImGui::Text("Bank switches per frame: %d", pPCEEmu->DebugStats.NumBankSwitchesPerFrame);
+	ImGui::Text("Bank switches per frame: %d", pPCEEmu->DebugStats.NumBankSwitchesThisFrame);
 
 	if (ImGui::TreeNode("Game Stats"))
 	{
@@ -119,6 +119,7 @@ void FDebugStatsViewer::DrawUI()
 			ImGui::Text("  Num Banks:        %d", gameStats.NumBanks);
 			ImGui::TextColored(txtColour, "  Num Banks Mapped: %d / %d", gameStats.NumBanksMapped, gameStats.NumBanks);
 			ImGui::Text("  Num Dupe Banks:   %d", gameStats.NumDupeBanks);
+			ImGui::Text("  Max Bank Switches:   %d", gameStats.MaxBankSwitches);
 
 			if (bDump)
 			{

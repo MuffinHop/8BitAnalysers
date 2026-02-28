@@ -21,6 +21,7 @@ struct FGameDebugStats
 	int NumDupeBanks = 0;
 	int NumBanks = 0;
 	int NumBanksMapped = 0;
+	int MaxBankSwitches = 0;
 };
 
 struct FEmuDebugStats
@@ -31,7 +32,7 @@ struct FEmuDebugStats
 	// Debug stats for each game. Uses project name as key
 	std::map<std::string, FGameDebugStats> GameDebugStats;
 
-	int NumBankSwitchesPerFrame = 0;
+	int NumBankSwitchesThisFrame = 0;
 };
 
 struct FPCELaunchConfig : public FEmulatorLaunchConfig

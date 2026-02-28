@@ -498,8 +498,8 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	{
 		if (pOutBank && pOutBank->IsMapped())
 		{
-			assert(pOutBank->Mapping == EBankAccess::Write);
 			BANK_LOG("Unmapping %d %s because it was still mapped after MapBank()", outBankId, pOutBank->Name.c_str());
+			assert(pOutBank->Mapping == EBankAccess::Write);
 			bool bUnMappedOk = state.UnMapBank(outBankId, pageNo, pOutBank->Mapping);
 			assert(bUnMappedOk);
 		}
@@ -540,7 +540,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		}
 	}
 
-	DebugStats.NumBankSwitchesPerFrame++;
+	DebugStats.NumBankSwitchesThisFrame++;
 #endif
 
 #if BANK_SWITCH_DEBUG
@@ -711,6 +711,7 @@ void FPCEEmu::UpdateDebugStats()
 			}
 		}
 		pGameDebugStats->NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
+		pGameDebugStats->MaxBankSwitches = MAX(pGameDebugStats->MaxBankSwitches, DebugStats.NumBankSwitchesThisFrame);
 	}
 #endif
 }
@@ -1333,6 +1334,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	if (!pMedia->IsCDROM())
 	{
+		// shouldnt we be loading mappings here?
 		TBankAddresses& mappings = GetBankMappingsForGame(pGameConfig->Name);
 		mappings.resize(GetBankCount());
 		mappings[0] = 0xe000;
@@ -1684,7 +1686,7 @@ void FPCEEmu::Tick()
 		FDebugger& debugger = CodeAnalysis.Debugger;
 		if (debugger.IsStopped() == false)
 		{
-			DebugStats.NumBankSwitchesPerFrame = 0;
+			DebugStats.NumBankSwitchesThisFrame = 0;
 
 			CodeAnalysis.OnFrameStart();
 			//CodeAnalysis.OnMachineFrameStart();
