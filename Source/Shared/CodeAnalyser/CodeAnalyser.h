@@ -248,14 +248,26 @@ struct FCodeAnalysisConfig
 	int		BranchLinesPerIndent = 5;
 };
 
+#define CODE_ANALYSIS_BANK_REWORK 1
 struct FCodeAnalysisBank
 {
 	int16_t				Id = -1;
 	int					NoPages = 0;
 	uint32_t			SizeMask = 0;
 	//std::vector<int>	MappedPages;	// banks can be mapped to multiple pages
+
+#if CODE_ANALYSIS_BANK_REWORK
+	FCodeAnalysisBank()
+	{
+		// Number of 1k pages in the 64k physical memory range
+		PageAccessFlags.resize(64, 0);
+	}
+	// sam. Replaced the sets with an array. Improved performance.
+	std::vector<uint8_t> PageAccessFlags;
+#else
 	std::unordered_set<int>	MappedReadPages;
 	std::unordered_set<int>	MappedWritePages;
+#endif
 	int					PrimaryMappedPage = -1;	// the page this bank is normally mapped to
 	uint8_t*			Memory = nullptr;	// pointer to memory bank occupies
 	FCodeAnalysisPage*	Pages = nullptr;
@@ -274,6 +286,49 @@ struct FCodeAnalysisBank
 
 	EBankAccess			Mapping = EBankAccess::None;
 
+#if CODE_ANALYSIS_BANK_REWORK
+	void MapToPage(int startPageNo, EBankAccess access)
+	{
+		uint8_t& flags = PageAccessFlags[startPageNo];
+
+		if ((int)access & 1)
+			flags |= 1;
+		if ((int)access & 2)
+			flags |= 2;
+
+		bEverBeenMapped = true;
+		UpdateMapping();
+	}
+
+	void UnmapFromPage(int startPageNo, EBankAccess access)
+	{
+		uint8_t& flags = PageAccessFlags[startPageNo];
+
+		if ((int)access & 1)
+			flags &= ~1;
+		if ((int)access & 2)
+			flags &= ~2;
+
+		UpdateMapping();
+	}
+	void UpdateMapping()
+	{
+		bool hasRead = false;
+		bool hasWrite = false;
+
+		for (uint8_t flags : PageAccessFlags)
+		{
+			if (flags & 1) hasRead = true;
+			if (flags & 2) hasWrite = true;
+		}
+
+		int mapping = 0;
+		if (hasRead) mapping |= 1;
+		if (hasWrite) mapping |= 2;
+
+		Mapping = (EBankAccess)mapping;
+	}
+#else
 	void UpdateMapping()
 	{
 		int mapping = 0;
@@ -302,6 +357,7 @@ struct FCodeAnalysisBank
 			MappedWritePages.erase(startPageNo);
 		UpdateMapping();
 	}
+#endif
 
 	bool		AddressValid(uint16_t addr) const { return addr >= GetMappedAddress() && addr < GetMappedAddress() + (NoPages * FCodeAnalysisPage::kPageSize);	}
 	bool		IsUsed() const { return Pages[0].bUsed; }
