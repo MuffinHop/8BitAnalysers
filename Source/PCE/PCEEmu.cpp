@@ -456,6 +456,8 @@ int FPCEEmu::GetBankCount() const
 	return romBankCount;
 }
 
+// Note: this function needs to be fast. 
+// Careful when adding new code - especially debug code that is always running. 
 void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 {
 	FCodeAnalysisState& state = CodeAnalysis;
@@ -505,53 +507,40 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 
 #if DEBUG_STATS_VIEWER
 	// Keep track of bank related debug stats
-	// move all this to the tick?
 	if (pCurrentProjectConfig)
 	{
-		// Track banks mapped to multiple physical memory ranges
-		int slotCount = 0;
-		for (int i = 0; i < kNumMprSlots; i++)
+		if (pGameDebugStats)
 		{
-			if (pMemory->GetMpr(i) == newBankIndex)
-				slotCount++;
-		}
-	
-		FGameDebugStats& debugStats = DebugStats.GameDebugStats[pCurrentProjectConfig->Name];
-		if (slotCount > 1)
-		{
-			int& perGameCount = debugStats.NumDupeBanks;
-			perGameCount = MAX(perGameCount, slotCount);
-			int& perBankCount = DebugStats.BankIdsWithDupes[Banks[newBankIndex]->GetBankId()];
-			perBankCount = MAX(perBankCount, slotCount);
-		}
-
-		// Track number of banks ever mapped
-		// Do this in the Tick function?
-		std::set<uint16_t> bankIdsPreviouslyMapped;
-		for (int i = 0; i < kBankCdRomRamStart; i++)
-		{
-			const int16_t bankId = Banks[i]->GetBankId(0);
-			if (FCodeAnalysisBank* pBank = state.GetBank(bankId))
+			// Track banks mapped to multiple physical memory ranges
+			int slotCount = 0;
+			for (int i = 0; i < kNumMprSlots; i++)
 			{
-				if (pBank->bEverBeenMapped)
-					bankIdsPreviouslyMapped.insert(bankId);
+				if (pMemory->GetMpr(i) == newBankIndex)
+					slotCount++;
+			}
+	
+			if (slotCount > 1)
+			{
+				int& perGameCount = pGameDebugStats->NumDupeBanks;
+				perGameCount = MAX(perGameCount, slotCount);
 			}
 		}
-		debugStats.NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
-
+		
 		if (!pMedia->IsCDROM())
 		{
 			if (newBankIndex < kBankCdRomRamStart)
 			{
 				const int romIndex = pMedia->GetRomBankIndex(newBankIndex);
-				TBankAddresses& bankAddresses = GetBankMappingsForGame(pCurrentProjectConfig->Name);
-				if (romIndex < bankAddresses.size())
-					bankAddresses[romIndex] = pInBank->GetMappedAddress();
+				if (pBankAddresses)
+				{
+					if (romIndex < pBankAddresses->size())
+						(*pBankAddresses)[romIndex] = pInBank->GetMappedAddress();
+				}
 			}
 		}
 	}
 
-
+	DebugStats.NumBankSwitchesPerFrame++;
 #endif
 
 #if BANK_SWITCH_DEBUG
@@ -701,6 +690,29 @@ void FPCEEmu::CheckPhysicalMemoryRangeIsMapped()
 			assert(mappedAddrFromBank == addrVal);
 		}
 	}
+}
+
+void FPCEEmu::UpdateDebugStats()
+{
+#if DEBUG_STATS_VIEWER
+	if (pGameDebugStats)
+	{
+		FCodeAnalysisState& state = CodeAnalysis;
+
+		// Track number of banks ever mapped
+		std::set<uint16_t> bankIdsPreviouslyMapped;
+		for (int i = 0; i < kBankCdRomRamStart; i++)
+		{
+			const int16_t bankId = Banks[i]->GetBankId(0);
+			if (FCodeAnalysisBank* pBank = state.GetBank(bankId))
+			{
+				if (pBank->bEverBeenMapped)
+					bankIdsPreviouslyMapped.insert(bankId);
+			}
+		}
+		pGameDebugStats->NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
+	}
+#endif
 }
 
 // Check the geargfx memory matches our bank's mapped memory
@@ -1169,7 +1181,9 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	assert(pGameConfig != nullptr);
 	pCurrentProjectConfig = nullptr;
-	
+	pGameDebugStats = nullptr;
+	pBankAddresses = nullptr;
+
 	const std::string windowTitle = kAppTitle + " - " + pGameConfig->Name;
 	SetWindowTitle(windowTitle.c_str());
 	
@@ -1230,9 +1244,11 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 			CheckPhysicalMemoryRangeIsMapped();
 		}
 
-		std::string fname = pGameConfig->Name + ".json";
-		LoadBankMappings(pGameConfig->Name, fname.c_str());
-
+		if (!pMedia->IsCDROM())
+		{
+			std::string fname = pGameConfig->Name + ".json";
+			LoadBankMappings(pGameConfig->Name, fname.c_str());
+		}
 		//pGraphicsViewer->LoadGraphicsSets(graphicsSetsJsonFName.c_str());
 	}
 	else
@@ -1312,6 +1328,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	//pGraphicsViewer->SetImagesRoot((pGlobalConfig->WorkspaceRoot + "/" + pGameConfig->Name + "/GraphicsSets/").c_str());
 
 	pCurrentProjectConfig = pGameConfig;
+	pGameDebugStats = &DebugStats.GameDebugStats[pGameConfig->Name];
+	pBankAddresses = &GetBankMappingsForGame(pGameConfig->Name);
 
 	if (!pMedia->IsCDROM())
 	{
@@ -1416,9 +1434,11 @@ bool FPCEEmu::SaveProject()
 	ExportAnalysisState(CodeAnalysis, analysisStateFName.c_str());
 	//pGraphicsViewer->SaveGraphicsSets(graphicsSetsJsonFName.c_str());
 
-	const std::string fname = pCurrentProjectConfig->Name + ".json";
-	SaveBankMappings(pCurrentProjectConfig->Name, GetBankCount(), fname);
-
+	if (!pMedia->IsCDROM())
+	{
+		const std::string fname = pCurrentProjectConfig->Name + ".json";
+		SaveBankMappings(pCurrentProjectConfig->Name, GetBankCount(), fname);
+	}
 #if EXPORT_BIOS_ANALYSIS_JSON
 	const std::string romJsonFName = GetBundlePath(kBiosInfoJsonFile);
 	ExportAnalysisJson(CodeAnalysis, romJsonFName.c_str(), true);	// export ROMS only
@@ -1657,11 +1677,15 @@ void FPCEEmu::Tick()
 	if (pVRAMViewer)
 		pVRAMViewer->Tick();
 
+	UpdateDebugStats();
+
 	for (int i = 0; i < EmuFramesToRun; i++)
 	{
 		FDebugger& debugger = CodeAnalysis.Debugger;
 		if (debugger.IsStopped() == false)
 		{
+			DebugStats.NumBankSwitchesPerFrame = 0;
+
 			CodeAnalysis.OnFrameStart();
 			//CodeAnalysis.OnMachineFrameStart();
 
@@ -1972,5 +1996,4 @@ void FEmuDebugStats::InitForGame(FPCEEmu* pEmu, const std::string& gameName)
 void FEmuDebugStats::Reset()
 {
 	GameDebugStats.clear();
-	BankIdsWithDupes.clear();
 }

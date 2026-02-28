@@ -96,6 +96,7 @@ void FDebugStatsViewer::DrawUI()
 	ImGui::Text("Game with most dupe banks: %s", gameWithMaxDupes.c_str());
 	ImGui::Text("Max dupe banks: %d", maxDupeBanks);
 	ImGui::Text("Num bank sets: %d", pPCEEmu->kNumBankSetIds);
+	ImGui::Text("Bank switches per frame: %d", pPCEEmu->DebugStats.NumBankSwitchesPerFrame);
 
 	if (ImGui::TreeNode("Game Stats"))
 	{

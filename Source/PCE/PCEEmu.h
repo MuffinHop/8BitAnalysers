@@ -30,7 +30,8 @@ struct FEmuDebugStats
 
 	// Debug stats for each game. Uses project name as key
 	std::map<std::string, FGameDebugStats> GameDebugStats;
-	std::map<uint16_t, int> BankIdsWithDupes;
+
+	int NumBankSwitchesPerFrame = 0;
 };
 
 struct FPCELaunchConfig : public FEmulatorLaunchConfig
@@ -181,6 +182,7 @@ protected:
 
 	void CheckPhysicalMemoryRangeIsMapped();
 	void CheckMemoryMap();
+	void UpdateDebugStats();
 	void ResetBanks();
 	void MapMprBanks();
 	
@@ -213,4 +215,8 @@ protected:
 
 	FBankSet BankSets[kNumBanks];
 	int16_t NullBankId = -1;
+
+	// cached for speed
+	FGameDebugStats* pGameDebugStats = nullptr;
+	std::vector<uint16_t>* pBankAddresses = nullptr;
 };
