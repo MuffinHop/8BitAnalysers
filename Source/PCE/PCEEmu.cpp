@@ -24,6 +24,7 @@
 #include "Viewers/PCERegistersViewer.h"
 #include <geargrafx_core.h>
 #include "Debug/DebugLog.h"
+#include "GameDb.h"
 
 #include "App.h"
 #include <CodeAnalyser/CodeAnalysisState.h>
@@ -65,14 +66,23 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 #ifndef NDEBUG
 #define BANK_SWITCH_DEBUG 0
 #define ASSEMBLE_AFTER_ASM_EXPORT 1
-#define LITE_MODE 0
+#define LITE_MODE 1
+#if !LITE_MODE
 #define BATCH_GAME_VIEWER 1
 #define DEBUG_STATS_VIEWER 1
+#endif
 #else
 #define ASSEMBLE_AFTER_ASM_EXPORT 0
 #define LITE_MODE 0
+#if !LITE_MODE
 #define BATCH_GAME_VIEWER 0
 #define DEBUG_STATS_VIEWER 0
+#endif
+#endif
+
+#if LITE_MODE
+#define BATCH_GAME_VIEWER 1
+#define DEBUG_STATS_VIEWER 1
 #endif
 
 #if BANK_SWITCH_DEBUG
@@ -438,6 +448,14 @@ uint8_t FPCEEmu::GetBankIndexForBankId(uint16_t bankId)
 	return 0xff;
 }
 
+int FPCEEmu::GetBankCount() const
+{
+	const bool bIsCdRom = pMedia->IsCDROM();
+	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pMedia->GetROMSize();
+	const int romBankCount = (romSize / 0x2000) + (romSize % 0x2000 ? 1 : 0);
+	return romBankCount;
+}
+
 void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 {
 	FCodeAnalysisState& state = CodeAnalysis;
@@ -487,6 +505,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 
 #if DEBUG_STATS_VIEWER
 	// Keep track of bank related debug stats
+	// move all this to the tick?
 	if (pCurrentProjectConfig)
 	{
 		// Track banks mapped to multiple physical memory ranges
@@ -519,7 +538,20 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 			}
 		}
 		debugStats.NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
+
+		if (!pMedia->IsCDROM())
+		{
+			if (newBankIndex < kBankCdRomRamStart)
+			{
+				const int romIndex = pMedia->GetRomBankIndex(newBankIndex);
+				TBankAddresses& bankAddresses = GetBankMappingsForGame(pCurrentProjectConfig->Name);
+				if (romIndex < bankAddresses.size())
+					bankAddresses[romIndex] = pInBank->GetMappedAddress();
+			}
+		}
 	}
+
+
 #endif
 
 #if BANK_SWITCH_DEBUG
@@ -864,11 +896,11 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	AddViewer(pGraphicsViewer);
 #endif
 
-#if BATCH_GAME_VIEWER || LITE_MODE
+#if BATCH_GAME_VIEWER
 	pBatchGameLoadViewer = new FBatchGameLoadViewer(this);
 	AddViewer(pBatchGameLoadViewer);
 #endif
-#if DEBUG_STATS_VIEWER  || LITE_MODE
+#if DEBUG_STATS_VIEWER
 	AddViewer(new FDebugStatsViewer(this));
 #endif
 
@@ -929,10 +961,10 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 void FPCEEmu::ResetBanks()
 {
 	const bool bIsCdRom = pMedia->IsCDROM();
-	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pMedia->GetROMSize();
-	const int romBankCount = (romSize / 0x2000) + (romSize % 0x2000 ? 1 : 0);
+	const int romBankCount = GetBankCount();
 
 #if BANK_SWITCH_DEBUG
+	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pMedia->GetROMSize();
 	BANK_LOG("ResetBanks()");
 	BANK_LOG("Rom size is %d bytes. Bank count is %d", romSize, romBankCount);
 #endif
@@ -1198,6 +1230,9 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 			CheckPhysicalMemoryRangeIsMapped();
 		}
 
+		std::string fname = pGameConfig->Name + ".json";
+		LoadBankMappings(pGameConfig->Name, fname.c_str());
+
 		//pGraphicsViewer->LoadGraphicsSets(graphicsSetsJsonFName.c_str());
 	}
 	else
@@ -1277,6 +1312,13 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	//pGraphicsViewer->SetImagesRoot((pGlobalConfig->WorkspaceRoot + "/" + pGameConfig->Name + "/GraphicsSets/").c_str());
 
 	pCurrentProjectConfig = pGameConfig;
+
+	if (!pMedia->IsCDROM())
+	{
+		TBankAddresses& mappings = GetBankMappingsForGame(pGameConfig->Name);
+		mappings.resize(GetBankCount());
+		mappings[0] = 0xe000;
+	}
 
 	LoadLua();
 	
@@ -1373,6 +1415,9 @@ bool FPCEEmu::SaveProject()
 	ExportAnalysisJson(CodeAnalysis, analysisJsonFName.c_str());
 	ExportAnalysisState(CodeAnalysis, analysisStateFName.c_str());
 	//pGraphicsViewer->SaveGraphicsSets(graphicsSetsJsonFName.c_str());
+
+	const std::string fname = pCurrentProjectConfig->Name + ".json";
+	SaveBankMappings(pCurrentProjectConfig->Name, GetBankCount(), fname);
 
 #if EXPORT_BIOS_ANALYSIS_JSON
 	const std::string romJsonFName = GetBundlePath(kBiosInfoJsonFile);
@@ -1921,11 +1966,7 @@ bool FPCEEmu::FBankSet::ClaimSpecificBank(int16_t bankId)
 
 void FEmuDebugStats::InitForGame(FPCEEmu* pEmu, const std::string& gameName)
 {
-	const bool bIsCdRom = pEmu->GetMedia()->IsCDROM();
-	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pEmu->GetMedia()->GetROMSize();
-	const int romBankCount = (romSize / 0x2000) + (romSize % 0x2000 ? 1 : 0);
-
-	GameDebugStats[gameName].NumBanks = romBankCount;
+	GameDebugStats[gameName].NumBanks = pEmu->GetBankCount();
 }
 
 void FEmuDebugStats::Reset()

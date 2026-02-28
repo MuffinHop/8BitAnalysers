@@ -115,11 +115,17 @@ public:
 	// Get the PCE bank index (0-255) for a given bank id.
 	uint8_t GetBankIndexForBankId(uint16_t bankId);
 
+	int GetBankCount() const;
+
 	void CheckDupeMprBankIds();
 
 	static const int kNumBanks = 256;
 	static const int kNumRomBanks = 128;
 	static const int kNumMprSlots = 8;
+	
+	//----------------------------------BankSet BEGIN----------------------------------------
+	// This is code to workaround the fact that 8BA doesn't currently support memory aliasing.
+	// As in, mapping a single logical memory bank to multiple physical memory locations.
 	
 	// The default number of banks in a bank set.
 	// The number includes the primary bank and any extra banks for duplicates.
@@ -129,13 +135,11 @@ public:
 
 	// A set of bank ids that all represent the same logical memory.
 	// PCE games can map the same bank to different physical memory ranges.
-	// Eg. ROM1 being mapped to 0x4000-0x6000 and 0x8000-0xa000.
+	// Eg. ROM1 being mapped to 0x4000-0x6000 and 0x8000-0xa000 simultaneously.
 	// This happens when the same bank index is present in >1 mpr slot.
 	// It is technically possible to map the same bank across the entire physical memory range.
 	// 8BA doesn't support a bank being mapped into >1 memory location at the same time, so 
 	// we need a set of banks that all point to the same memory.
-	// Todo: explore the idea of dupe banks sharing an item list.
-	// Actually this wouldn't work. The item list stores the address ref of each item.
 	struct FBankSet
 	{
 		void SetPrimaryMappedPage(FCodeAnalysisState& state, int bankSetIndex, uint16_t pageAddr);
@@ -163,6 +167,7 @@ public:
 
 	FBankSet* Banks[kNumBanks] = { nullptr };
 	int MprBankSet[kNumMprSlots] = { -1, -1, -1, -1, -1, -1, -1, -1 };
+	//----------------------------------BankSet END----------------------------------------
 
 	FEmuDebugStats DebugStats;
 

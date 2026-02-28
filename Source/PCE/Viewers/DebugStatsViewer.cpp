@@ -3,6 +3,7 @@
 #include <imgui.h>
 
 #include "../PCEEmu.h"
+#include "../GameDb.h"
 #include "BatchGameLoadViewer.h"
 
 #include <geargrafx_core.h>
@@ -158,6 +159,25 @@ void FDebugStatsViewer::DrawUI()
 		ImGui::TreePop();
 	}
 	
+	if (ImGui::TreeNode("Games Bank mappings"))
+	{
+		TGameBankMappings& bankMappings = GetBankMappings();
+		for (const auto it : bankMappings)
+		{
+			if (ImGui::TreeNode(it.first.c_str()))
+			{
+				ImGui::Text("%s", it.first.c_str());
+
+				for (int i = 0; i < bankMappings[it.first].size(); i++)
+				{
+					ImGui::Text("  %02d 0x%04x", i, bankMappings[it.first][i]);
+				}
+				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
+
 	if (ImGui::TreeNode("Bank list"))
 	{
 		constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);
