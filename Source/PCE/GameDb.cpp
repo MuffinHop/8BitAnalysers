@@ -51,6 +51,7 @@ bool SaveGameDbEntry(const std::string& gameName, const std::string& fname)
 	{
 		json mappingJson;
 		mappingJson["Addr"] = mappingAddr.Address;
+		mappingJson["Multiple"] = mappingAddr.bMultipleAddresses;
 		jsonFile["Mappings"].push_back(mappingJson);
 	}
 
@@ -87,6 +88,7 @@ bool LoadGameDbEntry(const std::string& gameName, const std::string& fname)
 	{
 		json& mappingJson = mappingsJson[i];
 		entry.banks[i].Address = mappingJson["Addr"];
+		entry.banks[i].bMultipleAddresses = mappingJson["Multiple"];
 	}
 	
 	return true;
