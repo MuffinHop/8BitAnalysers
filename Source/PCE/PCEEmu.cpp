@@ -531,10 +531,16 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 			if (newBankIndex < kBankCdRomRamStart)
 			{
 				const int romIndex = pMedia->GetRomBankIndex(newBankIndex);
-				if (pBankMappings)
+				if (pGameDbEntry)
 				{
-					if (romIndex < pBankMappings->size())
-						(*pBankMappings)[romIndex] = pInBank->GetMappedAddress();
+					if (romIndex < pGameDbEntry->banks.size())
+					{
+						FGameDbBank& dbBank = pGameDbEntry->banks[romIndex];
+						const uint16_t mappedAddr = pageNo * FCodeAnalysisPage::kPageSize;
+						if (dbBank.Address != 0 && mappedAddr != dbBank.Address)
+							dbBank.bMultipleAddresses = true;
+						dbBank.Address = mappedAddr;
+					}
 				}
 			}
 		}
@@ -890,6 +896,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	pPCEViewer = new FPCEViewer(this);
 	AddViewer(pPCEViewer);
 	AddViewer(new FBanksViewer(this));
+	AddViewer(new FPCERegistersViewer(this));
 
 #if LITE_MODE
 	// do nothing
@@ -897,7 +904,6 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	FOverviewViewer* pOverviewViewer = new FOverviewViewer(this);
 	pOverviewViewer->SetRomOptionEnabled(false); // this enables showing the entire physical address range.
 	AddViewer(pOverviewViewer);
-	AddViewer(new FPCERegistersViewer(this));
 	AddViewer(new FPaletteViewer(this));
 	AddViewer(new FJoypadViewer(this));
 	pSpriteViewer = new FSpriteViewer(this);
@@ -946,8 +952,11 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 		SetItemCode(CodeAnalysis, initialPC);*/
 		CodeAnalysis.Debugger.SetPC(FAddressRef(MprBankId[0], 0));
 		CodeAnalysis.Debugger.Break();
+		//CodeAnalysis.Debugger.Continue();
 	}
 	
+	//CodeAnalysis.Debugger.Continue();
+
 
 	// Setup Debugger
 	//FDebugger& debugger = CodeAnalysis.Debugger;
@@ -1182,12 +1191,12 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	// Save the last game's bank mapping progress
 	// todo: remove in release build?
-	SaveMappings();
+	SaveGameDbEntry();
 
 	assert(pGameConfig != nullptr);
 	pCurrentProjectConfig = nullptr;
 	pGameDebugStats = nullptr;
-	pBankMappings = nullptr;
+	pGameDbEntry = nullptr;
 
 	const std::string windowTitle = kAppTitle + " - " + pGameConfig->Name;
 	SetWindowTitle(windowTitle.c_str());
@@ -1297,7 +1306,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	DebugStats.InitForGame(this, pGameConfig->Name);
 
-	CodeAnalysis.Debugger.Break();
+	//CodeAnalysis.Debugger.Break();
+	CodeAnalysis.Debugger.Continue();
 	PrevPC = p6280State->PC->GetValue();
 
 	// some extra initialisation for creating new analysis from snapshot
@@ -1322,15 +1332,15 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	if (!pMedia->IsCDROM())
 	{
 		const std::string fname = "Mappings/" + pGameConfig->Name + ".json";
-		if (!LoadBankMappings(pGameConfig->Name, fname.c_str()))
+		if (!LoadGameDbEntry(pGameConfig->Name, fname.c_str()))
 		{
 			// Create new bank mappings if no file exists
-			TBankAddresses& mappings = CreateBankMappingsForGame(pGameConfig->Name, GetBankCount());
-			mappings[0] = 0xe000;
+			FGameDbEntry& dbEntry = CreateGameDbEntry(pGameConfig->Name, GetBankCount());
+			dbEntry.banks[0].Address = 0xe000;
 		}
 
-		pBankMappings = GetBankMappingsForGame(pGameConfig->Name);
-		assert(pBankMappings);
+		pGameDbEntry = GetGameDbEntry(pGameConfig->Name);
+		assert(pGameDbEntry);
 	}
 
 	LoadLua();
@@ -1394,13 +1404,13 @@ bool FPCEEmu::LoadMachineState(const char* path, int index /* = -1 */)
 	return pCore->LoadState(path, index);
 }
 
-void FPCEEmu::SaveMappings()
+void FPCEEmu::SaveGameDbEntry()
 {
 	if (pCurrentProjectConfig && !pMedia->IsCDROM())
 	{
 		const std::string fname = "Mappings/" + pCurrentProjectConfig->Name + ".json";
 		EnsureDirectoryExists("Mappings");
-		SaveBankMappings(pCurrentProjectConfig->Name, fname);
+		::SaveGameDbEntry(pCurrentProjectConfig->Name, fname);
 	}
 }
 
@@ -1439,7 +1449,7 @@ bool FPCEEmu::SaveProject()
 	ExportAnalysisState(CodeAnalysis, analysisStateFName.c_str());
 	//pGraphicsViewer->SaveGraphicsSets(graphicsSetsJsonFName.c_str());
 
-	SaveMappings();
+	SaveGameDbEntry();
 #if EXPORT_BIOS_ANALYSIS_JSON
 	const std::string romJsonFName = GetBundlePath(kBiosInfoJsonFile);
 	ExportAnalysisJson(CodeAnalysis, romJsonFName.c_str(), true);	// export ROMS only

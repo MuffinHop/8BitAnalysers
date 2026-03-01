@@ -15,6 +15,7 @@ class FBatchGameLoadViewer;
 class FSpriteViewer;
 class FVRAMViewer;
 class FPCEEmu;
+struct FGameDbEntry;
 
 struct FGameDebugStats
 {
@@ -181,7 +182,7 @@ protected:
 	bool LoadMachineState(const char* path, int index = -1);
 	bool SaveMachineState(const char* path, int index = -1);
 
-	void SaveMappings();
+	void SaveGameDbEntry();
 
 	void CheckPhysicalMemoryRangeIsMapped();
 	void CheckMemoryMap();
@@ -222,5 +223,5 @@ protected:
 
 	// cached for speed
 	FGameDebugStats* pGameDebugStats = nullptr;
-	std::vector<uint16_t>* pBankMappings = nullptr;
+	FGameDbEntry* pGameDbEntry = nullptr;
 };

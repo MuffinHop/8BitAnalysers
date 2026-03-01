@@ -7,43 +7,50 @@
 
 using json = nlohmann::json;
 
-std::map<std::string, TBankAddresses> gGameBankMappings;
+TGameDb gGameDb;
 
-TBankAddresses* GetBankMappingsForGame(const std::string& name)
+FGameDbEntry* GetGameDbEntry(const std::string& name)
 {
-	auto it = gGameBankMappings.find(name);
-	if (it == gGameBankMappings.end())
+	auto it = gGameDb.find(name);
+	if (it == gGameDb.end())
 		return nullptr;
 	return &(it->second);
-}
+	return nullptr;}
 
-TBankAddresses& CreateBankMappingsForGame(const std::string& name, int bankCount)
+FGameDbEntry& CreateGameDbEntry(const std::string& name, int bankCount)
 {
-	assert(gGameBankMappings.find(name) == gGameBankMappings.end());
+	assert(gGameDb.find(name) == gGameDb.end());
 
-	TBankAddresses& bankMappings = gGameBankMappings[name];
-	bankMappings.resize(bankCount);
-	return bankMappings;
+	FGameDbEntry& dbEntry = gGameDb[name];
+	dbEntry.banks.resize(bankCount);
+	return dbEntry;
 }
 
-TGameBankMappings& GetBankMappings()
+TGameDb& GetGameDb()
 {
-	return gGameBankMappings;
+	return gGameDb;
 }
 
-void SaveBankMappings(const std::string& gameName, const std::string& fname)
+bool SaveGameDbEntry(const std::string& gameName, const std::string& fname)
 {
 	json jsonFile;
 
-	const TBankAddresses& mappings = gGameBankMappings[gameName];
+	const auto it = gGameDb.find(gameName);
+	if (it == gGameDb.end())
+	{
+		// Dont save if no entry exists
+		return false;
+	}
+
+	const FGameDbEntry& entry = it->second;
 
 	jsonFile["Name"] = gameName;
-	jsonFile["NumBanks"] = mappings.size();
+	jsonFile["NumBanks"] = entry.banks.size();
 
-	for (auto mappingAddr : mappings)
+	for (auto mappingAddr : entry.banks)
 	{
 		json mappingJson;
-		mappingJson["Addr"] = mappingAddr;
+		mappingJson["Addr"] = mappingAddr.Address;
 		jsonFile["Mappings"].push_back(mappingJson);
 	}
 
@@ -51,11 +58,12 @@ void SaveBankMappings(const std::string& gameName, const std::string& fname)
 	if (outFileStream.is_open())
 	{
 		outFileStream << std::setw(4) << jsonFile << std::endl;
+		return true;
 	}
-	return;
+	return false;
 }
 
-bool LoadBankMappings(const std::string& gameName, const std::string& fname)
+bool LoadGameDbEntry(const std::string& gameName, const std::string& fname)
 {
 	std::ifstream inFileStream(fname);
 	if (inFileStream.is_open() == false)
@@ -69,16 +77,17 @@ bool LoadBankMappings(const std::string& gameName, const std::string& fname)
 	const std::string name = jsonFile["Name"];
 	const int numBanks = jsonFile["NumBanks"];
 
-	TBankAddresses& mappings = gGameBankMappings[name];
-	mappings.clear();
-	mappings.resize(numBanks);
+	FGameDbEntry& entry = gGameDb[name];
+	entry.banks.clear();
+	entry.banks.resize(numBanks);
 
 	json& mappingsJson = jsonFile["Mappings"];
 
 	for (int i = 0; i< numBanks; i++)
 	{
 		json& mappingJson = mappingsJson[i];
-		mappings[i] = mappingJson["Addr"];
+		entry.banks[i].Address = mappingJson["Addr"];
 	}
+	
 	return true;
 }

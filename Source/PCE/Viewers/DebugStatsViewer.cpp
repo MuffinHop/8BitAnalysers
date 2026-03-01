@@ -161,21 +161,26 @@ void FDebugStatsViewer::DrawUI()
 		ImGui::TreePop();
 	}
 	
+	constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);
+	constexpr ImVec4 whiteColour(1.0f, 1.0f, 1.0f, 1.0f);
+	constexpr ImVec4 yellowColour(1.0f, 1.0f, 0.0f, 1.0f);
 	if (ImGui::TreeNode("Games Bank mappings"))
 	{
-		TGameBankMappings& bankMappings = GetBankMappings();
-		for (const auto it : bankMappings)
+
+		TGameDb& gameDb = GetGameDb();
+		for (const auto it : gameDb)
 		{
 			if (ImGui::TreeNode(it.first.c_str()))
 			{
 				//ImGui::Text("%s", it.first.c_str());
-
-				for (int i = 0; i < bankMappings[it.first].size(); i++)
+				const FGameDbEntry& entry = gameDb[it.first];
+				for (int i = 0; i < entry.banks.size(); i++)
 				{
-					if (bankMappings[it.first][i] == 0)
-						ImGui::Text("  %02d ----", i, bankMappings[it.first][i]);
+					const uint16_t address = entry.banks[i].Address;
+					if (address == 0)
+						ImGui::Text("  %02d ----", i, address);
 					else
-						ImGui::Text("  %02d %04x", i, bankMappings[it.first][i]);
+						ImGui::TextColored(entry.banks[i].bMultipleAddresses ? redColour : whiteColour, "  %02d %04x", i, address);
 				}
 				ImGui::TreePop();
 			}
@@ -185,9 +190,6 @@ void FDebugStatsViewer::DrawUI()
 
 	if (ImGui::TreeNode("Bank list"))
 	{
-		constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);
-		constexpr ImVec4 whiteColour(1.0f, 1.0f, 1.0f, 1.0f);
-		constexpr ImVec4 yellowColour(1.0f, 1.0f, 0.0f, 1.0f);
 		for (int i = 0; i < 256; i++)
 		{
 			if (const FCodeAnalysisBank* pBank = state.GetBank(pPCEEmu->Banks[i]->GetBankId(0)))
