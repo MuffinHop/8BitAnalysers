@@ -4,6 +4,8 @@
 
 #include "../PCEEmu.h"
 #include "CodeAnalyser/UI/CodeAnalyserUI.h"
+#include "../GameDb.h"
+#include <Misc/GameConfig.h>
 
 enum class EBankTableColumn : int
 {
@@ -112,10 +114,14 @@ static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vecto
 	std::sort(sortedIndices.begin(), sortedIndices.end(), Compare);
 }
 
-
 void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 {
 	FCodeAnalysisState& state = pPCEEmu->GetCodeAnalysis();
+	FGameDbEntry* pDbEntry = nullptr;
+	if (pPCEEmu->GetProjectConfig())
+	{
+		pDbEntry = GetGameDbEntry(pPCEEmu->GetProjectConfig()->Name);
+	}
 
 	static std::vector<int> sortedIndices;
 
@@ -225,6 +231,10 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 					const FAddressRef bankAddr(pBank->Id, pBank->GetMappedAddress());
 					DrawSnippetToolTip(state, state.GetFocussedViewState(), bankAddr, 11);
 				}
+			}
+			else if (pDbEntry && idx < pDbEntry->banks.size() && pDbEntry->banks[idx].Address != 0)
+			{
+				ImGui::TextColored(colour, "%s", NumStr(pDbEntry->banks[idx].Address));
 			}
 			else
 			{

@@ -1,0 +1,134 @@
+{
+    "Mappings": [
+        {
+            "Addr": 57344,
+            "Multiple": false
+        },
+        {
+            "Addr": 16384,
+            "Multiple": false
+        },
+        {
+            "Addr": 24576,
+            "Multiple": false
+        },
+        {
+            "Addr": 32768,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        },
+        {
+            "Addr": 16384,
+            "Multiple": false
+        },
+        {
+            "Addr": 24576,
+            "Multiple": false
+        },
+        {
+            "Addr": 32768,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        },
+        {
+            "Addr": 16384,
+            "Multiple": false
+        },
+        {
+            "Addr": 24576,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": true
+        },
+        {
+            "Addr": 49152,
+            "Multiple": true
+        },
+        {
+            "Addr": 49152,
+            "Multiple": true
+        },
+        {
+            "Addr": 32768,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        },
+        {
+            "Addr": 16384,
+            "Multiple": false
+        },
+        {
+            "Addr": 24576,
+            "Multiple": false
+        },
+        {
+            "Addr": 32768,
+            "Multiple": false
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 32768,
+            "Multiple": true
+        },
+        {
+            "Addr": 40960,
+            "Multiple": false
+        },
+        {
+            "Addr": 49152,
+            "Multiple": false
+        }
+    ],
+    "Name": "Ankoku Densetsu (Japan)",
+    "NumBanks": 32
+}
