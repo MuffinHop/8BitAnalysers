@@ -168,11 +168,14 @@ void FDebugStatsViewer::DrawUI()
 		{
 			if (ImGui::TreeNode(it.first.c_str()))
 			{
-				ImGui::Text("%s", it.first.c_str());
+				//ImGui::Text("%s", it.first.c_str());
 
 				for (int i = 0; i < bankMappings[it.first].size(); i++)
 				{
-					ImGui::Text("  %02d 0x%04x", i, bankMappings[it.first][i]);
+					if (bankMappings[it.first][i] == 0)
+						ImGui::Text("  %02d ----", i, bankMappings[it.first][i]);
+					else
+						ImGui::Text("  %02d %04x", i, bankMappings[it.first][i]);
 				}
 				ImGui::TreePop();
 			}

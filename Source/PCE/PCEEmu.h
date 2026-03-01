@@ -181,6 +181,8 @@ protected:
 	bool LoadMachineState(const char* path, int index = -1);
 	bool SaveMachineState(const char* path, int index = -1);
 
+	void SaveMappings();
+
 	void CheckPhysicalMemoryRangeIsMapped();
 	void CheckMemoryMap();
 	void UpdateDebugStats();
@@ -190,6 +192,7 @@ protected:
 	void MapBankIdToMprSlot(uint8_t mprIndex, int16_t bankId);
 	void RestoreMprBankMappings(const FPCEGameConfig* pConfig);
 
+	void InitPalettes();
 	void UpdatePalettes();
 
 protected:
@@ -219,5 +222,5 @@ protected:
 
 	// cached for speed
 	FGameDebugStats* pGameDebugStats = nullptr;
-	std::vector<uint16_t>* pBankAddresses = nullptr;
+	std::vector<uint16_t>* pBankMappings = nullptr;
 };

@@ -9,9 +9,21 @@ using json = nlohmann::json;
 
 std::map<std::string, TBankAddresses> gGameBankMappings;
 
-TBankAddresses& GetBankMappingsForGame(const std::string& name)
+TBankAddresses* GetBankMappingsForGame(const std::string& name)
 {
-	return gGameBankMappings[name];
+	auto it = gGameBankMappings.find(name);
+	if (it == gGameBankMappings.end())
+		return nullptr;
+	return &(it->second);
+}
+
+TBankAddresses& CreateBankMappingsForGame(const std::string& name, int bankCount)
+{
+	assert(gGameBankMappings.find(name) == gGameBankMappings.end());
+
+	TBankAddresses& bankMappings = gGameBankMappings[name];
+	bankMappings.resize(bankCount);
+	return bankMappings;
 }
 
 TGameBankMappings& GetBankMappings()
@@ -19,17 +31,14 @@ TGameBankMappings& GetBankMappings()
 	return gGameBankMappings;
 }
 
-
-void SaveBankMappings(const std::string& gameName, int bankCount, const std::string& fname)
+void SaveBankMappings(const std::string& gameName, const std::string& fname)
 {
 	json jsonFile;
 
-	jsonFile["Name"] = gameName;
-	jsonFile["NumBanks"] = bankCount;
-
 	const TBankAddresses& mappings = gGameBankMappings[gameName];
-	
-	assert(bankCount == mappings.size());
+
+	jsonFile["Name"] = gameName;
+	jsonFile["NumBanks"] = mappings.size();
 
 	for (auto mappingAddr : mappings)
 	{
@@ -46,11 +55,11 @@ void SaveBankMappings(const std::string& gameName, int bankCount, const std::str
 	return;
 }
 
-void LoadBankMappings(const std::string& gameName, const std::string& fname)
+bool LoadBankMappings(const std::string& gameName, const std::string& fname)
 {
 	std::ifstream inFileStream(fname);
 	if (inFileStream.is_open() == false)
-		return;
+		return false;
 
 	json jsonFile;
 
@@ -71,4 +80,5 @@ void LoadBankMappings(const std::string& gameName, const std::string& fname)
 		json& mappingJson = mappingsJson[i];
 		mappings[i] = mappingJson["Addr"];
 	}
+	return true;
 }

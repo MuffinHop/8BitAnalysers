@@ -531,10 +531,10 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 			if (newBankIndex < kBankCdRomRamStart)
 			{
 				const int romIndex = pMedia->GetRomBankIndex(newBankIndex);
-				if (pBankAddresses)
+				if (pBankMappings)
 				{
-					if (romIndex < pBankAddresses->size())
-						(*pBankAddresses)[romIndex] = pInBank->GetMappedAddress();
+					if (romIndex < pBankMappings->size())
+						(*pBankMappings)[romIndex] = pInBank->GetMappedAddress();
 				}
 			}
 		}
@@ -1180,10 +1180,14 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 {
 	LOGINFO("Load Project '%s'. bLoadGameData = %s", pGameConfig->Name.c_str(), bLoadGameData ? "True" : "False");
 
+	// Save the last game's bank mapping progress
+	// todo: remove in release build?
+	SaveMappings();
+
 	assert(pGameConfig != nullptr);
 	pCurrentProjectConfig = nullptr;
 	pGameDebugStats = nullptr;
-	pBankAddresses = nullptr;
+	pBankMappings = nullptr;
 
 	const std::string windowTitle = kAppTitle + " - " + pGameConfig->Name;
 	SetWindowTitle(windowTitle.c_str());
@@ -1245,11 +1249,6 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 			CheckPhysicalMemoryRangeIsMapped();
 		}
 
-		if (!pMedia->IsCDROM())
-		{
-			std::string fname = pGameConfig->Name + ".json";
-			LoadBankMappings(pGameConfig->Name, fname.c_str());
-		}
 		//pGraphicsViewer->LoadGraphicsSets(graphicsSetsJsonFName.c_str());
 	}
 	else
@@ -1278,19 +1277,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 		ResetBanks();
 		MapMprBanks();
 
-		// we only want to do this once when create the project
-		// todo: put in a function	
-		uint32_t palette[32] = { 0 };
-		// Create a palette entry for all the HW palettes
-		for (int i = 0; i < 32; i++)
-		{
-			for (int c = 0; c < 16; c++)
-			{
-				palette[c] = i; 
-			}
-			// this wont create a new palette if the colours are the same.
-			const int p = GetPaletteNo(palette, 16);
-		}
+		// We only want to do this once when we create the project
+		InitPalettes();
 	}
 
 	if (pMedia->IsCDROM())
@@ -1330,14 +1318,19 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	pCurrentProjectConfig = pGameConfig;
 	pGameDebugStats = &DebugStats.GameDebugStats[pGameConfig->Name];
-	pBankAddresses = &GetBankMappingsForGame(pGameConfig->Name);
 
 	if (!pMedia->IsCDROM())
 	{
-		// shouldnt we be loading mappings here?
-		TBankAddresses& mappings = GetBankMappingsForGame(pGameConfig->Name);
-		mappings.resize(GetBankCount());
-		mappings[0] = 0xe000;
+		const std::string fname = "Mappings/" + pGameConfig->Name + ".json";
+		if (!LoadBankMappings(pGameConfig->Name, fname.c_str()))
+		{
+			// Create new bank mappings if no file exists
+			TBankAddresses& mappings = CreateBankMappingsForGame(pGameConfig->Name, GetBankCount());
+			mappings[0] = 0xe000;
+		}
+
+		pBankMappings = GetBankMappingsForGame(pGameConfig->Name);
+		assert(pBankMappings);
 	}
 
 	LoadLua();
@@ -1401,6 +1394,16 @@ bool FPCEEmu::LoadMachineState(const char* path, int index /* = -1 */)
 	return pCore->LoadState(path, index);
 }
 
+void FPCEEmu::SaveMappings()
+{
+	if (pCurrentProjectConfig && !pMedia->IsCDROM())
+	{
+		const std::string fname = "Mappings/" + pCurrentProjectConfig->Name + ".json";
+		EnsureDirectoryExists("Mappings");
+		SaveBankMappings(pCurrentProjectConfig->Name, fname);
+	}
+}
+
 // save config & data
 bool FPCEEmu::SaveProject()
 {
@@ -1436,11 +1439,7 @@ bool FPCEEmu::SaveProject()
 	ExportAnalysisState(CodeAnalysis, analysisStateFName.c_str());
 	//pGraphicsViewer->SaveGraphicsSets(graphicsSetsJsonFName.c_str());
 
-	if (!pMedia->IsCDROM())
-	{
-		const std::string fname = pCurrentProjectConfig->Name + ".json";
-		SaveBankMappings(pCurrentProjectConfig->Name, GetBankCount(), fname);
-	}
+	SaveMappings();
 #if EXPORT_BIOS_ANALYSIS_JSON
 	const std::string romJsonFName = GetBundlePath(kBiosInfoJsonFile);
 	ExportAnalysisJson(CodeAnalysis, romJsonFName.c_str(), true);	// export ROMS only
@@ -1843,6 +1842,21 @@ void FPCEEmu::AppFocusCallback(int focused)
 		{ 
 			listIt.second.EnumerateGames();
 		}
+	}
+}
+
+void FPCEEmu::InitPalettes()
+{
+	uint32_t palette[32] = { 0 };
+	// Create a palette entry for all the HW palettes
+	for (int i = 0; i < 32; i++)
+	{
+		for (int c = 0; c < 16; c++)
+		{
+			palette[c] = i;
+		}
+		// this wont create a new palette if the colours are the same.
+		const int p = GetPaletteNo(palette, 16);
 	}
 }
 
