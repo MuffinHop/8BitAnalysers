@@ -66,7 +66,7 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 #ifndef NDEBUG
 #define BANK_SWITCH_DEBUG 0
 #define ASSEMBLE_AFTER_ASM_EXPORT 1
-#define LITE_MODE 1
+#define LITE_MODE 0
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 1
 #define DEBUG_STATS_VIEWER 1
@@ -961,6 +961,8 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	ExportStartAddress = 0x2000;
 	ExportEndAddress = 0xffff;
 
+	CodeAnalysis.pGlobalConfig->ExportAssembler = "PCEAS";
+
 #ifndef NDEBUG
 	std::chrono::duration<double, std::milli> ms_double = std::chrono::high_resolution_clock::now() - t1;
 	LOGINFO("FPCEEmu::Init() took %.2f ms", ms_double);
@@ -1541,15 +1543,15 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 				}
 				else
 				{
-					if (pGameDbEntry && pGameDbEntry->banks[i].Address != 0)
+					if (pGameDbEntry && pGameDbEntry->Banks[i].MprSlot != -1)
 					{
 						// hack. set the primary mapped page
-						// should we do this when we load the gamedb file in?
-						pBank->PrimaryMappedPage = pGameDbEntry->banks[i].Address;
+						//pBank->PrimaryMappedPage = pGameDbEntry->Banks[i].MprSlot;
 						bExport = true;
 					}
 				}
-				banksToExport.push_back(Banks[i]->GetBankId());
+				if (bExport)
+					banksToExport.push_back(Banks[i]->GetBankId());
 			}
 		}
 	}

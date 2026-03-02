@@ -232,9 +232,9 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& Banks)
 					DrawSnippetToolTip(state, state.GetFocussedViewState(), bankAddr, 11);
 				}
 			}
-			else if (pDbEntry && idx < pDbEntry->banks.size() && pDbEntry->banks[idx].Address != 0)
+			else if (pDbEntry && idx < pDbEntry->Banks.size() && pDbEntry->Banks[idx].MprSlot != -1)
 			{
-				ImGui::TextColored(colour, "%s", NumStr(pDbEntry->banks[idx].Address));
+				ImGui::TextColored(colour, "%s", NumStr(pDbEntry->Banks[idx].GetMappedAddress()));
 			}
 			else
 			{

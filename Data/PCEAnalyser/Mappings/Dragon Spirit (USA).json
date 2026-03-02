@@ -1,131 +1,131 @@
 {
     "Mappings": [
         {
-            "Addr": 57344,
+            "MprSlot": 7,
             "Multiple": false
         },
         {
-            "Addr": 16384,
+            "MprSlot": 2,
             "Multiple": false
         },
         {
-            "Addr": 24576,
+            "MprSlot": 3,
             "Multiple": false
         },
         {
-            "Addr": 32768,
+            "MprSlot": 4,
             "Multiple": false
         },
         {
-            "Addr": 40960,
+            "MprSlot": 5,
             "Multiple": false
         },
         {
-            "Addr": 49152,
+            "MprSlot": 6,
             "Multiple": false
         },
         {
-            "Addr": 16384,
+            "MprSlot": 2,
             "Multiple": false
         },
         {
-            "Addr": 24576,
+            "MprSlot": 3,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 2,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 3,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 4,
             "Multiple": true
         },
         {
-            "Addr": 24576,
+            "MprSlot": 3,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 2,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 3,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 4,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 5,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 2,
             "Multiple": true
         },
         {
-            "Addr": 24576,
+            "MprSlot": 3,
             "Multiple": false
         },
         {
-            "Addr": 16384,
+            "MprSlot": 4,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 5,
+            "Multiple": false
+        },
+        {
+            "MprSlot": 6,
             "Multiple": true
         },
         {
-            "Addr": 24576,
+            "MprSlot": 3,
             "Multiple": false
         },
         {
-            "Addr": 16384,
+            "MprSlot": 4,
             "Multiple": false
         },
         {
-            "Addr": 24576,
+            "MprSlot": 5,
             "Multiple": false
         },
         {
-            "Addr": 32768,
-            "Multiple": false
-        },
-        {
-            "Addr": 40960,
-            "Multiple": false
-        },
-        {
-            "Addr": 16384,
+            "MprSlot": 6,
             "Multiple": true
         },
         {
-            "Addr": 24576,
+            "MprSlot": 3,
             "Multiple": false
         },
         {
-            "Addr": 32768,
+            "MprSlot": 4,
             "Multiple": false
         },
         {
-            "Addr": 40960,
+            "MprSlot": 2,
             "Multiple": false
         },
         {
-            "Addr": 49152,
-            "Multiple": true
-        },
-        {
-            "Addr": 24576,
+            "MprSlot": 3,
             "Multiple": false
         },
         {
-            "Addr": 32768,
+            "MprSlot": 4,
             "Multiple": false
         },
         {
-            "Addr": 40960,
+            "MprSlot": 5,
             "Multiple": false
         },
         {
-            "Addr": 49152,
-            "Multiple": true
-        },
-        {
-            "Addr": 24576,
-            "Multiple": false
-        },
-        {
-            "Addr": 32768,
-            "Multiple": false
-        },
-        {
-            "Addr": 16384,
-            "Multiple": false
-        },
-        {
-            "Addr": 24576,
-            "Multiple": false
-        },
-        {
-            "Addr": 32768,
-            "Multiple": false
-        },
-        {
-            "Addr": 40960,
-            "Multiple": false
-        },
-        {
-            "Addr": 16384,
+            "MprSlot": 2,
             "Multiple": false
         }
     ],

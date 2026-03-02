@@ -104,7 +104,9 @@ void FDebugStatsViewer::DrawUI()
 	constexpr ImVec4 greenColour(0.0f, 1.0f, 0.0f, 1.0f);
 
 	bool bDumpBanks = false;
-	if (ImGui::TreeNode("Game Stats"))
+	bool bGameStatsOpen = ImGui::TreeNode("Game Stats");
+
+	if (bGameStatsOpen)
 	{
 		if (ImGui::Button("Reset"))
 		{
@@ -115,10 +117,13 @@ void FDebugStatsViewer::DrawUI()
 		{
 			bDumpBanks = true;
 		}
+	}
 
-		for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
+	for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
+	{
+		const FGameDebugStats& gameStats = pair.second;
+		if (bGameStatsOpen)
 		{
-			const FGameDebugStats& gameStats = pair.second;
 			const ImVec4 txtColour = gameStats.NumBanksMapped == gameStats.NumBanks ? ImVec4(0.f, 0.75f, 0.f, 1.0f) : ImVec4(1.f, 1.0f, 1.f, 1.0f);
 			ImGui::Text("%s", pair.first.c_str());
 			ImGui::Text("  Num Banks:        %d", gameStats.NumBanks);
@@ -133,19 +138,20 @@ void FDebugStatsViewer::DrawUI()
 				LOGINFO("  Num Banks Mapped: %d/%d (%.2f%%)", gameStats.NumBanksMapped, gameStats.NumBanks, ((float)gameStats.NumBanksMapped / (float)gameStats.NumBanks) * 100.f);
 				LOGINFO("  Num Dupe Banks:   %d", gameStats.NumDupeBanks);
 			}
-
-			if (gameStats.NumBanksMapped == gameStats.NumBanks)
-			{
-				std::map<std::string, float>::iterator it = TimeUntilMapped.find(pair.first);
-				if (it == TimeUntilMapped.end())
-				{
-					TimeUntilMapped[pair.first] = pPCEEmu->GetBatchGameLoadViewer()->GetElapsedGameRunTime();
-				}
-			}
 		}
 
-		ImGui::TreePop();
+		if (gameStats.NumBanksMapped == gameStats.NumBanks)
+		{
+			std::map<std::string, float>::iterator it = TimeUntilMapped.find(pair.first);
+			if (it == TimeUntilMapped.end())
+			{
+				TimeUntilMapped[pair.first] = pPCEEmu->GetBatchGameLoadViewer()->GetElapsedGameRunTime();
+			}
+		}
 	}
+
+	if (bGameStatsOpen)
+		ImGui::TreePop();
 	
 	if (ImGui::TreeNode("Games Bank mappings"))
 	{
@@ -157,10 +163,15 @@ void FDebugStatsViewer::DrawUI()
 			bool bTreeOpen = ImGui::TreeNode(it.first.c_str());
 			ImGui::SameLine();
 
-			if (gameStats.NumBanksMapped == gameStats.NumBanks && entry.NumAmbiguousBanks == 0)
-				ImGui::TextColored(greenColour, "OK");
+			if (gameStats.NumBanksMapped == gameStats.NumBanks)
+			{
+				if (entry.NumAmbiguousBanks == 0)
+					ImGui::TextColored(greenColour, "OK");
+				else
+					ImGui::TextColored(yellowColour, "***");
+			}
 			else
-				ImGui::TextColored(redColour, "*");
+				ImGui::TextColored(redColour, "***");
 
 			if (bTreeOpen)
 			{

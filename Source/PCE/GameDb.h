@@ -4,6 +4,8 @@
 
 struct FGameDbBank
 {
+	uint16_t GetMappedAddress() const { return MprSlot == -1 ? 0 : MprSlot * 0x2000; }
+
 	// Has been mapped to multiple mpr slots?
 	bool bMultipleAddresses = false;
 	
