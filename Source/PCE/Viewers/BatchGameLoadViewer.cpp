@@ -63,6 +63,23 @@ void FBatchGameLoadViewer::DrawUI()
 			bAutomationActive = false;
 	}
 
+	FCodeAnalysisState& state = pPCEEmu->GetCodeAnalysis();
+
+	if (state.Debugger.IsStopped())
+	{
+		if (ImGui::Button("Continue"))
+		{
+			state.Debugger.Continue();
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Break"))
+		{
+			state.Debugger.Break();
+		}
+	}
+
 	ImGui::InputInt("Game run time", &GameRunTime);
 
 	if (ImGui::Checkbox("Press random buttons", &bPressRandomButtons))

@@ -943,21 +943,10 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	{
 		CodeAnalysis.Init(this);
 		
-		// if we get here no game is loaded
-		// so it doesnt make sense setting the item code.
-		// there will be no code in the memory.
-		
-		// temp. DELETE ME
-		/*const FAddressRef initialPC = GetPC();
-		SetItemCode(CodeAnalysis, initialPC);*/
 		CodeAnalysis.Debugger.SetPC(FAddressRef(MprBankId[0], 0));
 		CodeAnalysis.Debugger.Break();
-		//CodeAnalysis.Debugger.Continue();
 	}
 	
-	//CodeAnalysis.Debugger.Continue();
-
-
 	// Setup Debugger
 	//FDebugger& debugger = CodeAnalysis.Debugger;
 	//debugger.RegisterEventType((int)EEventType::ScreenPixWrite, "Screen Pixel Write", 0xff0000ff, nullptr, EventShowPixValue);
@@ -1306,8 +1295,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	DebugStats.InitForGame(this, pGameConfig->Name);
 
-	//CodeAnalysis.Debugger.Break();
-	CodeAnalysis.Debugger.Continue();
+	CodeAnalysis.Debugger.Break();
+	//CodeAnalysis.Debugger.Continue();
 	PrevPC = p6280State->PC->GetValue();
 
 	// some extra initialisation for creating new analysis from snapshot
@@ -1515,6 +1504,9 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 	if (pCurrentProjectConfig == nullptr)
 		return false;
 
+	if (pMedia->IsCDROM())
+		return false;
+
 	std::string exportPath;
 
 	if (pCurrentProjectConfig->AsmExportPath.empty() == false)
@@ -1535,21 +1527,31 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 
 	const std::string outputAsmFname = exportPath + pCurrentProjectConfig->Name + ".asm";
 	std::vector<int16_t> banksToExport;
-	if (!pMedia->IsCDROM())
+	for (int i = 0; i < kBankCdRomRamStart; i++)
 	{
-		for (int i = 0; i < kBankCdRomRamStart; i++)
+		const int16_t bankId = Banks[i]->GetBankId();
+		if (std::find(banksToExport.begin(), banksToExport.end(), bankId) == banksToExport.end())
 		{
-			const int16_t bankId = Banks[i]->GetBankId();
-			if (std::find(banksToExport.begin(), banksToExport.end(), bankId) == banksToExport.end())
+			if (FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(bankId))
 			{
-				if (FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(bankId))
+				bool bExport = false;
+				if (pBank->bEverBeenMapped)
 				{
-					if (pBank->bEverBeenMapped)
-						banksToExport.push_back(Banks[i]->GetBankId());
+					bExport = true;
 				}
+				else
+				{
+					if (pGameDbEntry && pGameDbEntry->banks[i].Address != 0)
+					{
+						// hack. set the primary mapped page
+						// should we do this when we load the gamedb file in?
+						pBank->PrimaryMappedPage = pGameDbEntry->banks[i].Address;
+						bExport = true;
+					}
+				}
+				banksToExport.push_back(Banks[i]->GetBankId());
 			}
 		}
-
 	}
 	
 	if (!ExportAssemblerForBanks(this, outputAsmFname.c_str(), banksToExport))
