@@ -533,13 +533,13 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 				const int romIndex = pMedia->GetRomBankIndex(newBankIndex);
 				if (pGameDbEntry)
 				{
-					if (romIndex < pGameDbEntry->banks.size())
+					if (romIndex < pGameDbEntry->Banks.size())
 					{
-						FGameDbBank& dbBank = pGameDbEntry->banks[romIndex];
-						const uint16_t mappedAddr = pageNo * FCodeAnalysisPage::kPageSize;
-						if (dbBank.Address != 0 && mappedAddr != dbBank.Address)
+						FGameDbBank& dbBank = pGameDbEntry->Banks[romIndex];
+						//const uint16_t mappedAddr = pageNo * FCodeAnalysisPage::kPageSize;
+						if (dbBank.MprSlot != -1 && mprIndex != dbBank.MprSlot)
 							dbBank.bMultipleAddresses = true;
-						dbBank.Address = mappedAddr;
+						dbBank.MprSlot = mprIndex;
 					}
 				}
 			}
@@ -1336,7 +1336,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 		{
 			// Create new bank mappings if no file exists
 			FGameDbEntry& dbEntry = CreateGameDbEntry(pGameConfig->Name, GetBankCount());
-			dbEntry.banks[0].Address = 0xe000;
+			dbEntry.Banks[0].MprSlot = 7;
 		}
 
 		pGameDbEntry = GetGameDbEntry(pGameConfig->Name);
@@ -1564,72 +1564,75 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 
 	LOGINFO("Assembling: %s. [%d banks]", outputAsmFname.c_str(), (int)banksToExport.size());
 
-	// todo:export to temp directory?
+	// todo: export to temp directory?
 	const std::string outputPceFname = RemoveFileExtension(outputAsmFname.c_str()) + ".pce";
 
 	// This presumes pceas.exe is in your windows path.
 	char cmdTxt[256];
 	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\"", outputAsmFname.c_str());
-	const int result = std::system(cmdTxt);
+	const int errorCode = std::system(cmdTxt);
 
-	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), !result ? "SUCESS" : "FAILURE");
+	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
 	//LOGINFO("Error code: %d", result);
 
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
-	size_t newFileSize = 0;
-	uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
-	if (pOrigData == nullptr)
+	if (!errorCode)
 	{
-		LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
-	}
-	else
-	{
-		LOGINFO("Produced .pce is %d bytes", newFileSize);
-	
-		size_t origFileSize = 0;
-		uint8_t* pNewData = nullptr;
-		auto findIt = GamesLists.find(pCurrentProjectConfig->EmulatorFile.ListName);
-		if (findIt != GamesLists.end())
+		size_t newFileSize = 0;
+		uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
+		if (pOrigData == nullptr)
 		{
-			const std::string origFname = findIt->second.GetRootDir() + pCurrentProjectConfig->EmulatorFile.FileName;
-			pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
-			if (pNewData == nullptr)
+			LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
+		}
+		else
+		{
+			LOGINFO("Produced .pce is %d bytes", newFileSize);
+
+			size_t origFileSize = 0;
+			uint8_t* pNewData = nullptr;
+			auto findIt = GamesLists.find(pCurrentProjectConfig->EmulatorFile.ListName);
+			if (findIt != GamesLists.end())
 			{
-				LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
-			}
-			else
-			{
-				LOGINFO("Original .pce is %d bytes", origFileSize);
-	
-				if (newFileSize == origFileSize)
+				const std::string origFname = findIt->second.GetRootDir() + pCurrentProjectConfig->EmulatorFile.FileName;
+				pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
+				if (pNewData == nullptr)
 				{
-					LOGINFO(".pce files are the same size! :)");
-					int numDiffs = 0;
-					for (int i = 0; i < newFileSize; i++)
-					{
-						if (pNewData[i] != pOrigData[i])
-							numDiffs++;
-					}
-					if (!numDiffs)
-						LOGINFO("Files are identical!");
-					else
-						LOGINFO("Found %d bytes that are different.", numDiffs);
+					LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
 				}
 				else
 				{
-					LOGINFO(".pce files size do not match. Difference is %d bytes", abs((long)(newFileSize - origFileSize)));
+					LOGINFO("Original .pce is %d bytes", origFileSize);
+
+					if (newFileSize == origFileSize)
+					{
+						LOGINFO(".pce files are the same size! :)");
+						int numDiffs = 0;
+						for (int i = 0; i < newFileSize; i++)
+						{
+							if (pNewData[i] != pOrigData[i])
+								numDiffs++;
+						}
+						if (!numDiffs)
+							LOGINFO("Files are identical!");
+						else
+							LOGINFO("Found %d bytes that are different.", numDiffs);
+					}
+					else
+					{
+						LOGINFO(".pce files size do not match. Difference is %d bytes", abs((long)(newFileSize - origFileSize)));
+					}
+
+					if (pNewData)
+						free(pNewData);
 				}
 			}
 		}
-
-		if (pNewData)
-			free(pNewData);
 	
 		if (pOrigData)
 			free(pOrigData);
 	}
-	return result == 0 ? true: false;
+	return errorCode == 0 ? true: false;
 #endif
 #else
 	return true;

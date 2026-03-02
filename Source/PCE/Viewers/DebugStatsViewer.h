@@ -16,7 +16,7 @@ public:
 
 protected:
 	
-	std::map<std::string, float> MappedGames;
+	std::map<std::string, float> TimeUntilMapped;
 
 	FPCEEmu* pPCEEmu = nullptr;
 };

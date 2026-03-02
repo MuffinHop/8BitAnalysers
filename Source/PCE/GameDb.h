@@ -4,14 +4,20 @@
 
 struct FGameDbBank
 {
-	// Has been mapped to multiple addresses
+	// Has been mapped to multiple mpr slots?
 	bool bMultipleAddresses = false;
-	uint16_t Address = 0;
+	
+	// todo make this a bitfield of all slots this banks has been mapped to?
+	int MprSlot = -1;
 };
 
 struct FGameDbEntry
 {
-	std::vector<FGameDbBank> banks;
+	std::vector<FGameDbBank> Banks;
+
+	// How many banks are mapped into multiple mpr slots?
+	// Note: this is not saved in the json file.
+	int NumAmbiguousBanks = 0;
 };
 
 typedef std::map<std::string, FGameDbEntry> TGameDb;

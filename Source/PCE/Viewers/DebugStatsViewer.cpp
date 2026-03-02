@@ -98,6 +98,12 @@ void FDebugStatsViewer::DrawUI()
 	ImGui::Text("Num bank sets: %d", pPCEEmu->kNumBankSetIds);
 	ImGui::Text("Bank switches per frame: %d", pPCEEmu->DebugStats.NumBankSwitchesThisFrame);
 
+	constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);
+	constexpr ImVec4 whiteColour(1.0f, 1.0f, 1.0f, 1.0f);
+	constexpr ImVec4 yellowColour(1.0f, 1.0f, 0.0f, 1.0f);
+	constexpr ImVec4 greenColour(0.0f, 1.0f, 0.0f, 1.0f);
+
+	bool bDumpBanks = false;
 	if (ImGui::TreeNode("Game Stats"))
 	{
 		if (ImGui::Button("Reset"))
@@ -105,10 +111,9 @@ void FDebugStatsViewer::DrawUI()
 			pPCEEmu->DebugStats.Reset();
 		}
 
-		bool bDump = false;
 		if (ImGui::Button("Dump"))
 		{
-			bDump = true;
+			bDumpBanks = true;
 		}
 
 		for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
@@ -121,7 +126,7 @@ void FDebugStatsViewer::DrawUI()
 			ImGui::Text("  Num Dupe Banks:   %d", gameStats.NumDupeBanks);
 			ImGui::Text("  Max Bank Switches:   %d", gameStats.MaxBankSwitches);
 
-			if (bDump)
+			if (bDumpBanks)
 			{
 				LOGINFO("%s", pair.first.c_str());
 				LOGINFO("  Num Banks:        %d", gameStats.NumBanks);
@@ -131,58 +136,66 @@ void FDebugStatsViewer::DrawUI()
 
 			if (gameStats.NumBanksMapped == gameStats.NumBanks)
 			{
-				std::map<std::string, float>::iterator it = MappedGames.find(pair.first);
-				if (it == MappedGames.end())
+				std::map<std::string, float>::iterator it = TimeUntilMapped.find(pair.first);
+				if (it == TimeUntilMapped.end())
 				{
-					MappedGames[pair.first] = pPCEEmu->GetBatchGameLoadViewer()->GetElapsedGameRunTime();
+					TimeUntilMapped[pair.first] = pPCEEmu->GetBatchGameLoadViewer()->GetElapsedGameRunTime();
 				}
 			}
-		}
-
-		if (ImGui::TreeNode("Games with all banks mapped"))
-		{
-			if (bDump)
-			{
-				LOGINFO("Mapped games");
-			}
-
-			for (auto pair : MappedGames)
-			{
-				ImGui::Text("%s [%.2f secs]", pair.first.c_str(), pair.second);
-
-				if (bDump)
-				{
-					LOGINFO("  %s [%.2f secs]", pair.first.c_str(), pair.second);
-				}
-			}
-			ImGui::TreePop();
 		}
 
 		ImGui::TreePop();
 	}
 	
-	constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);
-	constexpr ImVec4 whiteColour(1.0f, 1.0f, 1.0f, 1.0f);
-	constexpr ImVec4 yellowColour(1.0f, 1.0f, 0.0f, 1.0f);
 	if (ImGui::TreeNode("Games Bank mappings"))
 	{
-
 		TGameDb& gameDb = GetGameDb();
 		for (const auto it : gameDb)
 		{
-			if (ImGui::TreeNode(it.first.c_str()))
+			const FGameDebugStats& gameStats = pPCEEmu->DebugStats.GameDebugStats[it.first];
+			const FGameDbEntry& entry = gameDb[it.first];
+			bool bTreeOpen = ImGui::TreeNode(it.first.c_str());
+			ImGui::SameLine();
+
+			if (gameStats.NumBanksMapped == gameStats.NumBanks && entry.NumAmbiguousBanks == 0)
+				ImGui::TextColored(greenColour, "OK");
+			else
+				ImGui::TextColored(redColour, "*");
+
+			if (bTreeOpen)
 			{
 				//ImGui::Text("%s", it.first.c_str());
-				const FGameDbEntry& entry = gameDb[it.first];
-				for (int i = 0; i < entry.banks.size(); i++)
+				for (int i = 0; i < entry.Banks.size(); i++)
 				{
-					const uint16_t address = entry.banks[i].Address;
-					if (address == 0)
-						ImGui::Text("  %02d ----", i, address);
+					const int mprSlot = entry.Banks[i].MprSlot;
+					if (mprSlot == -1)
+						ImGui::Text("  %02d - ----", i);
 					else
-						ImGui::TextColored(entry.banks[i].bMultipleAddresses ? redColour : whiteColour, "  %02d %04x", i, address);
+						ImGui::TextColored(entry.Banks[i].bMultipleAddresses ? yellowColour : whiteColour, "  %02d %d %04x", i, mprSlot, mprSlot * 0x2000);
 				}
 				ImGui::TreePop();
+			}
+		}
+		ImGui::TreePop();
+	}
+
+	if (ImGui::TreeNode("Games with all banks mapped"))
+	{
+		TGameDb& gameDb = GetGameDb();
+
+		if (bDumpBanks)
+		{
+			LOGINFO("Mapped games");
+		}
+
+		for (auto pair : TimeUntilMapped)
+		{
+			const FGameDbEntry& entry = gameDb[pair.first];
+			ImGui::TextColored(entry.NumAmbiguousBanks > 0 ? yellowColour : whiteColour, "%s %d [%.2f secs]", pair.first.c_str(), entry.NumAmbiguousBanks, pair.second);
+
+			if (bDumpBanks)
+			{
+				LOGINFO("  %s %d [%.2f secs]", pair.first.c_str(), entry.NumAmbiguousBanks, pair.second);
 			}
 		}
 		ImGui::TreePop();

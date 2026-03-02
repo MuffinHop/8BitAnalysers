@@ -137,6 +137,9 @@ void FBatchGameLoadViewer::DrawUI()
 					bNextGame = true;
 			}
 
+			if (bSkipWhenMapped && bMapped)
+				bNextGame = true;
+
 			if (bPressRandomButtons && ElapsedGameRunTime > TimeUntilButtonPresses)
 			{
 				if (time >= NextButtonPressTime)
@@ -205,7 +208,8 @@ void FBatchGameLoadViewer::DrawUI()
 			}
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Next game") || ImGui::IsKeyPressed(ImGuiKey_F2) || bNextGame || (bSkipWhenMapped && bMapped))
+	
+		if (ImGui::Button("Next game") || ImGui::IsKeyPressed(ImGuiKey_F2) || bNextGame)
 		{
 			if (!bIsLastGameInList)
 			{

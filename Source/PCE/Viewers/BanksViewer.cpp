@@ -71,7 +71,7 @@ static const char* BankContentToString(EBankContent content)
 	}
 }
 
-static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vector<FCodeAnalysisBank*>& banks,	std::vector<int>& sortedIndices)
+static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vector<FCodeAnalysisBank*>& Banks,	std::vector<int>& sortedIndices)
 {
 	if (!sortSpecs || sortSpecs->SpecsCount == 0)
 		return;
@@ -80,8 +80,8 @@ static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vecto
 
 	auto Compare = [&](int lhs, int rhs)
 		{
-			const FCodeAnalysisBank* A = banks[lhs];
-			const FCodeAnalysisBank* B = banks[rhs];
+			const FCodeAnalysisBank* A = Banks[lhs];
+			const FCodeAnalysisBank* B = Banks[rhs];
 			int delta = 0;
 
 			switch ((EBankTableColumn)spec.ColumnIndex)
@@ -113,17 +113,17 @@ static void SortBankTable(const ImGuiTableSortSpecs* sortSpecs,	const std::vecto
 }
 
 
-void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
+void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& Banks)
 {
 	FCodeAnalysisState& state = pPCEEmu->GetCodeAnalysis();
 
 	static std::vector<int> sortedIndices;
 
 	// Initialize index list once or if size changes
-	if (sortedIndices.size() != banks.size())
+	if (sortedIndices.size() != Banks.size())
 	{
-		sortedIndices.resize(banks.size());
-		for (int i = 0; i < (int)banks.size(); ++i)
+		sortedIndices.resize(Banks.size());
+		for (int i = 0; i < (int)Banks.size(); ++i)
 			sortedIndices[i] = i;
 	}
 
@@ -153,7 +153,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 		{
 			if (sortSpecs->SpecsDirty)
 			{
-				SortBankTable(sortSpecs, banks, sortedIndices);
+				SortBankTable(sortSpecs, Banks, sortedIndices);
 				sortSpecs->SpecsDirty = false;
 			}
 		}
@@ -161,7 +161,7 @@ void FBanksViewer::DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks)
 		// Draw rows
 		for (int idx : sortedIndices)
 		{
-			const FCodeAnalysisBank* pBank = banks[idx];
+			const FCodeAnalysisBank* pBank = Banks[idx];
 
 			ImGui::TableNextRow();
 

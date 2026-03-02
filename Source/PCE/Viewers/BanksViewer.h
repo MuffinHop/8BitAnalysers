@@ -16,7 +16,7 @@ public:
 	virtual void Shutdown() override {}
 	virtual void DrawUI() override;
 
-	void DrawBankTable(const std::vector<FCodeAnalysisBank*>& banks);
+	void DrawBankTable(const std::vector<FCodeAnalysisBank*>& Banks);
 
 	FPCEEmu* pPCEEmu = nullptr;
 };

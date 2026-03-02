@@ -22,7 +22,7 @@ FGameDbEntry& CreateGameDbEntry(const std::string& name, int bankCount)
 	assert(gGameDb.find(name) == gGameDb.end());
 
 	FGameDbEntry& dbEntry = gGameDb[name];
-	dbEntry.banks.resize(bankCount);
+	dbEntry.Banks.resize(bankCount);
 	return dbEntry;
 }
 
@@ -42,17 +42,22 @@ bool SaveGameDbEntry(const std::string& gameName, const std::string& fname)
 		return false;
 	}
 
-	const FGameDbEntry& entry = it->second;
+	FGameDbEntry& entry = it->second;
 
 	jsonFile["Name"] = gameName;
-	jsonFile["NumBanks"] = entry.banks.size();
+	jsonFile["NumBanks"] = entry.Banks.size();
 
-	for (auto mappingAddr : entry.banks)
+	entry.NumAmbiguousBanks = 0;
+
+	for (auto dbBank : entry.Banks)
 	{
 		json mappingJson;
-		mappingJson["Addr"] = mappingAddr.Address;
-		mappingJson["Multiple"] = mappingAddr.bMultipleAddresses;
+		mappingJson["MprSlot"] = dbBank.MprSlot;
+		mappingJson["Multiple"] = dbBank.bMultipleAddresses;
 		jsonFile["Mappings"].push_back(mappingJson);
+
+		if (dbBank.MprSlot != -1 && dbBank.bMultipleAddresses)
+			entry.NumAmbiguousBanks++;
 	}
 
 	std::ofstream outFileStream(fname);
@@ -79,16 +84,21 @@ bool LoadGameDbEntry(const std::string& gameName, const std::string& fname)
 	const int numBanks = jsonFile["NumBanks"];
 
 	FGameDbEntry& entry = gGameDb[name];
-	entry.banks.clear();
-	entry.banks.resize(numBanks);
+	entry.Banks.clear();
+	entry.Banks.resize(numBanks);
 
 	json& mappingsJson = jsonFile["Mappings"];
+
+	entry.NumAmbiguousBanks = 0;
 
 	for (int i = 0; i< numBanks; i++)
 	{
 		json& mappingJson = mappingsJson[i];
-		entry.banks[i].Address = mappingJson["Addr"];
-		entry.banks[i].bMultipleAddresses = mappingJson["Multiple"];
+		entry.Banks[i].MprSlot = mappingJson["MprSlot"];
+		entry.Banks[i].bMultipleAddresses = mappingJson["Multiple"];
+
+		if (entry.Banks[i].MprSlot != -1 && entry.Banks[i].bMultipleAddresses)
+			entry.NumAmbiguousBanks++;
 	}
 	
 	return true;
