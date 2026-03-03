@@ -1,94 +1,6 @@
 {
     "Mappings": [
         {
-            "Fixed": true,
-            "MprSlot": 6
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 2
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 3
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 4
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 5
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 2
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 3
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 4
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 5
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 6
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 2
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 3
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 4
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 5
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 6
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 4
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 5
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 6
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 2
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 3
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 4
-        },
-        {
-            "Fixed": true,
-            "MprSlot": 5
-        },
-        {
             "Fixed": false,
             "MprSlot": 5
         },
@@ -97,24 +9,20 @@
             "MprSlot": 6
         },
         {
-            "Fixed": true,
-            "MprSlot": 6
+            "Fixed": false,
+            "MprSlot": 2
         },
         {
-            "Fixed": true,
-            "MprSlot": 5
+            "Fixed": false,
+            "MprSlot": 3
         },
         {
-            "Fixed": true,
-            "MprSlot": 6
+            "Fixed": false,
+            "MprSlot": 4
         },
         {
             "Fixed": false,
             "MprSlot": 5
-        },
-        {
-            "Fixed": false,
-            "MprSlot": 6
         },
         {
             "Fixed": true,
@@ -127,8 +35,100 @@
         {
             "Fixed": true,
             "MprSlot": 5
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 2
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 3
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 4
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 5
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 2
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 3
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 4
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 5
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 2
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 3
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 4
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 5
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 2
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 3
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 4
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 5
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 2
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 3
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 4
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 5
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 2
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 3
+        },
+        {
+            "Fixed": true,
+            "MprSlot": 4
         }
     ],
-    "Name": "Alien Crush (Japan)",
+    "Name": "Gradius (Japan)",
     "NumBanks": 32
 }

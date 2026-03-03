@@ -165,7 +165,7 @@ void FDebugStatsViewer::DrawUI()
 
 			if (gameStats.NumBanksMapped == gameStats.NumBanks)
 			{
-				if (entry.NumAmbiguousBanks == 0)
+				if (entry.NumDynamicBanks == 0)
 					ImGui::TextColored(greenColour, "OK");
 				else
 					ImGui::TextColored(yellowColour, "***");
@@ -182,7 +182,7 @@ void FDebugStatsViewer::DrawUI()
 					if (mprSlot == -1)
 						ImGui::Text("  %02d - ----", i);
 					else
-						ImGui::TextColored(entry.Banks[i].bMultipleAddresses ? yellowColour : whiteColour, "  %02d %d %04x", i, mprSlot, mprSlot * 0x2000);
+						ImGui::TextColored(!entry.Banks[i].bFixed ? yellowColour : whiteColour, "  %02d %d %04x", i, mprSlot, mprSlot * 0x2000);
 				}
 				ImGui::TreePop();
 			}
@@ -202,11 +202,11 @@ void FDebugStatsViewer::DrawUI()
 		for (auto pair : TimeUntilMapped)
 		{
 			const FGameDbEntry& entry = gameDb[pair.first];
-			ImGui::TextColored(entry.NumAmbiguousBanks > 0 ? yellowColour : whiteColour, "%s %d [%.2f secs]", pair.first.c_str(), entry.NumAmbiguousBanks, pair.second);
+			ImGui::TextColored(entry.NumDynamicBanks > 0 ? yellowColour : whiteColour, "%s %d [%.2f secs]", pair.first.c_str(), entry.NumDynamicBanks, pair.second);
 
 			if (bDumpBanks)
 			{
-				LOGINFO("  %s %d [%.2f secs]", pair.first.c_str(), entry.NumAmbiguousBanks, pair.second);
+				LOGINFO("  %s %d [%.2f secs]", pair.first.c_str(), entry.NumDynamicBanks, pair.second);
 			}
 		}
 		ImGui::TreePop();

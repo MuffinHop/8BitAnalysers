@@ -1,68 +1,68 @@
 {
     "Mappings": [
         {
-            "MprSlot": 7,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 7
         },
         {
-            "MprSlot": 4,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 4
         },
         {
-            "MprSlot": 5,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 5
         },
         {
-            "MprSlot": 6,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 6
         },
         {
-            "MprSlot": 4,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 4
         },
         {
-            "MprSlot": 5,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 5
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 2,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 2
         },
         {
-            "MprSlot": 3,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 3
         },
         {
-            "MprSlot": 3,
-            "Multiple": false
+            "Fixed": true,
+            "MprSlot": 3
         }
     ],
     "Name": "Blodia (Japan)",

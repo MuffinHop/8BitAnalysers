@@ -536,9 +536,8 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 					if (romIndex < pGameDbEntry->Banks.size())
 					{
 						FGameDbBank& dbBank = pGameDbEntry->Banks[romIndex];
-						//const uint16_t mappedAddr = pageNo * FCodeAnalysisPage::kPageSize;
 						if (dbBank.MprSlot != -1 && mprIndex != dbBank.MprSlot)
-							dbBank.bMultipleAddresses = true;
+							dbBank.bFixed = false;
 						dbBank.MprSlot = mprIndex;
 					}
 				}
