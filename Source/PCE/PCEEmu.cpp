@@ -93,6 +93,11 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 #define BANK_ERROR(...)
 #endif
 
+enum class EEventType : uint8_t
+{
+	None = 0,
+	BankAddressChange,
+};
 
 class FPCECPUEmulator6502 : public ICPUEmulator6502
 {
@@ -537,7 +542,10 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 					{
 						FGameDbBank& dbBank = pGameDbEntry->Banks[romIndex];
 						if (dbBank.MprSlot != -1 && mprIndex != dbBank.MprSlot)
+						{
+							CodeAnalysis.Debugger.RegisterEvent((uint8_t)EEventType::BankAddressChange, GetPC(), mprIndex * 0x2000, romIndex, 0);
 							dbBank.bFixed = false;
+						}
 						dbBank.MprSlot = mprIndex;
 					}
 				}
@@ -751,6 +759,12 @@ void FPCEEmu::CheckMemoryMap()
 #endif
 }
 
+void EventShowBankAddressChange(FCodeAnalysisState& state, const FEvent& event)
+{
+	// todo: display snippet?
+	ImGui::Text("ROM %02d", event.Value);
+}
+
 bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 {
 #ifndef NDEBUG
@@ -947,8 +961,8 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	}
 	
 	// Setup Debugger
-	//FDebugger& debugger = CodeAnalysis.Debugger;
-	//debugger.RegisterEventType((int)EEventType::ScreenPixWrite, "Screen Pixel Write", 0xff0000ff, nullptr, EventShowPixValue);
+	FDebugger& debugger = CodeAnalysis.Debugger;
+	debugger.RegisterEventType((int)EEventType::BankAddressChange, "Bank Address Change", 0xff0000ff, nullptr, EventShowBankAddressChange);
 	//debugger.RegisterEventType((int)EEventType::ScreenAttrWrite, "Screen Attr Write", 0xff007fff, nullptr, EventShowAttrValue);
 	//debugger.RegisterEventType((int)EEventType::KempstonJoystickRead, "Kempston Read", 0xff007f1f, IOPortEventShowAddress, IOPortEventShowValue);
 
