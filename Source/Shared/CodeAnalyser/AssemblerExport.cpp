@@ -428,7 +428,10 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 	FCodeAnalysisState& state = pEmu->GetCodeAnalysis();
 	FASMExporter* pExporter = GetAssemblerExporter(state.pGlobalConfig->ExportAssembler.c_str());
 	if (pExporter == nullptr)
+	{
+		LOGWARNING("Failed to export '%s': No exporter is set.", pTextFileName);
 		return false;
+	}
 
 	if (pExporter->Init(pTextFileName, pEmu) == false)
 		return false;
@@ -467,7 +470,7 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 			pExporter->AddBankSection(pBank);
 			
 			const uint16_t startAddr = pBank->GetMappedAddress();
-			const uint16_t endAddr = pBank->GetMappedAddress() + pBank->GetSizeBytes() - 1;
+			const uint16_t endAddr = startAddr + pBank->GetSizeBytes() - 1;
 			pExporter->ExportAddressRange(pBank->ItemList, startAddr, endAddr, false);
 		}
 	}

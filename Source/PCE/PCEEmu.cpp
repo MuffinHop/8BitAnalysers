@@ -1511,6 +1511,8 @@ void FPCEEmu::FileMenuAdditions(void)
 	}
 }
 
+//extern void UpdateItemList(FCodeAnalysisState& state);
+
 // This only exports banks that have previously been mapped.
 // We won't know the correct mapped address otherwise.
 // todo: get this working on CD games
@@ -1556,12 +1558,15 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 				}
 				else
 				{
-					if (pGameDbEntry && pGameDbEntry->Banks[i].MprSlot != -1)
+					// this doesnt work.
+					// I was trying to get a game that hasn't been executed to export properly.
+					// that is never going to work.
+					/*if (pGameDbEntry && pGameDbEntry->Banks[i].MprSlot != -1)
 					{
 						// hack. set the primary mapped page
-						//pBank->PrimaryMappedPage = pGameDbEntry->Banks[i].MprSlot;
+						pBank->PrimaryMappedPage = pGameDbEntry->Banks[i].MprSlot;
 						bExport = true;
-					}
+					}*/
 				}
 				if (bExport)
 					banksToExport.push_back(Banks[i]->GetBankId());
@@ -1569,6 +1574,13 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 		}
 	}
 	
+	if (!bWriteCodeInfoWhenCodeExecuted)
+	{
+		LOGWARNING("'Write Code Info When Code Executed' option is not turned on. ASM Export may not work!");
+	}
+
+	//UpdateItemList(CodeAnalysis);
+
 	if (!ExportAssemblerForBanks(this, outputAsmFname.c_str(), banksToExport))
 	{
 		return false;
@@ -1623,7 +1635,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 
 					if (newFileSize == origFileSize)
 					{
-						LOGINFO(".pce files are the same size! :)");
+						LOGINFO(".pce files are the same size.");
 						int numDiffs = 0;
 						for (int i = 0; i < newFileSize; i++)
 						{
@@ -1687,6 +1699,10 @@ void FPCEEmu::SystemMenuAdditions(void)
 
 void FPCEEmu::OptionsMenuAdditions(void)
 {
+	// sam. hack to workaround a bug.
+	// bug is asm export won't work due to missing labels.
+	ImGui::MenuItem("Write Code Info When Code Executed", 0, &bWriteCodeInfoWhenCodeExecuted);
+
 }
 
 void FPCEEmu::ActionMenuAdditions(void)
