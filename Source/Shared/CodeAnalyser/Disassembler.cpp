@@ -154,13 +154,14 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 			
 			for (int addrVal = val; addrVal >= 0; addrVal--)
 			{
-				if (addrVal == 0)	// no label found
+				// sam. moved this to below to support labels at location 0x0000
+				/*if (addrVal <= 0)	// no label found
 				{
 					const char* outStr = NumStr(val, GetNumberDisplayMode());
 					for (int i = 0; i < strlen(outStr); i++)
 						outputCallback(outStr[i], this);
 					break;
-				}
+				}*/
 
 				// sam todo: tidy this up. 
 				const FLabelInfo* pLabel = nullptr;
@@ -248,12 +249,24 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 					}
 					break;
 				}
+				else
+				{
+					// sam. moved this from above to support labels at location 0x0000
+					if (addrVal == 0)	// no label found
+					{
+						const char* outStr = NumStr(val, GetNumberDisplayMode());
+						for (int i = 0; i < strlen(outStr); i++)
+							outputCallback(outStr[i], this);
+						break;
+					}
+				}
 			
 				labelOffset++;
 			}
 
 			// referencing an address not in the disassembly but not null
-			if (labelAddress != 0 && (labelAddress < ExportMin || labelAddress > ExportMax))
+			// sam. commented check for label address 0 to deal with a label at address 0.
+			if (/*labelAddress != 0 && */(labelAddress < ExportMin || labelAddress > ExportMax))
 			{
 				if (!potentialLabels.empty())
 				{
