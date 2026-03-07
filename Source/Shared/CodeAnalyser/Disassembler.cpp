@@ -152,6 +152,9 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 			uint16_t labelAddress = 0;
 			std::vector<std::pair<FCodeAnalysisBank*, FLabelInfo*>> potentialLabels;
 			
+			const FLabelInfo* pLabel = nullptr;
+			const FLabelInfo* pScopeLabel = nullptr;
+
 			for (int addrVal = val; addrVal >= 0; addrVal--)
 			{
 				// sam. moved this to below to support labels at location 0x0000
@@ -164,8 +167,8 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 				}*/
 
 				// sam todo: tidy this up. 
-				const FLabelInfo* pLabel = nullptr;
-				const FLabelInfo* pScopeLabel = nullptr;
+				//pLabel = nullptr;
+				//pScopeLabel = nullptr;
 
 				// This address might not be in physical memory.
 				// Go through all banks with a matching address range and find candidates.
@@ -265,8 +268,9 @@ void FExportDasmState::OutputU16(uint16_t val, dasm_output_t outputCallback)
 			}
 
 			// referencing an address not in the disassembly but not null
-			// sam. commented check for label address 0 to deal with a label at address 0.
-			if (/*labelAddress != 0 && */(labelAddress < ExportMin || labelAddress > ExportMax))
+			// sam. changed check for label address 0 to deal with a label at address 0.
+			//if (/*labelAddress != 0 && */(labelAddress < ExportMin || labelAddress > ExportMax))
+			if (pLabel && (labelAddress < ExportMin || labelAddress > ExportMax))
 			{
 				if (!potentialLabels.empty())
 				{

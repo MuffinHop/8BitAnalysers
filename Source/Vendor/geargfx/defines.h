@@ -94,7 +94,8 @@
         #endif
     #elif defined(_MSC_VER)
         #if !defined(NDEBUG)
-            #pragma message("Compiling without optimizations.")
+            // sam. took this out to stop spam.
+            //#pragma message("Compiling without optimizations.")
             #define GG_NO_OPTIMIZATIONS
         #endif
     #endif
