@@ -14,6 +14,7 @@ enum EGlobalsColumnID
 	Name = 0,
 	References,
 	Location,
+	BankName,
 
 	// Used by code items
 	CallFrequencyIndicator,
@@ -30,6 +31,7 @@ enum EGlobalsColumnID
 
 bool gbGlobalsColumnSortAlways[EGlobalsColumnID::Count] =
 {
+	false,
 	false,
 	false,
 	false,
@@ -131,6 +133,18 @@ void SortGlobals(FCodeAnalysisState& state, std::vector<FCodeAnalysisItem>& glob
 					return pDataInfoA->WriteCount < pDataInfoB->WriteCount;
 			});
 		break;
+	case EGlobalsColumnID::BankName:
+		std::sort(globals.begin(), globals.end(), [&state, &pColumnSortSpecs](const FCodeAnalysisItem& a, const FCodeAnalysisItem& b)
+			{
+				const FCodeAnalysisBank* pBankA = state.GetBank(a.AddressRef.GetBankId());
+				const FCodeAnalysisBank* pBankB = state.GetBank(b.AddressRef.GetBankId());
+				
+				if (pColumnSortSpecs->SortDirection == ImGuiSortDirection_Descending)
+					return pBankA->Name < pBankB->Name;	// dodgy!
+				else
+					return pBankA->Name > pBankB->Name;	// dodgy!*/
+			});
+		break;
 	}
 }
 
@@ -204,7 +218,7 @@ void DrawFunctionList(FCodeAnalysisState& state, FCodeAnalysisViewState& viewSta
 		flags |= ImGuiTableFlags_NoSavedSettings;
 #endif
 		const ImVec2 outer_size = ImVec2(0.0f, 0.0f);
-		if (ImGui::BeginTable("GlobalFunctionTable", 5, flags, outer_size))
+		if (ImGui::BeginTable("GlobalFunctionTable", 6, flags, outer_size))
 		{
 			const int columnFlagsAsc = ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_PreferSortAscending;
 			const int columnFlagsDes = ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_PreferSortDescending;
@@ -216,6 +230,7 @@ void DrawFunctionList(FCodeAnalysisState& state, FCodeAnalysisViewState& viewSta
 			ImGui::TableSetupColumn("Refs", columnFlagsDes, w * 5.0f, EGlobalsColumnID::References);
 			ImGui::TableSetupColumn("Addr", columnFlagsAsc | ImGuiTableColumnFlags_DefaultSort, w * 6.0f, EGlobalsColumnID::Location);
 			ImGui::TableSetupColumn("Calls", columnFlagsDes | ImGuiTableColumnFlags_DefaultHide, w * 8.0f, EGlobalsColumnID::CallFrequencyCount);
+			ImGui::TableSetupColumn("Bank", columnFlagsDes /*| ImGuiTableColumnFlags_DefaultHide*/, w * 16.0f, EGlobalsColumnID::BankName);
 			ImGui::TableHeadersRow();
 
 			if (ImGuiTableSortSpecs* pSortSpecs = ImGui::TableGetSortSpecs())
@@ -280,6 +295,10 @@ void DrawFunctionList(FCodeAnalysisState& state, FCodeAnalysisViewState& viewSta
 					ImGui::TableNextColumn();
 					const int count = pCodeInfo != nullptr ? pCodeInfo->ExecutionCount : 0;
 					ImGui::Text("%d", count);
+
+					ImGui::TableNextColumn();
+					const FCodeAnalysisBank* pBank = state.GetBank(item.AddressRef.GetBankId());
+					ImGui::Text("%s", pBank ? pBank->Name.c_str() : "Unknown");
 				}
 			}
 			ImGui::EndTable();
@@ -297,7 +316,7 @@ void DrawGlobalDataList(FCodeAnalysisState& state, FCodeAnalysisViewState& viewS
 		flags |= ImGuiTableFlags_NoSavedSettings;
 #endif
 		const ImVec2 outer_size = ImVec2(0.0f, 0.0f);
-		if (ImGui::BeginTable("GlobalDataTable", 7, flags, outer_size))
+		if (ImGui::BeginTable("GlobalDataTable", 8, flags, outer_size))
 		{
 			const int columnFlagsAsc = ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_PreferSortAscending;
 			const int columnFlagsDes = ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_PreferSortDescending;
@@ -312,6 +331,7 @@ void DrawGlobalDataList(FCodeAnalysisState& state, FCodeAnalysisViewState& viewS
 			ImGui::TableSetupColumn("Addr", columnFlagsAsc | ImGuiTableColumnFlags_DefaultSort, w * 6.0f, EGlobalsColumnID::Location);
 			ImGui::TableSetupColumn("R.Count", columnFlagsDes | ImGuiTableColumnFlags_DefaultHide, w * 8.0f, EGlobalsColumnID::ReadCount);
 			ImGui::TableSetupColumn("W.Count", columnFlagsDes | ImGuiTableColumnFlags_DefaultHide, w * 8.0f, EGlobalsColumnID::WriteCount);
+			ImGui::TableSetupColumn("Bank", columnFlagsDes /*| ImGuiTableColumnFlags_DefaultHide*/, w * 16.0f, EGlobalsColumnID::BankName);
 			ImGui::TableHeadersRow();
 
 			if (ImGuiTableSortSpecs* pSortSpecs = ImGui::TableGetSortSpecs())
@@ -375,13 +395,16 @@ void DrawGlobalDataList(FCodeAnalysisState& state, FCodeAnalysisViewState& viewS
 					ImGui::TableNextColumn();
 					ImGui::Text("%s", NumStr(item.AddressRef.GetAddress()));
 
-					
 					const FDataInfo* pDataInfo = state.GetDataInfoForAddress(item.AddressRef);
 					ImGui::TableNextColumn();
 					ImGui::Text("%d", pDataInfo->ReadCount);
 
 					ImGui::TableNextColumn();
 					ImGui::Text("%d", pDataInfo->WriteCount);
+
+					ImGui::TableNextColumn();
+					const FCodeAnalysisBank* pBank = state.GetBank(item.AddressRef.GetBankId());
+					ImGui::Text("%s", pBank ? pBank->Name.c_str() : "Unknown");
 				}
 			}
 			ImGui::EndTable();
