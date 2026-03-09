@@ -38,6 +38,11 @@ void FBatchGameLoadViewer::StartAutomation()
 
 	if (bPressRandomButtons)
 		NextButtonPressTime = GetNextButtonPressTime();
+
+#ifdef _WIN32
+	if (bExportAsm)
+		std::system("del AssembleLog.txt");
+#endif
 }
 
 void FBatchGameLoadViewer::DrawUI()

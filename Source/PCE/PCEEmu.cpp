@@ -1594,21 +1594,36 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 #if ASSEMBLE_AFTER_ASM_EXPORT
 #ifdef _WIN32
 	printf("--------------------------------------------------------------------------------------------------------\n");
-	printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
+	//printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
 
 	LOGINFO("Assembling: %s. [%d banks]", outputAsmFname.c_str(), (int)banksToExport.size());
 
 	// todo: export to temp directory?
+
 	const std::string outputPceFname = RemoveFileExtension(outputAsmFname.c_str()) + ".pce";
+
+	// create out.txt and output which file we are assembling
+	std::string echoCmd = "echo Assembling " + pCurrentProjectConfig->Name + " > tmp.txt";
+	std::system(echoCmd.c_str());
+	// echo blank line
+	std::system("echo[ >> tmp.txt"); 
 
 	// This presumes pceas.exe is in your windows path.
 	char cmdTxt[256];
-	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\"", outputAsmFname.c_str());
+	// append the results to out.txt
+	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", outputAsmFname.c_str());
 	const int errorCode = std::system(cmdTxt);
+	
+	// append to the batch log file
+	std::system("type tmp.txt >> AssembleLog.txt");
+
+	// print the contents to std output so we can see the result in the command window
+	std::system("type tmp.txt");
 
 	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
 	//LOGINFO("Error code: %d", result);
 
+	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
 	if (!errorCode)
