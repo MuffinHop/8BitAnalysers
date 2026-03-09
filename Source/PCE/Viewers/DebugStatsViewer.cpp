@@ -155,23 +155,42 @@ void FDebugStatsViewer::DrawUI()
 	
 	if (ImGui::TreeNode("Games Bank mappings"))
 	{
+		if (ImGui::Button("Load all GameDb entries"))
+		{
+			auto findIt = pPCEEmu->GetGamesLists().find("Snapshot File");
+			if (findIt != pPCEEmu->GetGamesLists().end())
+			{
+				const FGamesList& gamesList = findIt->second;
+				for (int i = 0; i < gamesList.GetNoGames(); i++)
+				{
+					const FEmulatorFile& emuFile = gamesList.GetGame(i);
+					const std::string fname = "Mappings/" + emuFile.DisplayName + ".json";
+					LoadGameDbEntry(emuFile.DisplayName, fname);
+				}
+			}
+		}
+
 		TGameDb& gameDb = GetGameDb();
 		for (const auto it : gameDb)
 		{
-			const FGameDebugStats& gameStats = pPCEEmu->DebugStats.GameDebugStats[it.first];
+			const FGameDebugStats* pGameStats = pPCEEmu->DebugStats.GetDebugStatsForGame(it.first);
+
 			const FGameDbEntry& entry = gameDb[it.first];
 			bool bTreeOpen = ImGui::TreeNode(it.first.c_str());
-			ImGui::SameLine();
 
-			if (gameStats.NumBanksMapped == gameStats.NumBanks)
+			if (pGameStats)
 			{
-				if (entry.NumDynamicBanks == 0)
-					ImGui::TextColored(greenColour, "OK");
+				ImGui::SameLine();
+				if (pGameStats->NumBanksMapped == pGameStats->NumBanks)
+				{
+					if (entry.NumDynamicBanks == 0)
+						ImGui::TextColored(greenColour, "FIXED");
+					else
+						ImGui::TextColored(yellowColour, "DYNAMIC");
+				}
 				else
-					ImGui::TextColored(yellowColour, "***");
+					ImGui::TextColored(redColour, "INCOMPLETE");
 			}
-			else
-				ImGui::TextColored(redColour, "***");
 
 			if (bTreeOpen)
 			{

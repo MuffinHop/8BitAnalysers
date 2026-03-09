@@ -472,6 +472,8 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 			
 			const uint16_t startAddr = pBank->GetMappedAddress();
 			const uint16_t endAddr = startAddr + pBank->GetSizeBytes() - 1;
+
+			LOGINFO("Exporting bank %03d '%s' [0x%04x - 0x%04x]", pBank->Id, pBank->Name.c_str(), startAddr, endAddr);
 			pExporter->ExportAddressRange(pBank->ItemList, startAddr, endAddr, false);
 		}
 	}

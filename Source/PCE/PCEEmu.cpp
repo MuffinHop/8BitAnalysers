@@ -1621,7 +1621,6 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 	std::system("type tmp.txt");
 
 	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
-	//LOGINFO("Error code: %d", result);
 
 	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
 	printf("--------------------------------------------------------------------------------------------------------\n");
@@ -2068,6 +2067,16 @@ bool FPCEEmu::FBankSet::ClaimSpecificBank(int16_t bankId)
 		}
 	}
 	return false;
+}
+
+FGameDebugStats* FEmuDebugStats::GetDebugStatsForGame(const std::string& gameName)
+{
+	auto it = GameDebugStats.find(gameName);
+	if (it != GameDebugStats.end())
+	{
+		return &it->second;
+	}
+	return nullptr;
 }
 
 void FEmuDebugStats::InitForGame(FPCEEmu* pEmu, const std::string& gameName)
