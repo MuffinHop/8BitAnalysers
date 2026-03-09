@@ -55,6 +55,7 @@ bool FASMExporter::Init(const char* pFilename, FEmuBase* pEmu)
 
 	HeaderText.clear();
 	BodyText.clear();
+	ExportRanges.clear();
 	DasmState.CodeAnalysisState = &pEmu->GetCodeAnalysis();
 	DasmState.HexDisplayMode = HexMode;
 	DasmState.LabelsOutsideRange.clear();
