@@ -44,6 +44,9 @@ public:
 
 	bool			IsLabelStubbed(const char* pLabelName) const;
 
+	// todo tidy up this
+	std::vector<const FCodeAnalysisBank*> ExportBanks;
+
 protected:
 	void				OutputDataItemBytes(FAddressRef addr, const FDataInfo* pDataInfo);
 	ENumberDisplayMode	GetNumberDisplayModeForDataItem(const FDataInfo* pDataInfo);

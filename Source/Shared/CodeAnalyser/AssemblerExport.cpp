@@ -347,7 +347,7 @@ bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& item
 				WriteCodeInfoForAddress(state, addr);	// needed to refresh code info
 			}
 
-			//if (item.AddressRef.GetBankId() == g_DbgBank && addr == g_DbgAddress)
+			//if (item.AddressRef.GetBankId() == 0 && addr == 0xf9b2)
 			if (addr == g_DbgAddress)
 				LOGINFO("DebugAddress");
 
@@ -441,14 +441,14 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 	pExporter->AddHeader();
 
 	// Build bank list
-	std::vector<const FCodeAnalysisBank*> banks;
+	pExporter->ExportBanks.clear();
 	if (bankList.empty())
 	{
 		// Add all banks
 		for (int b = 0; b < FCodeAnalysisState::BankCount; b++)
 		{
 			FCodeAnalysisBank& bank = state.GetBanks()[b];
-			banks.emplace_back(&bank);
+			pExporter->ExportBanks.emplace_back(&bank);
 		}
 	}
 	else
@@ -457,17 +457,15 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 		{
 			if (const FCodeAnalysisBank* pBank = state.GetBank(bankId))
 			{
-				banks.emplace_back(pBank);
+				pExporter->ExportBanks.emplace_back(pBank);
 			}
 		}
 	}
 
-	for (const FCodeAnalysisBank* pBank : banks)
+	for (const FCodeAnalysisBank* pBank : pExporter->ExportBanks)
 	{
 		if (pBank->PrimaryMappedPage != -1 && !pBank->bMachineROM && pBank->bEverBeenMapped)
 		{
-			LOGINFO("Exporting bank %03d '%s'", pBank->Id, pBank->Name.c_str());
-
 			pExporter->AddBankSection(pBank);
 			
 			const uint16_t startAddr = pBank->GetMappedAddress();
