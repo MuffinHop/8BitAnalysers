@@ -224,4 +224,7 @@ protected:
 	// cached for speed
 	FGameDebugStats* pGameDebugStats = nullptr;
 	FGameDbEntry* pGameDbEntry = nullptr;
+
+	int16_t UnusedBankIdStart = -1;
+	int16_t UnusedBankIdEnd = -1;
 };

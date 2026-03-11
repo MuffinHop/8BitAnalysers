@@ -285,6 +285,7 @@ void BankChangeCallback(void* pContext, u8 mprIndex, u8 oldBankIndex, u8 newBank
 	OPTICK_EVENT();
 	FPCEEmu* pEmu = static_cast<FPCEEmu*>(pContext);
 
+	BANK_LOG("------------------------------BANK CHANGE START--------------------------------------------------");
 	BANK_LOG("Map bank index 0x%x to mpr slot %d. [0x%x->0x%x]", newBankIndex, mprIndex, oldBankIndex, newBankIndex);
 
 	if (oldBankIndex == newBankIndex)
@@ -472,7 +473,7 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	FCodeAnalysisBank* pInBank = CodeAnalysis.GetBank(newBankId);
 	const int16_t outBankId = MprBankId[mprIndex];
 	// This can be null if a bank is getting mapped to this slot for the very first time.
-	const FCodeAnalysisBank* pOutBank = CodeAnalysis.GetBank(outBankId);
+	FCodeAnalysisBank* pOutBank = CodeAnalysis.GetBank(outBankId);
 
 	assert(pInBank);
 	if (!pInBank)
@@ -496,6 +497,10 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 	pInBank->PrimaryMappedPage = pageNo;
 	MprBankId[mprIndex] = newBankId;
 
+#if BANK_SWITCH_DEBUG
+	BANK_LOG("[PC=%04x] IN: '%s' OUT: '%s' 0x%x->0x%x", GetPC().GetAddress(), pInBank->Name.c_str(), pOutBank ? pOutBank->Name.c_str() : "None", oldMappedAddress, pInBank->GetMappedAddress());
+#endif
+
 	// Deal with the case where a RW bank is getting replaced by a Read only bank.
 	// MapBank() won't remove the Write mapping of the RW bank, so the RW bank will remain
 	// mapped Write only.
@@ -510,6 +515,48 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		}
 	}
 
+	// attempt to fix references that stick around to the unused bank.
+	/*if (pOutBank)
+	{
+		if (outBankId >= UnusedBankIdStart && outBankId <= UnusedBankIdEnd)
+		{
+			LOGINFO("Unmapping unused bank %s", pOutBank->Name.c_str());
+			
+			// go through all the labels in the unused bank and find any references.
+			// update the code at those locations to point at this new bank.
+			// what if there are references to this unused bank in other parts of the UI
+			// or code analysis?
+			
+			for (const auto& item : pOutBank->ItemList)
+			{
+				if (item.Item->Type == EItemType::Label)
+				{
+					FLabelInfo * pLabelInfo = static_cast<FLabelInfo*>(item.Item);
+					for (const auto& ref : pLabelInfo->References.GetReferences())
+					{
+						if (FCodeInfo* pCodeInfo = state.GetCodeInfoForAddress(ref))
+						{
+							if (pCodeInfo->OperandAddress == item.AddressRef)
+							{
+								LOGINFO("fixing ref");
+								// not sure this is the right thing to do?
+								pCodeInfo->OperandAddress.SetBankId(newBankId);
+							}
+							else
+							{
+								LOGINFO("found invalid ref");
+							}
+							// i wanted to call WriteCodeInfoForAddress() to update the code item but i dont think i can.
+							// what if the code item is not in memory?
+						}
+					}
+					pLabelInfo->References.GetReferences().clear();
+
+					// todo set the pmp of the bank to -1?
+				}
+			}
+		}
+	}*/
 #if DEBUG_STATS_VIEWER
 	// Keep track of bank related debug stats
 	if (pCurrentProjectConfig)
@@ -600,8 +647,6 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		}
 	}
 
-	BANK_LOG("IN: '%s' OUT: '%s' 0x%x->0x%x", pInBank->Name.c_str(), pOutBank ? pOutBank->Name.c_str() : "None", oldMappedAddress, pInBank->GetMappedAddress());
-
 	int b = 0;
 	for (int addrVal = 0; addrVal < 0xffff; addrVal += 0x2000, b++)
 	{
@@ -614,7 +659,6 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 
 	if (bDoneInitialBankMapping)
 		CheckDupeMprBankIds();
-
 #endif // BANK_SWITCH_DEBUG 
 
 #if !NEWADDRESSREF
@@ -881,6 +925,11 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 		sprintf(bankName, "UNUSED %02d", d);
 		BankSets[kBankUnusedStart].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pMemory->GetUnusedMemory(), false /*bMachineROM*/, kDefaultInitialBankAddr));
 	}
+
+	// create x8 dummy banks here?
+
+	UnusedBankIdStart = BankSets[kBankUnusedStart].GetBankId(0);
+	UnusedBankIdEnd = BankSets[kBankUnusedStart].GetBankId(7);
 
 	ResetBanks();
 	MapMprBanks();
