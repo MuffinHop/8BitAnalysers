@@ -6,6 +6,7 @@
 
 #include "../PCEEmu.h"
 #include "Misc/GameConfig.h"
+#include "Util/FileUtil.h"
 
 #include <geargrafx_core.h>
 
@@ -41,7 +42,15 @@ void FBatchGameLoadViewer::StartAutomation()
 
 #ifdef _WIN32
 	if (bExportAsm)
-		std::system("del AssembleLog.txt");
+	{
+		if (FileExists("AssembleLog.txt"))
+		{
+			if (FileExists("AssembleLogOld.txt"))
+				std::system("del AssembleLogOld.txt");
+			std::system("rename AssembleLog.txt AssembleLogOld.txt");
+			std::system("del AssembleLog.txt");
+		}
+	}
 #endif
 }
 

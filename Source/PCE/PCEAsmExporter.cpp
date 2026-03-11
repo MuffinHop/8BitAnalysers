@@ -2,8 +2,8 @@
 #include "CodeAnalyser/6502/HuC6280Disassembler.h"
 #include "PCEEmu.h"
 
-#define ASM_EXPORT_DEBUG 0
-#define ASM_EXPORT_NEW_LABELS 1
+#define ASM_EXPORT_LABEL_DEBUG 0
+#define ASM_EXPORT_NEW_LABELS_METHOD 1
 
 class FPCEAsmExporterBase : public FASMExporter
 {
@@ -15,7 +15,9 @@ class FPCEAsmExporterBase : public FASMExporter
 			// but this means we dont include the HW PAGE labels because they are not technically out of range.
 			// Hence we are looking at bank id instead of address range.
 
-#if ASM_EXPORT_NEW_LABELS
+			// do we need to deal with the situation where we are exporting a range that does not span an entire bank?
+
+#if ASM_EXPORT_NEW_LABELS_METHOD
 			std::unordered_set<int16_t> exportedBankIds;
 			for (auto pBank : ExportBanks)
 			{
@@ -28,17 +30,17 @@ class FPCEAsmExporterBase : public FASMExporter
 
 				std::set<FAddressRef> labels;
 				
-#if ASM_EXPORT_DEBUG
+#if ASM_EXPORT_LABEL_DEBUG
 				LOGINFO("Labels outside range:");
 #endif
 				for (auto labelAddrRef : DasmState.LabelsOutsideRange)
 				{
-#if ASM_EXPORT_DEBUG
+#if ASM_EXPORT_LABEL_DEBUG
 					FCodeAnalysisBank* pBank = state.GetBank(labelAddrRef.GetBankId());
 					const FLabelInfo* pLabelInfo = state.GetLabelForAddress(labelAddrRef);
 					LOGINFO("  Label: %s 0x%x [%s]", pLabelInfo ? pLabelInfo->GetName() : "Unknown label", labelAddrRef.GetAddress(), pBank ? pBank->Name.c_str() : "Unknown bank");
 #endif
-#if ASM_EXPORT_NEW_LABELS
+#if ASM_EXPORT_NEW_LABELS_METHOD
 					// See if this label is in the exported banks.
 					// If it isn't then we want to declare it.
 					auto it = exportedBankIds.find(labelAddrRef.GetBankId());
@@ -68,8 +70,9 @@ class FPCEAsmExporterBase : public FASMExporter
 				{
 					Output("\n; Labels\n");
 
+#if ASM_EXPORT_LABEL_DEBUG
 					LOGINFO("Writing %d Labels", labels.size());
-
+#endif
 					for (auto labelAddr : labels)
 					{
 						const FLabelInfo* pLabelInfo = state.GetLabelForAddress(labelAddr);
@@ -77,7 +80,9 @@ class FPCEAsmExporterBase : public FASMExporter
 						{
 							Output("%s: \t%s %s\n", pLabelInfo->GetName(), Config.EQUText, NumStr(labelAddr.GetAddress()));
 							FCodeAnalysisBank* pBank = state.GetBank(labelAddr.GetBankId());
+#if ASM_EXPORT_LABEL_DEBUG
 							LOGINFO("  Label: %s 0x%x [%s]", pLabelInfo->GetName(), labelAddr.GetAddress(), pBank ? pBank->Name.c_str() : "Unknown bank");
+#endif
 						}
 						else
 							LOGINFO("Can't get label for address 0x%x", labelAddr.GetAddress());
