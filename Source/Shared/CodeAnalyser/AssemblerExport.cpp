@@ -338,9 +338,6 @@ bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& item
 		{
 			const FCodeInfo* pCodeInfo = static_cast<FCodeInfo*>(item.Item);
 
-			// Sam. This breaks if we call it on a bank that is not mapped.
-			// It can end up setting the wrong bank's memory as code.
-			// This is impossible to rewrite using address refs for banks that are not mapped .
 			if (bIsPhysicalMem)
 			{
 				// Sam. This breaks if we call it on a bank that is not in physical memory.
