@@ -343,6 +343,10 @@ bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& item
 			// This is impossible to rewrite using address refs for banks that are not mapped .
 			if (bIsPhysicalMem)
 			{
+				// Sam. This breaks if we call it on a bank that is not in physical memory.
+				// It will set the wrong bank's memory as code.
+				// I looked at rewriting it using address refs but came to the conclusion
+				// it is not possible.
 				WriteCodeInfoForAddress(state, addr);	// needed to refresh code info
 			}
 
