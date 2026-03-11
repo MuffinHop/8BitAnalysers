@@ -456,6 +456,7 @@ uint8_t FPCEEmu::GetBankIndexForBankId(uint16_t bankId)
 
 int FPCEEmu::GetBankCount() const
 {
+	// todo cache this?
 	const bool bIsCdRom = pMedia->IsCDROM();
 	const int romSize = bIsCdRom ? GG_BIOS_SYSCARD_SIZE : pMedia->GetROMSize();
 	const int romBankCount = (romSize / 0x2000) + (romSize % 0x2000 ? 1 : 0);
@@ -1565,11 +1566,11 @@ void FPCEEmu::FileMenuAdditions(void)
 	}
 }
 
-//extern void UpdateItemList(FCodeAnalysisState& state);
 
 // This only exports banks that have previously been mapped.
 // We won't know the correct mapped address otherwise.
 // todo: get this working on CD games
+// todo: tidy this function
 bool FPCEEmu::ExportAsmForCurrentGame()
 {
 	if (pCurrentProjectConfig == nullptr)
@@ -1613,8 +1614,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 				else
 				{
 					// this doesnt work.
-					// I was trying to get a game that hasn't been executed to export properly.
-					// that is never going to work.
+					// I was trying to get an exported game to lookup previously mapped bank addresses.
 					/*if (pGameDbEntry && pGameDbEntry->Banks[i].MprSlot != -1)
 					{
 						// hack. set the primary mapped page
@@ -1642,22 +1642,37 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 
 #if ASSEMBLE_AFTER_ASM_EXPORT
 #ifdef _WIN32
+	const int bankCount = GetBankCount();
 	printf("--------------------------------------------------------------------------------------------------------\n");
-	printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
+	//printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
 
-	LOGINFO("Assembling: %s. [%d banks]", outputAsmFname.c_str(), (int)banksToExport.size());
+	LOGINFO("Assembling: %s. [%d/%d banks]", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size(), bankCount);
 
 	// todo: export to temp directory?
+
 	const std::string outputPceFname = RemoveFileExtension(outputAsmFname.c_str()) + ".pce";
+
+	// create out.txt and output which file we are assembling
+	std::string echoCmd = "echo Assembling " + pCurrentProjectConfig->Name + " > tmp.txt";
+	std::system(echoCmd.c_str());
+	// echo blank line
+	std::system("echo[ >> tmp.txt"); 
 
 	// This presumes pceas.exe is in your windows path.
 	char cmdTxt[256];
-	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\"", outputAsmFname.c_str());
+	// append the results to out.txt
+	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", outputAsmFname.c_str());
 	const int errorCode = std::system(cmdTxt);
+	
+	// append to the batch log file
+	std::system("type tmp.txt >> AssembleLog.txt");
+
+	// print the contents to std output so we can see the result in the PCEAnalyser command window
+	std::system("type tmp.txt");
 
 	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
-	//LOGINFO("Error code: %d", result);
 
+	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
 	if (!errorCode)
@@ -1685,25 +1700,66 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 				}
 				else
 				{
-					LOGINFO("Original .pce is %d bytes", origFileSize);
+					LOGINFO("Original .pce is %d bytes, %.1fKB", origFileSize, (float)origFileSize / 1024.f);
 
 					if (newFileSize == origFileSize)
 					{
 						LOGINFO(".pce files are the same size.");
-						int numDiffs = 0;
-						for (int i = 0; i < newFileSize; i++)
-						{
-							if (pNewData[i] != pOrigData[i])
-								numDiffs++;
-						}
-						if (!numDiffs)
-							LOGINFO("Files are identical!");
-						else
-							LOGINFO("Found %d bytes that are different.", numDiffs);
 					}
 					else
 					{
-						LOGINFO(".pce files size do not match. Difference is %d bytes", abs((long)(newFileSize - origFileSize)));
+						const long diffBytes = abs((long)(newFileSize - origFileSize));
+						LOGINFO("pce files size do not match. Difference is %d 0x%x bytes. %.1fKB", diffBytes, diffBytes, (float)diffBytes / 1024.0f);
+					}
+
+					int numDiffs = 0;
+
+					// check the data for the exported pce file matches the original pce file.
+					// only check the bytes for the banks we exported.
+					for (auto bankId : banksToExport)
+					{
+						const uint8_t bankIndex = GetBankIndexForBankId(bankId);
+						uint8_t* pNewBankData = pNewData + 0x2000 * bankIndex;
+						uint8_t* pOrigBankData = pOrigData + 0x2000 * bankIndex;
+
+						const FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(bankId);
+
+						if (bankIndex < bankCount)
+						{
+							int numBankDiffs = 0;
+							for (int i = 0; i < 0x2000; i++)
+							{
+								if (pNewBankData[i] != pOrigBankData[i])
+									numBankDiffs++;
+							}
+
+							if (numBankDiffs)
+								LOGINFO("Found %04d diffs in %s (bank index %d).", numBankDiffs, pBank->Name.c_str(), bankIndex);
+
+							numDiffs += numBankDiffs;
+						}
+						else
+						{
+							LOGINFO("Invalid bank index %d for %s", bankIndex, pBank->Name.c_str());
+						}
+					}
+
+					/*int numDiffs = 0;
+					for (int i = 0; i < newFileSize; i++)
+					{
+						if (pNewData[i] != pOrigData[i])
+							numDiffs++;
+					}*/
+					if (!numDiffs)
+					{
+						if (newFileSize != origFileSize)
+							LOGINFO("Exported banks match the originals.");
+						else
+							LOGINFO("Files are identical!");
+					}
+					else
+					{
+						LOGINFO("Found %d bytes that are different.", numDiffs);
 					}
 
 					if (pNewData)
@@ -2102,6 +2158,16 @@ bool FPCEEmu::FBankSet::ClaimSpecificBank(int16_t bankId)
 		}
 	}
 	return false;
+}
+
+FGameDebugStats* FEmuDebugStats::GetDebugStatsForGame(const std::string& gameName)
+{
+	auto it = GameDebugStats.find(gameName);
+	if (it != GameDebugStats.end())
+	{
+		return &it->second;
+	}
+	return nullptr;
 }
 
 void FEmuDebugStats::InitForGame(FPCEEmu* pEmu, const std::string& gameName)
