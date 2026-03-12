@@ -1566,12 +1566,164 @@ void FPCEEmu::FileMenuAdditions(void)
 	}
 }
 
+struct FAsmExportResults
+{
+	std::vector<int16_t> BanksExported;
+	std::string Filename;
+};
+
+// maybe this just needs to be a function?
+struct FAsmExportValidator
+{
+	bool Validate(const FAsmExportResults& results, FPCEEmu* pEmu)
+	{
+//#if ASSEMBLE_AFTER_ASM_EXPORT
+#ifdef _WIN32
+		const int bankCount = pEmu->GetBankCount();
+		printf("--------------------------------------------------------------------------------------------------------\n");
+		//printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
+
+		LOGINFO("Assembling: %s. [%d/%d banks]", pEmu->GetProjectConfig()->Name.c_str(), (int)results.BanksExported.size(), bankCount);
+
+		// todo: export to temp directory?
+
+		const std::string outputPceFname = RemoveFileExtension(results.Filename.c_str()) + ".pce";
+
+		// create out.txt and output which file we are assembling
+		std::string echoCmd = "echo Assembling " + pEmu->GetProjectConfig()->Name + " > tmp.txt";
+		std::system(echoCmd.c_str());
+		// echo blank line
+		std::system("echo[ >> tmp.txt");
+
+		// This presumes pceas.exe is in your windows path.
+		char cmdTxt[256];
+		// append the results to out.txt
+		snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", results.Filename.c_str());
+		const int errorCode = std::system(cmdTxt);
+
+		// append to the batch log file
+		std::system("type tmp.txt >> AssembleLog.txt");
+
+		// print the contents to std output so we can see the result in the PCEAnalyser command window
+		std::system("type tmp.txt");
+
+		LOGINFO("Assembled '%s' : %s", pEmu->GetProjectConfig()->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
+
+		std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
+		printf("--------------------------------------------------------------------------------------------------------\n");
+
+		if (!errorCode)
+		{
+			size_t newFileSize = 0;
+			uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
+			if (pOrigData == nullptr)
+			{
+				LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
+			}
+			else
+			{
+				LOGINFO("Produced .pce is %d bytes", newFileSize);
+
+				size_t origFileSize = 0;
+				uint8_t* pNewData = nullptr;
+				auto findIt = pEmu->GetGamesLists().find(pEmu->GetProjectConfig()->EmulatorFile.ListName);
+				if (findIt != pEmu->GetGamesLists().end())
+				{
+					const std::string origFname = findIt->second.GetRootDir() + pEmu->GetProjectConfig()->EmulatorFile.FileName;
+					pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
+					if (pNewData == nullptr)
+					{
+						LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
+					}
+					else
+					{
+						LOGINFO("Original .pce is %d bytes, %.1fKB", origFileSize, (float)origFileSize / 1024.f);
+
+						if (newFileSize == origFileSize)
+						{
+							LOGINFO(".pce files are the same size.");
+						}
+						else
+						{
+							const long diffBytes = abs((long)(newFileSize - origFileSize));
+							LOGINFO("pce files size do not match. Difference is %d 0x%x bytes. %.1fKB", diffBytes, diffBytes, (float)diffBytes / 1024.0f);
+						}
+
+						int numDiffs = 0;
+
+						// check the data for the exported pce file matches the original pce file.
+						// only check the bytes for the banks we exported.
+						for (auto bankId : results.BanksExported)
+						{
+							const uint8_t bankIndex = pEmu->GetBankIndexForBankId(bankId);
+							uint8_t* pNewBankData = pNewData + 0x2000 * bankIndex;
+							uint8_t* pOrigBankData = pOrigData + 0x2000 * bankIndex;
+
+							const FCodeAnalysisBank* pBank = pEmu->GetCodeAnalysis().GetBank(bankId);
+
+							if (bankIndex < bankCount)
+							{
+								int numBankDiffs = 0;
+								for (int i = 0; i < 0x2000; i++)
+								{
+									if (pNewBankData[i] != pOrigBankData[i])
+										numBankDiffs++;
+								}
+
+								if (numBankDiffs)
+									LOGINFO("Found %04d diffs in %s (bank index %d).", numBankDiffs, pBank->Name.c_str(), bankIndex);
+
+								numDiffs += numBankDiffs;
+							}
+							else
+							{
+								LOGINFO("Invalid bank index %d for %s", bankIndex, pBank->Name.c_str());
+							}
+						}
+
+						/*int numDiffs = 0;
+						for (int i = 0; i < newFileSize; i++)
+						{
+							if (pNewData[i] != pOrigData[i])
+								numDiffs++;
+						}*/
+						if (!numDiffs)
+						{
+							if (newFileSize != origFileSize)
+								LOGINFO("Exported banks match the originals.");
+							else
+								LOGINFO("Files are identical!");
+						}
+						else
+						{
+							LOGINFO("Found %d bytes that are different.", numDiffs);
+						}
+
+						if (pNewData)
+							free(pNewData);
+					}
+				}
+			}
+
+			if (pOrigData)
+				free(pOrigData);
+		}
+
+		// todo
+		return true;
+		//return errorCode == 0 ? true : false;
+//#endif
+//#else
+//		return true;
+#endif
+	}
+};
 
 // This only exports banks that have previously been mapped.
 // We won't know the correct mapped address otherwise.
 // todo: get this working on CD games
 // todo: tidy this function
-bool FPCEEmu::ExportAsmForCurrentGame()
+bool FPCEEmu::ExportAsmForCurrentGame(FAsmExportResults* pResults)
 {
 	if (pCurrentProjectConfig == nullptr)
 		return false;
@@ -1633,149 +1785,21 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 		LOGWARNING("'Write Code Info When Code Executed' option is not turned on. ASM Export may not work!");
 	}
 
-	//UpdateItemList(CodeAnalysis);
+	if (pResults)
+	{
+		pResults->BanksExported = banksToExport;
+		pResults->Filename = outputAsmFname;
+	}
 
 	if (!ExportAssemblerForBanks(this, outputAsmFname.c_str(), banksToExport))
 	{
 		return false;
 	}
 
-#if ASSEMBLE_AFTER_ASM_EXPORT
-#ifdef _WIN32
-	const int bankCount = GetBankCount();
-	printf("--------------------------------------------------------------------------------------------------------\n");
-	//printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
+	//FAsmExportValidator validator;
+	//validator.Validate(
 
-	LOGINFO("Assembling: %s. [%d/%d banks]", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size(), bankCount);
-
-	// todo: export to temp directory?
-
-	const std::string outputPceFname = RemoveFileExtension(outputAsmFname.c_str()) + ".pce";
-
-	// create out.txt and output which file we are assembling
-	std::string echoCmd = "echo Assembling " + pCurrentProjectConfig->Name + " > tmp.txt";
-	std::system(echoCmd.c_str());
-	// echo blank line
-	std::system("echo[ >> tmp.txt"); 
-
-	// This presumes pceas.exe is in your windows path.
-	char cmdTxt[256];
-	// append the results to out.txt
-	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", outputAsmFname.c_str());
-	const int errorCode = std::system(cmdTxt);
-	
-	// append to the batch log file
-	std::system("type tmp.txt >> AssembleLog.txt");
-
-	// print the contents to std output so we can see the result in the PCEAnalyser command window
-	std::system("type tmp.txt");
-
-	LOGINFO("Assembled '%s' : %s", pCurrentProjectConfig->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
-
-	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
-	printf("--------------------------------------------------------------------------------------------------------\n");
-
-	if (!errorCode)
-	{
-		size_t newFileSize = 0;
-		uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
-		if (pOrigData == nullptr)
-		{
-			LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
-		}
-		else
-		{
-			LOGINFO("Produced .pce is %d bytes", newFileSize);
-
-			size_t origFileSize = 0;
-			uint8_t* pNewData = nullptr;
-			auto findIt = GamesLists.find(pCurrentProjectConfig->EmulatorFile.ListName);
-			if (findIt != GamesLists.end())
-			{
-				const std::string origFname = findIt->second.GetRootDir() + pCurrentProjectConfig->EmulatorFile.FileName;
-				pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
-				if (pNewData == nullptr)
-				{
-					LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
-				}
-				else
-				{
-					LOGINFO("Original .pce is %d bytes, %.1fKB", origFileSize, (float)origFileSize / 1024.f);
-
-					if (newFileSize == origFileSize)
-					{
-						LOGINFO(".pce files are the same size.");
-					}
-					else
-					{
-						const long diffBytes = abs((long)(newFileSize - origFileSize));
-						LOGINFO("pce files size do not match. Difference is %d 0x%x bytes. %.1fKB", diffBytes, diffBytes, (float)diffBytes / 1024.0f);
-					}
-
-					int numDiffs = 0;
-
-					// check the data for the exported pce file matches the original pce file.
-					// only check the bytes for the banks we exported.
-					for (auto bankId : banksToExport)
-					{
-						const uint8_t bankIndex = GetBankIndexForBankId(bankId);
-						uint8_t* pNewBankData = pNewData + 0x2000 * bankIndex;
-						uint8_t* pOrigBankData = pOrigData + 0x2000 * bankIndex;
-
-						const FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(bankId);
-
-						if (bankIndex < bankCount)
-						{
-							int numBankDiffs = 0;
-							for (int i = 0; i < 0x2000; i++)
-							{
-								if (pNewBankData[i] != pOrigBankData[i])
-									numBankDiffs++;
-							}
-
-							if (numBankDiffs)
-								LOGINFO("Found %04d diffs in %s (bank index %d).", numBankDiffs, pBank->Name.c_str(), bankIndex);
-
-							numDiffs += numBankDiffs;
-						}
-						else
-						{
-							LOGINFO("Invalid bank index %d for %s", bankIndex, pBank->Name.c_str());
-						}
-					}
-
-					/*int numDiffs = 0;
-					for (int i = 0; i < newFileSize; i++)
-					{
-						if (pNewData[i] != pOrigData[i])
-							numDiffs++;
-					}*/
-					if (!numDiffs)
-					{
-						if (newFileSize != origFileSize)
-							LOGINFO("Exported banks match the originals.");
-						else
-							LOGINFO("Files are identical!");
-					}
-					else
-					{
-						LOGINFO("Found %d bytes that are different.", numDiffs);
-					}
-
-					if (pNewData)
-						free(pNewData);
-				}
-			}
-		}
-	
-		if (pOrigData)
-			free(pOrigData);
-	}
-	return errorCode == 0 ? true: false;
-#endif
-#else
 	return true;
-#endif
 }
 
 void FPCEEmu::SystemMenuAdditions(void)

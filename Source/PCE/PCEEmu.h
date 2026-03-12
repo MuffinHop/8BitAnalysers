@@ -16,6 +16,7 @@ class FSpriteViewer;
 class FVRAMViewer;
 class FPCEEmu;
 struct FGameDbEntry;
+struct FAsmExportResults;
 
 struct FGameDebugStats
 {
@@ -88,7 +89,7 @@ public:
 	ICPUEmulator* GetCPUEmulator(void) const override;
 	//ICPUInterface End
 
-	bool ExportAsmForCurrentGame();
+	bool ExportAsmForCurrentGame(FAsmExportResults* pResults = nullptr);
 
 	const std::unordered_map<std::string, FGamesList>& GetGamesLists() const { return	GamesLists; }
 
