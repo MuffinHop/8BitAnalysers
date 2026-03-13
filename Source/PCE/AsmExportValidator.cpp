@@ -60,7 +60,7 @@ bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& ba
 		return false;
 	}
 
-	LOGINFO("Produced .pce is %d bytes, %.1KB", newFileSize, (float)newFileSize / 1024.f);
+	LOGINFO("Produced .pce is %d bytes, %.1fKB", newFileSize, (float)newFileSize / 1024.f);
 
 	size_t origFileSize = 0;
 	uint8_t* pNewData = nullptr;
