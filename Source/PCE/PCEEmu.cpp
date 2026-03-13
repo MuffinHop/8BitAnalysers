@@ -4,6 +4,7 @@
 
 #include <chrono>
 
+#include "AsmExportValidator.h"
 #include "Constants.h"
 #include "PCEConfig.h"
 #include "Util/FileUtil.h"
@@ -25,6 +26,7 @@
 #include <geargrafx_core.h>
 #include "Debug/DebugLog.h"
 #include "GameDb.h"
+#include "DebugStats.h"
 
 #include "App.h"
 #include <CodeAnalyser/CodeAnalysisState.h>
@@ -65,14 +67,12 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 
 #ifndef NDEBUG
 #define BANK_SWITCH_DEBUG 0
-#define ASSEMBLE_AFTER_ASM_EXPORT 1
 #define LITE_MODE 0
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 1
 #define DEBUG_STATS_VIEWER 1
 #endif
 #else
-#define ASSEMBLE_AFTER_ASM_EXPORT 0
 #define LITE_MODE 0
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 0
@@ -601,7 +601,8 @@ void FPCEEmu::MapMprBank(uint8_t mprIndex, uint8_t newBankIndex)
 		}
 	}
 
-	DebugStats.NumBankSwitchesThisFrame++;
+	if (pDebugStats)
+		pDebugStats->NumBankSwitchesThisFrame++;
 #endif
 
 #if BANK_SWITCH_DEBUG
@@ -753,7 +754,7 @@ void FPCEEmu::CheckPhysicalMemoryRangeIsMapped()
 void FPCEEmu::UpdateDebugStats()
 {
 #if DEBUG_STATS_VIEWER
-	if (pGameDebugStats)
+	if (pGameDebugStats && pDebugStats)
 	{
 		FCodeAnalysisState& state = CodeAnalysis;
 
@@ -769,7 +770,7 @@ void FPCEEmu::UpdateDebugStats()
 			}
 		}
 		pGameDebugStats->NumBanksMapped = (int)bankIdsPreviouslyMapped.size();
-		pGameDebugStats->MaxBankSwitches = MAX(pGameDebugStats->MaxBankSwitches, DebugStats.NumBankSwitchesThisFrame);
+		pGameDebugStats->MaxBankSwitches = MAX(pGameDebugStats->MaxBankSwitches, pDebugStats->NumBankSwitchesThisFrame);
 	}
 #endif
 }
@@ -822,6 +823,10 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
  
 	SetWindowTitle(kAppTitle.c_str());
 	SetWindowIcon(GetBundlePath("PCELogo.png"));
+
+#if DEBUG_STATS_VIEWER
+	pDebugStats = new FEmuDebugStats;
+#endif
 
 	// Initialise Emulator
 	pCore = new GeargrafxCore();
@@ -1358,7 +1363,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	GenerateGlobalInfo(CodeAnalysis);
 	CodeAnalysis.SetAddressRangeDirty();
 
-	DebugStats.InitForGame(this, pGameConfig->Name);
+	if (pDebugStats)
+		pDebugStats->InitForGame(this, pGameConfig->Name);
 
 	CodeAnalysis.Debugger.Break();
 	//CodeAnalysis.Debugger.Continue();
@@ -1386,7 +1392,8 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	//pGraphicsViewer->SetImagesRoot((pGlobalConfig->WorkspaceRoot + "/" + pGameConfig->Name + "/GraphicsSets/").c_str());
 
 	pCurrentProjectConfig = pGameConfig;
-	pGameDebugStats = &DebugStats.GameDebugStats[pGameConfig->Name];
+	if (pDebugStats)
+		pGameDebugStats = &pDebugStats->GameDebugStats[pGameConfig->Name];
 
 	if (!pMedia->IsCDROM())
 	{
@@ -1566,164 +1573,10 @@ void FPCEEmu::FileMenuAdditions(void)
 	}
 }
 
-struct FAsmExportResults
-{
-	std::vector<int16_t> BanksExported;
-	std::string Filename;
-};
-
-// maybe this just needs to be a function?
-struct FAsmExportValidator
-{
-	bool Validate(const FAsmExportResults& results, FPCEEmu* pEmu)
-	{
-//#if ASSEMBLE_AFTER_ASM_EXPORT
-#ifdef _WIN32
-		const int bankCount = pEmu->GetBankCount();
-		printf("--------------------------------------------------------------------------------------------------------\n");
-		//printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
-
-		LOGINFO("Assembling: %s. [%d/%d banks]", pEmu->GetProjectConfig()->Name.c_str(), (int)results.BanksExported.size(), bankCount);
-
-		// todo: export to temp directory?
-
-		const std::string outputPceFname = RemoveFileExtension(results.Filename.c_str()) + ".pce";
-
-		// create out.txt and output which file we are assembling
-		std::string echoCmd = "echo Assembling " + pEmu->GetProjectConfig()->Name + " > tmp.txt";
-		std::system(echoCmd.c_str());
-		// echo blank line
-		std::system("echo[ >> tmp.txt");
-
-		// This presumes pceas.exe is in your windows path.
-		char cmdTxt[256];
-		// append the results to out.txt
-		snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", results.Filename.c_str());
-		const int errorCode = std::system(cmdTxt);
-
-		// append to the batch log file
-		std::system("type tmp.txt >> AssembleLog.txt");
-
-		// print the contents to std output so we can see the result in the PCEAnalyser command window
-		std::system("type tmp.txt");
-
-		LOGINFO("Assembled '%s' : %s", pEmu->GetProjectConfig()->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
-
-		std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
-		printf("--------------------------------------------------------------------------------------------------------\n");
-
-		if (!errorCode)
-		{
-			size_t newFileSize = 0;
-			uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
-			if (pOrigData == nullptr)
-			{
-				LOGINFO("Could not load '%s' to verify contents.", outputPceFname.c_str());
-			}
-			else
-			{
-				LOGINFO("Produced .pce is %d bytes", newFileSize);
-
-				size_t origFileSize = 0;
-				uint8_t* pNewData = nullptr;
-				auto findIt = pEmu->GetGamesLists().find(pEmu->GetProjectConfig()->EmulatorFile.ListName);
-				if (findIt != pEmu->GetGamesLists().end())
-				{
-					const std::string origFname = findIt->second.GetRootDir() + pEmu->GetProjectConfig()->EmulatorFile.FileName;
-					pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
-					if (pNewData == nullptr)
-					{
-						LOGINFO("Could not load '%s' to verify contents.", origFname.c_str());
-					}
-					else
-					{
-						LOGINFO("Original .pce is %d bytes, %.1fKB", origFileSize, (float)origFileSize / 1024.f);
-
-						if (newFileSize == origFileSize)
-						{
-							LOGINFO(".pce files are the same size.");
-						}
-						else
-						{
-							const long diffBytes = abs((long)(newFileSize - origFileSize));
-							LOGINFO("pce files size do not match. Difference is %d 0x%x bytes. %.1fKB", diffBytes, diffBytes, (float)diffBytes / 1024.0f);
-						}
-
-						int numDiffs = 0;
-
-						// check the data for the exported pce file matches the original pce file.
-						// only check the bytes for the banks we exported.
-						for (auto bankId : results.BanksExported)
-						{
-							const uint8_t bankIndex = pEmu->GetBankIndexForBankId(bankId);
-							uint8_t* pNewBankData = pNewData + 0x2000 * bankIndex;
-							uint8_t* pOrigBankData = pOrigData + 0x2000 * bankIndex;
-
-							const FCodeAnalysisBank* pBank = pEmu->GetCodeAnalysis().GetBank(bankId);
-
-							if (bankIndex < bankCount)
-							{
-								int numBankDiffs = 0;
-								for (int i = 0; i < 0x2000; i++)
-								{
-									if (pNewBankData[i] != pOrigBankData[i])
-										numBankDiffs++;
-								}
-
-								if (numBankDiffs)
-									LOGINFO("Found %04d diffs in %s (bank index %d).", numBankDiffs, pBank->Name.c_str(), bankIndex);
-
-								numDiffs += numBankDiffs;
-							}
-							else
-							{
-								LOGINFO("Invalid bank index %d for %s", bankIndex, pBank->Name.c_str());
-							}
-						}
-
-						/*int numDiffs = 0;
-						for (int i = 0; i < newFileSize; i++)
-						{
-							if (pNewData[i] != pOrigData[i])
-								numDiffs++;
-						}*/
-						if (!numDiffs)
-						{
-							if (newFileSize != origFileSize)
-								LOGINFO("Exported banks match the originals.");
-							else
-								LOGINFO("Files are identical!");
-						}
-						else
-						{
-							LOGINFO("Found %d bytes that are different.", numDiffs);
-						}
-
-						if (pNewData)
-							free(pNewData);
-					}
-				}
-			}
-
-			if (pOrigData)
-				free(pOrigData);
-		}
-
-		// todo
-		return true;
-		//return errorCode == 0 ? true : false;
-//#endif
-//#else
-//		return true;
-#endif
-	}
-};
-
 // This only exports banks that have previously been mapped.
 // We won't know the correct mapped address otherwise.
 // todo: get this working on CD games
-// todo: tidy this function
-bool FPCEEmu::ExportAsmForCurrentGame(FAsmExportResults* pResults)
+bool FPCEEmu::ExportAsmForCurrentGame()
 {
 	if (pCurrentProjectConfig == nullptr)
 		return false;
@@ -1785,19 +1638,15 @@ bool FPCEEmu::ExportAsmForCurrentGame(FAsmExportResults* pResults)
 		LOGWARNING("'Write Code Info When Code Executed' option is not turned on. ASM Export may not work!");
 	}
 
-	if (pResults)
-	{
-		pResults->BanksExported = banksToExport;
-		pResults->Filename = outputAsmFname;
-	}
-
 	if (!ExportAssemblerForBanks(this, outputAsmFname.c_str(), banksToExport))
 	{
 		return false;
 	}
 
-	//FAsmExportValidator validator;
-	//validator.Validate(
+#if ASSEMBLE_AFTER_ASM_EXPORT
+	FAsmExportValidator validator;
+	validator.Validate(this, banksToExport, outputAsmFname);
+#endif
 
 	return true;
 }
@@ -1865,7 +1714,8 @@ void FPCEEmu::Tick()
 		FDebugger& debugger = CodeAnalysis.Debugger;
 		if (debugger.IsStopped() == false)
 		{
-			DebugStats.NumBankSwitchesThisFrame = 0;
+			if (pDebugStats)
+				pDebugStats->NumBankSwitchesThisFrame = 0;
 
 			CodeAnalysis.OnFrameStart();
 			//CodeAnalysis.OnMachineFrameStart();
@@ -2112,94 +1962,4 @@ void FPCELaunchConfig::ParseCommandline(int argc, char** argv)
 
 		++argIt;
 	}*/
-}
-
-// move this to it's own file?
-void FPCEEmu::FBankSet::SetPrimaryMappedPage(FCodeAnalysisState& state, int bankSetIndex, uint16_t pageAddr)
-{
-	FCodeAnalysisBank* pBank = state.GetBank(Banks[bankSetIndex].BankId);
-	assert(pBank);
-	pBank->PrimaryMappedPage = pageAddr;
-}
-
-int16_t FPCEEmu::FBankSet::GetFreeBank(uint8_t mprSlot)
-{
-	for (int i = 0; i < Banks.size(); i++)
-	{
-		FBankSetEntry& entry = Banks[i];
-		if (!entry.bMapped)
-		{
-			entry.bMapped = true;
-			assert(SlotBankId[mprSlot] == -1);
-			SlotBankId[mprSlot] = i;
-			return entry.BankId;
-		}
-	}
-
-	return -1;
-}
-	
-void FPCEEmu::FBankSet::SetBankFreed(uint8_t mprSlot)
-{
-	assert(SlotBankId[mprSlot] != -1);
-	Banks[SlotBankId[mprSlot]].bMapped = false;
-	SlotBankId[mprSlot] = -1;
-}
-	
-void FPCEEmu::FBankSet::Reset()
-{
-	for (int i = 0; i < kNumMprSlots; i++)
-		SlotBankId[i] = -1;
-	for (int i = 0; i < Banks.size(); i++)
-		Banks[i].bMapped = false;
-}
-	
-void FPCEEmu::FBankSet::AddBankId(int16_t bankId)
-{
-	Banks.push_back(FBankSetEntry({ bankId, false }));
-}
-	
-int16_t FPCEEmu::FBankSet::GetBankId(int index /* = 0 */) const
-{
-	assert(!Banks.empty());
-	if (index >= Banks.size())
-		return -1;
-
-	return Banks[index].BankId;
-}
-
-bool FPCEEmu::FBankSet::ClaimSpecificBank(int16_t bankId)
-{
-	for (auto& entry : Banks)
-	{
-		if (entry.BankId == bankId)
-		{
-			if (entry.bMapped)
-				return false; // Already mapped (corrupt state)
-
-			entry.bMapped = true;
-			return true;
-		}
-	}
-	return false;
-}
-
-FGameDebugStats* FEmuDebugStats::GetDebugStatsForGame(const std::string& gameName)
-{
-	auto it = GameDebugStats.find(gameName);
-	if (it != GameDebugStats.end())
-	{
-		return &it->second;
-	}
-	return nullptr;
-}
-
-void FEmuDebugStats::InitForGame(FPCEEmu* pEmu, const std::string& gameName)
-{
-	GameDebugStats[gameName].NumBanks = pEmu->GetBankCount();
-}
-
-void FEmuDebugStats::Reset()
-{
-	GameDebugStats.clear();
 }

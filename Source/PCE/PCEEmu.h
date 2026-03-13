@@ -3,10 +3,19 @@
 
 #include "Misc/EmuBase.h"
 #include "huc6280.h"
+#include "BankSet.h"
 
+#ifndef NDEBUG
+#define ASSEMBLE_AFTER_ASM_EXPORT 1
+#else
+#define ASSEMBLE_AFTER_ASM_EXPORT 0
+#endif
+
+// Geargrafx fwd declares
 class GeargrafxCore;
 class Media;
 class Memory;
+
 struct FPCEConfig;
 struct FPCEGameConfig;
 class FPCECPUEmulator6502;
@@ -16,27 +25,8 @@ class FSpriteViewer;
 class FVRAMViewer;
 class FPCEEmu;
 struct FGameDbEntry;
-struct FAsmExportResults;
-
-struct FGameDebugStats
-{
-	int NumDupeBanks = 0;
-	int NumBanks = 0;
-	int NumBanksMapped = 0;
-	int MaxBankSwitches = 0;
-};
-
-struct FEmuDebugStats
-{
-	void Reset();
-	void InitForGame(FPCEEmu* pEmu, const std::string& gameName);
-	FGameDebugStats* GetDebugStatsForGame(const std::string& gameName);
-
-	// Debug stats for each game. Uses project name as key
-	std::map<std::string, FGameDebugStats> GameDebugStats;
-
-	int NumBankSwitchesThisFrame = 0;
-};
+struct FEmuDebugStats;
+struct FGameDebugStats;
 
 struct FPCELaunchConfig : public FEmulatorLaunchConfig
 {
@@ -89,7 +79,7 @@ public:
 	ICPUEmulator* GetCPUEmulator(void) const override;
 	//ICPUInterface End
 
-	bool ExportAsmForCurrentGame(FAsmExportResults* pResults = nullptr);
+	bool ExportAsmForCurrentGame();
 
 	const std::unordered_map<std::string, FGamesList>& GetGamesLists() const { return	GamesLists; }
 
@@ -128,56 +118,12 @@ public:
 	static const int kNumRomBanks = 128;
 	static const int kNumMprSlots = 8;
 	
-	//----------------------------------BankSet BEGIN----------------------------------------
-	// This is code to workaround the fact that 8BA doesn't currently support memory aliasing.
-	// As in, mapping a single logical memory bank to multiple physical memory locations.
-	
-	// The default number of banks in a bank set.
-	// The number includes the primary bank and any extra banks for duplicates.
-	// For example, a value of 4 means 1 primary and 3 duplicates.
-	// If this value is set to 1 then any duplicates will use UNUSED banks.
-	static const int kNumBankSetIds = 5;
-
-	// A set of bank ids that all represent the same logical memory.
-	// PCE games can map the same bank to different physical memory ranges.
-	// Eg. ROM1 being mapped to 0x4000-0x6000 and 0x8000-0xa000 simultaneously.
-	// This happens when the same bank index is present in >1 mpr slot.
-	// It is technically possible to map the same bank across the entire physical memory range.
-	// 8BA doesn't support a bank being mapped into >1 memory location at the same time, so 
-	// we need a set of banks that all point to the same memory.
-	struct FBankSet
-	{
-		void SetPrimaryMappedPage(FCodeAnalysisState& state, int bankSetIndex, uint16_t pageAddr);
-		int16_t GetFreeBank(uint8_t mprSlot);
-		bool ClaimSpecificBank(int16_t bankId);
-		void SetBankFreed(uint8_t mprSlot);
-		void Reset();
-		void AddBankId(int16_t bankId);
-		int16_t GetBankId(int index = 0) const;
-
-		struct FBankSetEntry
-		{
-			int16_t BankId = -1;
-			bool bMapped = false;
-		};
-		
-		// Bank set index for each mpr slot. Only will be set to a bank id when a bank gets mapped.
-		int SlotBankId[kNumMprSlots] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-	
-		// List of all bank ids.
-		// Entry 0 is the primary bank. It should always have a primary mapped page.
-		// Entries >1 are the dupe banks and will get a primary mapped page if they get mapped in.
-		std::vector<FBankSetEntry> Banks;
-	};
-
 	FBankSet* Banks[kNumBanks] = { nullptr };
 	int MprBankSet[kNumMprSlots] = { -1, -1, -1, -1, -1, -1, -1, -1 };
-	//----------------------------------BankSet END----------------------------------------
 
-	FEmuDebugStats DebugStats;
+	FEmuDebugStats* pDebugStats = nullptr;
 
 	uint16_t PrevPC = 0;
-
 	int EmuFramesToRun = 1;
 
 protected:

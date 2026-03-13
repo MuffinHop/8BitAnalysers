@@ -4,6 +4,7 @@
 
 #include "../PCEEmu.h"
 #include "../GameDb.h"
+#include "../DebugStats.h"
 #include "BatchGameLoadViewer.h"
 
 #include <geargrafx_core.h>
@@ -45,6 +46,9 @@ std::string GetBankType(Memory* pMemory, int bankIndex)
 
 void FDebugStatsViewer::DrawUI()
 {
+	if (!pPCEEmu->pDebugStats)
+		return;
+
 	FCodeAnalysisState& state = pPCEEmu->GetCodeAnalysis();
 
 	int mappedBanks = 0;
@@ -73,7 +77,7 @@ void FDebugStatsViewer::DrawUI()
 
 	int maxDupeBanks = 0;
 	std::string gameWithMaxDupes;
-	for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
+	for (auto pair : pPCEEmu->pDebugStats->GameDebugStats)
 	{
 		const FGameDebugStats& debugStats = pair.second;
 		if (debugStats.NumDupeBanks > maxDupeBanks)
@@ -95,8 +99,8 @@ void FDebugStatsViewer::DrawUI()
 	ImGui::Text("Pages in use: %d", pagesInUse);
 	ImGui::Text("Game with most dupe banks: %s", gameWithMaxDupes.c_str());
 	ImGui::Text("Max dupe banks: %d", maxDupeBanks);
-	ImGui::Text("Num bank sets: %d", pPCEEmu->kNumBankSetIds);
-	ImGui::Text("Bank switches per frame: %d", pPCEEmu->DebugStats.NumBankSwitchesThisFrame);
+	ImGui::Text("Num bank sets: %d", kNumBankSetIds);
+	ImGui::Text("Bank switches per frame: %d", pPCEEmu->pDebugStats->NumBankSwitchesThisFrame);
 
 	constexpr ImVec4 redColour(1.0f, 0.0f, 0.0f, 1.0f);
 	constexpr ImVec4 whiteColour(1.0f, 1.0f, 1.0f, 1.0f);
@@ -110,7 +114,7 @@ void FDebugStatsViewer::DrawUI()
 	{
 		if (ImGui::Button("Reset"))
 		{
-			pPCEEmu->DebugStats.Reset();
+			pPCEEmu->pDebugStats->Reset();
 		}
 
 		if (ImGui::Button("Dump"))
@@ -119,7 +123,7 @@ void FDebugStatsViewer::DrawUI()
 		}
 	}
 
-	for (auto pair : pPCEEmu->DebugStats.GameDebugStats)
+	for (auto pair : pPCEEmu->pDebugStats->GameDebugStats)
 	{
 		const FGameDebugStats& gameStats = pair.second;
 		if (bGameStatsOpen)
@@ -173,7 +177,7 @@ void FDebugStatsViewer::DrawUI()
 		TGameDb& gameDb = GetGameDb();
 		for (const auto it : gameDb)
 		{
-			const FGameDebugStats* pGameStats = pPCEEmu->DebugStats.GetDebugStatsForGame(it.first);
+			const FGameDebugStats* pGameStats = pPCEEmu->pDebugStats->GetDebugStatsForGame(it.first);
 
 			const FGameDbEntry& entry = gameDb[it.first];
 			bool bTreeOpen = ImGui::TreeNode(it.first.c_str());

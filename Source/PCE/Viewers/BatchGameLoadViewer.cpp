@@ -5,6 +5,7 @@
 #include <imgui.h>
 
 #include "../PCEEmu.h"
+#include "../DebugStats.h"
 #include "Misc/GameConfig.h"
 #include "Util/FileUtil.h"
 
@@ -127,7 +128,8 @@ void FBatchGameLoadViewer::DrawUI()
 	bool bMapped = false;
 	if (const FProjectConfig* pConfig = pPCEEmu->GetProjectConfig())
 	{
-		bMapped = pPCEEmu->DebugStats.GameDebugStats[pConfig->Name].NumBanks == pPCEEmu->DebugStats.GameDebugStats[pConfig->Name].NumBanksMapped;
+		if (pPCEEmu->pDebugStats)
+			bMapped = pPCEEmu->pDebugStats->GameDebugStats[pConfig->Name].NumBanks == pPCEEmu->pDebugStats->GameDebugStats[pConfig->Name].NumBanksMapped;
 		ImGui::Text("Fully mapped: %s", bMapped ? "Yes" : "No");
 	}
 	ImGui::Checkbox("Skip game when fully mapped", &bSkipWhenMapped);
