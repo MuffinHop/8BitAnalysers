@@ -82,10 +82,9 @@ public:
 	bool ExportAsmForCurrentGame();
 
 	const std::unordered_map<std::string, FGamesList>& GetGamesLists() const { return	GamesLists; }
-
 	const FPCEConfig* GetPCEGlobalConfig() { return (const FPCEConfig*)pGlobalConfig; }
-
-	void AddLabels();
+	FGameDebugStats* GetGameDebugStats() const { return pGameDebugStats; }
+	FGameDbEntry* GetGameDbEntry() const { return pGameDbEntry; }
 
 	// Geargrafx helpers
 	GeargrafxCore* GetCore() const { return pCore; }
@@ -99,25 +98,26 @@ public:
 	void OnVRAMWritten(uint16_t vramAddr, uint16_t value);
 
 	uint8_t* GetFrameBuffer() const { return pFrameBuffer; }
+	int16_t* GetAudioBuffer() const { return pAudioBuf; }
 
 	FSpriteViewer* GetSpriteViewer() const { return pSpriteViewer; }
 	FVRAMViewer* GetVRAMViewer() const { return pVRAMViewer; }
 	FBatchGameLoadViewer* GetBatchGameLoadViewer() const { return pBatchGameLoadViewer;	}
-
-	int16_t GetBankIdForMprSlot(uint8_t bankIndex, uint8_t mprIndex);
-	void MapMprBank(uint8_t mprIndex, uint8_t newBankIndex);
 	
+	void EnableGeargrafxCallbacks(bool bEnabled);
+
 	// Get the PCE bank index (0-255) for a given bank id.
 	uint8_t GetBankIndexForBankId(uint16_t bankId);
 
 	int GetBankCount() const;
+	void MapMprBank(uint8_t mprIndex, uint8_t newBankIndex);
 
-	void CheckDupeMprBankIds();
-
-	static const int kNumBanks = 256;
-	static const int kNumRomBanks = 128;
-	static const int kNumMprSlots = 8;
+	static constexpr int kNumBanks = 256;
+	static constexpr int kNumRomBanks = 128;
+	static constexpr int kNumMprSlots = 8;
 	
+	static constexpr int kFramebufferSize = 2048 * 512 * 4;
+
 	FBankSet* Banks[kNumBanks] = { nullptr };
 	int MprBankSet[kNumMprSlots] = { -1, -1, -1, -1, -1, -1, -1, -1 };
 
@@ -127,6 +127,7 @@ public:
 	int EmuFramesToRun = 1;
 
 protected:
+
 	bool LoadMachineState(const char* path, int index = -1);
 	bool SaveMachineState(const char* path, int index = -1);
 
@@ -134,15 +135,19 @@ protected:
 
 	void CheckPhysicalMemoryRangeIsMapped();
 	void CheckMemoryMap();
+	void CheckDupeMprBankIds();
 	void UpdateDebugStats();
 	void ResetBanks();
 	void MapMprBanks();
+	int16_t GetBankIdForMprSlot(uint8_t bankIndex, uint8_t mprIndex);
 	
 	void MapBankIdToMprSlot(uint8_t mprIndex, int16_t bankId);
 	void RestoreMprBankMappings(const FPCEGameConfig* pConfig);
 
 	void InitPalettes();
 	void UpdatePalettes();
+
+	void AddLabels();
 
 protected:
 	GeargrafxCore* pCore = nullptr;
@@ -173,6 +178,7 @@ protected:
 	FGameDebugStats* pGameDebugStats = nullptr;
 	FGameDbEntry* pGameDbEntry = nullptr;
 
-	int16_t UnusedBankIdStart = -1;
-	int16_t UnusedBankIdEnd = -1;
+	bool bCallbacksEnabled = true;
+	//int16_t UnusedBankIdStart = -1;
+	//int16_t UnusedBankIdEnd = -1;
 };

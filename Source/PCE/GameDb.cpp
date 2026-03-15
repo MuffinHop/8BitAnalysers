@@ -15,7 +15,7 @@ FGameDbEntry* GetGameDbEntry(const std::string& name)
 	if (it == gGameDb.end())
 		return nullptr;
 	return &(it->second);
-	return nullptr;}
+}
 
 FGameDbEntry& CreateGameDbEntry(const std::string& name, int bankCount)
 {

@@ -2,6 +2,8 @@
 #include <string>
 #include <map>
 
+class FPCEEmu;
+
 struct FGameDbBank
 {
 	uint16_t GetMappedAddress() const { return MprSlot == -1 ? 0 : MprSlot * 0x2000; }
@@ -18,6 +20,14 @@ struct FGameDbEntry
 {
 	std::vector<FGameDbBank> Banks;
 
+	bool bAssemblesOk = false;
+	bool bPassesValidation = false;
+
+	// Version 1:
+	// Run for 30 seconds without joypad input
+
+	int TestingMethodology = 1;
+
 	// Note: this is not saved in the json file.
 	int NumDynamicBanks = 0;
 };
@@ -25,6 +35,7 @@ struct FGameDbEntry
 typedef std::map<std::string, FGameDbEntry> TGameDb;
 
 FGameDbEntry* GetGameDbEntry(const std::string& name);
+
 FGameDbEntry& CreateGameDbEntry(const std::string& name, int bankCount);
 TGameDb& GetGameDb();
 

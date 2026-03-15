@@ -13,6 +13,8 @@ public:
 	virtual void Shutdown() override {}
 	virtual void DrawUI() override;
 
+	void Tick();
+
 	bool IsAutomationActive() const { return bAutomationActive; }
 
 	float GetElapsedGameRunTime() const { return ElapsedGameRunTime; }

@@ -55,6 +55,21 @@ void FBatchGameLoadViewer::StartAutomation()
 #endif
 }
 
+#include "crc.h"
+
+// shouldnt the validator be doing this?
+void FBatchGameLoadViewer::Tick()
+{
+	if (bExportAsm)
+	{
+		if (FGameDebugStats* pGameDebugStats = pPCEEmu->GetGameDebugStats())
+		{
+			if (pGameDebugStats->FramebufferCRCs.size() < 600)
+				pGameDebugStats->FramebufferCRCs.push_back(CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize));
+		}
+	}
+}
+
 void FBatchGameLoadViewer::DrawUI()
 {
 #if !NEWADDRESSREF

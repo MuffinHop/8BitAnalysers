@@ -454,6 +454,31 @@ uint8_t FPCEEmu::GetBankIndexForBankId(uint16_t bankId)
 	return 0xff;
 }
 
+void FPCEEmu::EnableGeargrafxCallbacks(bool bEnabled)
+{
+	// todo
+#if LITE_MODE
+	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
+#else
+	//pCore->SetInstructionExecutedCallback(bEnabled ? ::OnInstructionExecuted : nullptr, this);
+	//pMemory->SetMemoryCallbacks(bEnabled ? OnMemoryRead : nullptr, bEnabled ? OnMemoryWritten : nullptr, BankChangeCallback, this);
+	//pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
+	if (bEnabled)
+	{
+		pCore->SetInstructionExecutedCallback(::OnInstructionExecuted, this);
+		pMemory->SetMemoryCallbacks(OnMemoryRead, OnMemoryWritten, BankChangeCallback, this);
+		pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
+	}
+	else
+	{
+		pCore->SetInstructionExecutedCallback(nullptr, this);
+		pMemory->SetMemoryCallbacks(nullptr, nullptr, nullptr, this);
+		pCore->GetHuC6270_1()->SetCallback(nullptr, this);
+	}
+#endif
+
+}
+
 int FPCEEmu::GetBankCount() const
 {
 	// todo cache this?
@@ -834,6 +859,9 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	
 	pMemory = pCore->GetMemory();
 
+	EnableGeargrafxCallbacks(true);
+
+	/*
 #if LITE_MODE
 	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
 #else
@@ -841,6 +869,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	pMemory->SetMemoryCallbacks(OnMemoryRead, OnMemoryWritten, BankChangeCallback, this);
 	pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
 #endif
+*/
 
 	pMedia = pCore->GetMedia();
 	//pMedia->PreloadCdRom(true);
@@ -852,7 +881,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 
 	pPCE6502CPU = new FPCECPUEmulator6502(this);
 
-	pFrameBuffer = new uint8_t[2048 * 512 * 4];
+	pFrameBuffer = new uint8_t[FPCEEmu::kFramebufferSize];
 	pAudioBuf = new int16_t[GG_AUDIO_BUFFER_SIZE];;
 
 	CPUType = ECPUType::HuC6280;
@@ -934,8 +963,8 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 
 	// create x8 dummy banks here?
 
-	UnusedBankIdStart = BankSets[kBankUnusedStart].GetBankId(0);
-	UnusedBankIdEnd = BankSets[kBankUnusedStart].GetBankId(7);
+	//UnusedBankIdStart = BankSets[kBankUnusedStart].GetBankId(0);
+	//UnusedBankIdEnd = BankSets[kBankUnusedStart].GetBankId(7);
 
 	ResetBanks();
 	MapMprBanks();
@@ -1405,7 +1434,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 			dbEntry.Banks[0].MprSlot = 7;
 		}
 
-		pGameDbEntry = GetGameDbEntry(pGameConfig->Name);
+		pGameDbEntry = ::GetGameDbEntry(pGameConfig->Name);
 		assert(pGameDbEntry);
 	}
 
@@ -1686,6 +1715,10 @@ void FPCEEmu::OptionsMenuAdditions(void)
 	// bug is asm export won't work due to missing labels.
 	ImGui::MenuItem("Write Code Info When Code Executed", 0, &bWriteCodeInfoWhenCodeExecuted);
 
+	if (ImGui::MenuItem("Callbacks Enabled", 0, &bCallbacksEnabled))
+	{
+		EnableGeargrafxCallbacks(bCallbacksEnabled);
+	}
 }
 
 void FPCEEmu::ActionMenuAdditions(void)
@@ -1722,6 +1755,9 @@ void FPCEEmu::Tick()
 
 			int audioSampleCount = 0;
 			pCore->RunToVBlank(pFrameBuffer, pAudioBuf, &audioSampleCount);
+
+			if (pBatchGameLoadViewer)
+				pBatchGameLoadViewer->Tick();
 
 			CodeAnalysis.OnFrameEnd();
 			//CodeAnalysis.OnMachineFrameStart();

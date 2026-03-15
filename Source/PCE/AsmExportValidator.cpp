@@ -2,38 +2,55 @@
 
 #include "AsmExportValidator.h"
 
+#include "crc.h"
+
 #include "PCEEmu.h"
+#include "GameDb.h"
 
 //#include <chrono>
 #include "PCEConfig.h"
 #include "Util/FileUtil.h"
-//#include <geargrafx_core.h>
 #include "Debug/DebugLog.h"
 #include "PCEGameConfig.h"
+#include "DebugStats.h"
+
+// todo copy failed pces to a directory for easier manual inspection?
 
 bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& banksExported, const std::string& asmFname)
 {
 #ifdef _WIN32
-	const int bankCount = pEmu->GetBankCount();
-	printf("--------------------------------------------------------------------------------------------------------\n");
-	//printf("Assembling %s [%d banks]\n", pCurrentProjectConfig->Name.c_str(), (int)banksToExport.size());
+	LOGINFO("Assembling: %s. [%d/%d banks]", pEmu->GetProjectConfig()->Name.c_str(), (int)banksExported.size(), pEmu->GetBankCount());
 
-	LOGINFO("Assembling: %s. [%d/%d banks]", pEmu->GetProjectConfig()->Name.c_str(), (int)banksExported.size(), bankCount);
+	if (!Assemble(pEmu, asmFname))
+	{
+		return false;
+	}
+
+	CompareRomFiles(pEmu, banksExported, asmFname);
+
+	RunEmulatorTest(pEmu, asmFname);
+
+	// todo return if it failed
+	return true;
+#endif
+}
+
+bool FAsmExportValidator::Assemble(FPCEEmu* pEmu, const std::string& asmFname)
+{
+	printf("--------------------------------------------------------------------------------------------------------\n");
 
 	// todo: export to temp directory?
-
-	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
 
 	// create tmp.txt and output which file we are assembling
 	std::string echoCmd = "echo Assembling " + pEmu->GetProjectConfig()->Name + " > tmp.txt";
 	std::system(echoCmd.c_str());
-		
+
 	// echo blank line
 	std::system("echo[ >> tmp.txt");
 
 	// This presumes pceas.exe is in your windows path.
 	char cmdTxt[256];
-		
+
 	// append the results to out.txt
 	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", asmFname.c_str());
 	const int errorCode = std::system(cmdTxt);
@@ -49,8 +66,18 @@ bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& ba
 	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
-	if (errorCode)
-		return false;
+	const bool bAssemblesOk = errorCode == 0 ? true : false;
+	if (FGameDbEntry* pDbEntry = pEmu->GetGameDbEntry())
+	{
+		pDbEntry->bAssemblesOk = bAssemblesOk;
+	}
+
+	return bAssemblesOk;
+}
+
+bool FAsmExportValidator::CompareRomFiles(FPCEEmu* pEmu, const std::vector<int16_t>& banksExported, const std::string& asmFname) const
+{
+	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
 
 	size_t newFileSize = 0;
 	uint8_t* pOrigData = (uint8_t*)LoadBinaryFile(outputPceFname.c_str(), newFileSize);
@@ -60,7 +87,7 @@ bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& ba
 		return false;
 	}
 
-	LOGINFO("Produced .pce is %d bytes, %.1KB", newFileSize, (float)newFileSize / 1024.f);
+	LOGINFO("Produced .pce is %d bytes, %.1fKB", newFileSize, (float)newFileSize / 1024.f);
 
 	size_t origFileSize = 0;
 	uint8_t* pNewData = nullptr;
@@ -70,7 +97,7 @@ bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& ba
 		const std::string origFname = findIt->second.GetRootDir() + pEmu->GetProjectConfig()->EmulatorFile.FileName;
 		pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
 		if (pNewData != nullptr)
-		{			
+		{
 			LOGINFO("Original .pce is %d bytes, %.1fKB", origFileSize, (float)origFileSize / 1024.f);
 
 			if (newFileSize == origFileSize)
@@ -95,7 +122,7 @@ bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& ba
 
 				const FCodeAnalysisBank* pBank = pEmu->GetCodeAnalysis().GetBank(bankId);
 
-				if (bankIndex < bankCount)
+				if (bankIndex < pEmu->GetBankCount())
 				{
 					int numBankDiffs = 0;
 					for (int i = 0; i < 0x2000; i++)
@@ -137,7 +164,58 @@ bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& ba
 
 	free(pOrigData);
 
-	// todo return if it failed
+	// todo decide what to return here
 	return true;
-#endif
+}
+
+bool FAsmExportValidator::RunEmulatorTest(FPCEEmu* pEmu, const std::string& asmFname)
+{
+	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
+
+	// turn off callback to improve performance
+	pEmu->EnableGeargrafxCallbacks(false);
+
+	// do I need to reset anything here?
+
+	LOGINFO("Running emulator test on '%s'...", outputPceFname.c_str());
+
+	if (pEmu->GetCore()->LoadMedia(outputPceFname.c_str()) == false)
+		return false;
+	
+	FGameDebugStats* pGameDebugStats = pEmu->GetGameDebugStats();
+	if (!pGameDebugStats)
+		return false;
+
+	LOGINFO("Checking %d frames...", (int)pGameDebugStats->FramebufferCRCs.size());
+	
+	int numDiffs = 0;
+	for (int i = 0; i < pGameDebugStats->FramebufferCRCs.size(); i++)
+	{
+		int audioSampleCount = 0;
+		pEmu->GetCore()->RunToVBlank(pEmu->GetFrameBuffer(), pEmu->GetAudioBuffer(), &audioSampleCount);
+
+		const u32 framebufCRC = CalculateCRC32(0, pEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
+		
+		//if (i < pGameDebugStats->FramebufferCRCs.size())
+		{
+			if (framebufCRC == pGameDebugStats->FramebufferCRCs[i])
+			{
+				//LOGINFO("Frame %03d CRC %x matches", i, framebufCRC);
+			}
+			else
+			{
+				//LOGINFO("Frame %03d CRC %x does not match reference CRC %x", i, framebufCRC, pGameDebugStats->FramebufferCRCs[i]);
+				numDiffs++;
+			}
+		}
+	}
+
+	pEmu->EnableGeargrafxCallbacks(true);
+
+	if (numDiffs)
+		LOGINFO("Test Failed. %d frames differ", numDiffs);
+	else
+		LOGINFO("Test passed. Frames are identical.");
+
+	return true;
 }
