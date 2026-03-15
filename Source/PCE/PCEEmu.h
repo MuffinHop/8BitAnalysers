@@ -27,6 +27,7 @@ class FPCEEmu;
 struct FGameDbEntry;
 struct FEmuDebugStats;
 struct FGameDebugStats;
+struct FAsmExportValidator;
 
 struct FPCELaunchConfig : public FEmulatorLaunchConfig
 {
@@ -179,6 +180,9 @@ protected:
 	FGameDbEntry* pGameDbEntry = nullptr;
 
 	bool bCallbacksEnabled = true;
+
+	// todo kick out in release build?
+	FAsmExportValidator* pAsmExportValidator = nullptr;
 	//int16_t UnusedBankIdStart = -1;
 	//int16_t UnusedBankIdEnd = -1;
 };

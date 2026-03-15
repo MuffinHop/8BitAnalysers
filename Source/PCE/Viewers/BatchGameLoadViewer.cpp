@@ -37,6 +37,7 @@ void FBatchGameLoadViewer::StartAutomation()
 	bLoadGame = true;
 	NumAssembledOk = 0;
 	NumFailedToAssemble = 0;
+	GameFrameCount = 0;
 
 	if (bPressRandomButtons)
 		NextButtonPressTime = GetNextButtonPressTime();
@@ -53,21 +54,6 @@ void FBatchGameLoadViewer::StartAutomation()
 		}
 	}
 #endif
-}
-
-#include "crc.h"
-
-// shouldnt the validator be doing this?
-void FBatchGameLoadViewer::Tick()
-{
-	if (bExportAsm)
-	{
-		if (FGameDebugStats* pGameDebugStats = pPCEEmu->GetGameDebugStats())
-		{
-			if (pGameDebugStats->FramebufferCRCs.size() < 600)
-				pGameDebugStats->FramebufferCRCs.push_back(CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize));
-		}
-	}
 }
 
 void FBatchGameLoadViewer::DrawUI()
@@ -111,6 +97,7 @@ void FBatchGameLoadViewer::DrawUI()
 	}
 
 	ImGui::InputInt("Game run time", &GameRunTime);
+	ImGui::Checkbox("Use exact frames", &bUseFramesForRunTime);
 
 	if (ImGui::Checkbox("Press random buttons", &bPressRandomButtons))
 	{
@@ -155,10 +142,17 @@ void FBatchGameLoadViewer::DrawUI()
 	ElapsedGameRunTime = 0.f;
 	if (bAutomationActive)
 	{
-		fGameTimeRemaining = (float)(NextGameTime - time);
-		ImGui::Text("Game time remaining: %.1fs", MAX(fGameTimeRemaining, 0.f));
-		ElapsedGameRunTime = GameRunTime - fGameTimeRemaining;
-		ImGui::Text("Game time elapsed: %.1fs", ElapsedGameRunTime);
+		if (bUseFramesForRunTime)
+		{
+			ImGui::Text("Game frames elapsed %d / %d", GameFrameCount, GameRunTime * 60);
+		}
+		else
+		{
+			fGameTimeRemaining = (float)(NextGameTime - time);
+			ImGui::Text("Game time remaining: %.1fs", MAX(fGameTimeRemaining, 0.f));
+			ElapsedGameRunTime = GameRunTime - fGameTimeRemaining;
+			ImGui::Text("Game time elapsed: %.1fs", ElapsedGameRunTime);
+		}
 	}
 
 	auto findIt = pPCEEmu->GetGamesLists().find("Snapshot File");
@@ -174,7 +168,19 @@ void FBatchGameLoadViewer::DrawUI()
 
 		if (bAutomationActive)
 		{
-			if (time >= NextGameTime)
+			bool bTimeIsUp = false;
+			if (bUseFramesForRunTime)
+			{
+				if (GameFrameCount >= GameRunTime * 60)
+					bTimeIsUp = true;
+			}
+			else
+			{
+				if (time >= NextGameTime)
+					bTimeIsUp = true;
+			}
+
+			if (bTimeIsUp)
 			{
 				if (bIsLastGameInList)
 				{
@@ -232,6 +238,7 @@ void FBatchGameLoadViewer::DrawUI()
 					NextButtonPressTime = GetNextButtonPressTime();
 				}
 			}
+			GameFrameCount++;
 		}
 		const int numGamesToLoad = numGamesInList - GameIndex;
 		const int totSecs = (numGamesToLoad * GameRunTime) + (int)fGameTimeRemaining;
@@ -262,6 +269,7 @@ void FBatchGameLoadViewer::DrawUI()
 			if (!bIsLastGameInList)
 			{
 				GameIndex++;
+				GameFrameCount = 0;
 				bLoadGame = true;
 
 				if (bExportAsm && bNextGame)
@@ -318,4 +326,17 @@ double FBatchGameLoadViewer::GetNextButtonPressTime() const
 { 
 	return ImGui::GetTime() + ((double)(rand() / RAND_MAX) * InputDelay); 
 }
+
+int FBatchGameLoadViewer::GetTestingMethodology() const
+{
+	if (bAutomationActive)
+	{
+		// Run for 1800 frames with no input
+		if (bUseFramesForRunTime && GameRunTime == 30 && !bPressRandomButtons)
+			return 1;
+	}
+
+	return -1;
+}
+
 

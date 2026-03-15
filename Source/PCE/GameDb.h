@@ -21,12 +21,15 @@ struct FGameDbEntry
 	std::vector<FGameDbBank> Banks;
 
 	bool bAssemblesOk = false;
-	bool bPassesValidation = false;
+	bool bRomFilePartialMatch = false;
+	bool bRomFileIdentical = false;
+	bool bEmulatorTestOk = false;
 
-	// Version 1:
-	// Run for 30 seconds without joypad input
+	// Version 1 Criteria:
+	// Run for 1800 frames (30 seconds) without joypad input
 
-	int TestingMethodology = 1;
+	// If this is set to -1 it means the criteria wasn't valid or automation wasn't active.
+	int TestingMethodology = -1;
 
 	// Note: this is not saved in the json file.
 	int NumDynamicBanks = 0;

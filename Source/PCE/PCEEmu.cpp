@@ -852,6 +852,9 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 #if DEBUG_STATS_VIEWER
 	pDebugStats = new FEmuDebugStats;
 #endif
+#if ASSEMBLE_AFTER_ASM_EXPORT
+	pAsmExportValidator = new FAsmExportValidator(this);
+#endif
 
 	// Initialise Emulator
 	pCore = new GeargrafxCore();
@@ -1278,7 +1281,9 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	LOGINFO("Load Project '%s'. bLoadGameData = %s", pGameConfig->Name.c_str(), bLoadGameData ? "True" : "False");
 
 	// Save the last game's bank mapping progress
-	// todo: remove in release build?
+	// todo: remove in release build
+	// todo: we may not want to save asm validation results here unless automation mode is active.
+	// otherwise if we may overwrite a complete validation run when we load a new game.
 	SaveGameDbEntry();
 
 	assert(pGameConfig != nullptr);
@@ -1292,6 +1297,9 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	// Initialise code analysis
 	CodeAnalysis.Init(this);
 	
+	if (pAsmExportValidator)
+		pAsmExportValidator->Reset();
+
 	GetGlobalsViewer()->Reset();
 	if (pVRAMViewer)
 		pVRAMViewer->Reset();
@@ -1673,8 +1681,23 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 	}
 
 #if ASSEMBLE_AFTER_ASM_EXPORT
-	FAsmExportValidator validator;
-	validator.Validate(this, banksToExport, outputAsmFname);
+	// make this an option in the menu.
+	// once the asm exporter is stable we wont need it.
+	if (pAsmExportValidator)
+	{
+		pAsmExportValidator->Validate(banksToExport, outputAsmFname);
+		
+		const FAsmExportValidator::FResults& results = pAsmExportValidator->GetResults();
+		if (pGameDbEntry)
+		{
+			pGameDbEntry->bAssemblesOk = results.bAssembledOk;
+			pGameDbEntry->bEmulatorTestOk = results.bEmulatorTestOk;
+			pGameDbEntry->bRomFileIdentical = results.bRomFileIdentical;
+			pGameDbEntry->bRomFilePartialMatch = results.bRomFilePartialMatch;
+			if (pBatchGameLoadViewer)
+				pGameDbEntry->TestingMethodology = pBatchGameLoadViewer->GetTestingMethodology();
+		}
+	}
 #endif
 
 	return true;
@@ -1756,8 +1779,8 @@ void FPCEEmu::Tick()
 			int audioSampleCount = 0;
 			pCore->RunToVBlank(pFrameBuffer, pAudioBuf, &audioSampleCount);
 
-			if (pBatchGameLoadViewer)
-				pBatchGameLoadViewer->Tick();
+			if (pAsmExportValidator)
+				pAsmExportValidator->Tick();
 
 			CodeAnalysis.OnFrameEnd();
 			//CodeAnalysis.OnMachineFrameStart();

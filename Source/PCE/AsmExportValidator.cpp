@@ -16,33 +16,33 @@
 
 // todo copy failed pces to a directory for easier manual inspection?
 
-bool FAsmExportValidator::Validate(FPCEEmu* pEmu, const std::vector<int16_t>& banksExported, const std::string& asmFname)
+bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname)
 {
 #ifdef _WIN32
-	LOGINFO("Assembling: %s. [%d/%d banks]", pEmu->GetProjectConfig()->Name.c_str(), (int)banksExported.size(), pEmu->GetBankCount());
+	LOGINFO("Assembling: %s. [%d/%d banks]", pPCEEmu->GetProjectConfig()->Name.c_str(), (int)banksExported.size(), pPCEEmu->GetBankCount());
 
-	if (!Assemble(pEmu, asmFname))
+	if (!Assemble(asmFname))
 	{
 		return false;
 	}
 
-	CompareRomFiles(pEmu, banksExported, asmFname);
+	CompareRomFiles(banksExported, asmFname);
 
-	RunEmulatorTest(pEmu, asmFname);
+	RunEmulatorTest(asmFname);
 
 	// todo return if it failed
 	return true;
 #endif
 }
 
-bool FAsmExportValidator::Assemble(FPCEEmu* pEmu, const std::string& asmFname)
+bool FAsmExportValidator::Assemble(const std::string& asmFname)
 {
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
 	// todo: export to temp directory?
 
 	// create tmp.txt and output which file we are assembling
-	std::string echoCmd = "echo Assembling " + pEmu->GetProjectConfig()->Name + " > tmp.txt";
+	std::string echoCmd = "echo Assembling " + pPCEEmu->GetProjectConfig()->Name + " > tmp.txt";
 	std::system(echoCmd.c_str());
 
 	// echo blank line
@@ -61,21 +61,17 @@ bool FAsmExportValidator::Assemble(FPCEEmu* pEmu, const std::string& asmFname)
 	// print the contents to std output so we can see the result in the PCEAnalyser command window
 	std::system("type tmp.txt");
 
-	LOGINFO("Assembled '%s' : %s", pEmu->GetProjectConfig()->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
+	LOGINFO("Assembled '%s' : %s", pPCEEmu->GetProjectConfig()->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
 
 	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
-	const bool bAssemblesOk = errorCode == 0 ? true : false;
-	if (FGameDbEntry* pDbEntry = pEmu->GetGameDbEntry())
-	{
-		pDbEntry->bAssemblesOk = bAssemblesOk;
-	}
+	Results.bAssembledOk = errorCode == 0 ? true : false;
 
-	return bAssemblesOk;
+	return Results.bAssembledOk;
 }
 
-bool FAsmExportValidator::CompareRomFiles(FPCEEmu* pEmu, const std::vector<int16_t>& banksExported, const std::string& asmFname) const
+bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExported, const std::string& asmFname)
 {
 	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
 
@@ -91,10 +87,10 @@ bool FAsmExportValidator::CompareRomFiles(FPCEEmu* pEmu, const std::vector<int16
 
 	size_t origFileSize = 0;
 	uint8_t* pNewData = nullptr;
-	auto findIt = pEmu->GetGamesLists().find(pEmu->GetProjectConfig()->EmulatorFile.ListName);
-	if (findIt != pEmu->GetGamesLists().end())
+	auto findIt = pPCEEmu->GetGamesLists().find(pPCEEmu->GetProjectConfig()->EmulatorFile.ListName);
+	if (findIt != pPCEEmu->GetGamesLists().end())
 	{
-		const std::string origFname = findIt->second.GetRootDir() + pEmu->GetProjectConfig()->EmulatorFile.FileName;
+		const std::string origFname = findIt->second.GetRootDir() + pPCEEmu->GetProjectConfig()->EmulatorFile.FileName;
 		pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
 		if (pNewData != nullptr)
 		{
@@ -116,13 +112,13 @@ bool FAsmExportValidator::CompareRomFiles(FPCEEmu* pEmu, const std::vector<int16
 			// only check the bytes for the banks we exported.
 			for (auto bankId : banksExported)
 			{
-				const uint8_t bankIndex = pEmu->GetBankIndexForBankId(bankId);
+				const uint8_t bankIndex = pPCEEmu->GetBankIndexForBankId(bankId);
 				uint8_t* pNewBankData = pNewData + 0x2000 * bankIndex;
 				uint8_t* pOrigBankData = pOrigData + 0x2000 * bankIndex;
 
-				const FCodeAnalysisBank* pBank = pEmu->GetCodeAnalysis().GetBank(bankId);
+				const FCodeAnalysisBank* pBank = pPCEEmu->GetCodeAnalysis().GetBank(bankId);
 
-				if (bankIndex < pEmu->GetBankCount())
+				if (bankIndex < pPCEEmu->GetBankCount())
 				{
 					int numBankDiffs = 0;
 					for (int i = 0; i < 0x2000; i++)
@@ -145,9 +141,15 @@ bool FAsmExportValidator::CompareRomFiles(FPCEEmu* pEmu, const std::vector<int16
 			if (!numDiffs)
 			{
 				if (newFileSize != origFileSize)
-					LOGINFO("Exported banks match the originals.");
+				{
+					LOGINFO("Exported banks match the originals. (Partial match.)");
+					Results.bRomFilePartialMatch = true;
+				}
 				else
+				{
 					LOGINFO("Files are identical!");
+					Results.bRomFileIdentical = true;
+				}
 			}
 			else
 			{
@@ -164,58 +166,101 @@ bool FAsmExportValidator::CompareRomFiles(FPCEEmu* pEmu, const std::vector<int16
 
 	free(pOrigData);
 
-	// todo decide what to return here
-	return true;
+	return Results.bRomFileIdentical;
 }
 
-bool FAsmExportValidator::RunEmulatorTest(FPCEEmu* pEmu, const std::string& asmFname)
+bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 {
 	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
 
 	// turn off callback to improve performance
-	pEmu->EnableGeargrafxCallbacks(false);
+	pPCEEmu->EnableGeargrafxCallbacks(false);
 
 	// do I need to reset anything here?
+	// do I need to worry about tidying up the analyser state if this fails?
 
-	LOGINFO("Running emulator test on '%s'...", outputPceFname.c_str());
+	LOGINFO("Running emulator frame buffer test on '%s'...", outputPceFname.c_str());
 
-	if (pEmu->GetCore()->LoadMedia(outputPceFname.c_str()) == false)
+	if (pPCEEmu->GetCore()->LoadMedia(outputPceFname.c_str()) == false)
 		return false;
+
+	if (pPCEEmu->GetMedia()->IsReady() == false)
+		return false;
+
+	FDebugger& debugger = pPCEEmu->GetCodeAnalysis().Debugger;
+	const bool bWasStopped = debugger.IsStopped();
 	
-	FGameDebugStats* pGameDebugStats = pEmu->GetGameDebugStats();
-	if (!pGameDebugStats)
-		return false;
+	debugger.Continue();
 
-	LOGINFO("Checking %d frames...", (int)pGameDebugStats->FramebufferCRCs.size());
+	//LOGINFO("Checking %d frames...", (int)FramebufferCRCs.size());
+	LOGINFO("Checking %d frames...", GameFrameNo);
 	
 	int numDiffs = 0;
-	for (int i = 0; i < pGameDebugStats->FramebufferCRCs.size(); i++)
+	for (int i = 0; i < GameFrameNo; i++)
 	{
 		int audioSampleCount = 0;
-		pEmu->GetCore()->RunToVBlank(pEmu->GetFrameBuffer(), pEmu->GetAudioBuffer(), &audioSampleCount);
+		pPCEEmu->GetCore()->RunToVBlank(pPCEEmu->GetFrameBuffer(), pPCEEmu->GetAudioBuffer(), &audioSampleCount);
 
-		const u32 framebufCRC = CalculateCRC32(0, pEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
+		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
 		
-		//if (i < pGameDebugStats->FramebufferCRCs.size())
+		LOGINFO("%03d created CRC %x", i, framebufCRC);
+
+		if (framebufCRC == FramebufferCRCs[i])
 		{
-			if (framebufCRC == pGameDebugStats->FramebufferCRCs[i])
-			{
-				//LOGINFO("Frame %03d CRC %x matches", i, framebufCRC);
-			}
-			else
-			{
-				//LOGINFO("Frame %03d CRC %x does not match reference CRC %x", i, framebufCRC, pGameDebugStats->FramebufferCRCs[i]);
-				numDiffs++;
-			}
+			//LOGINFO("Frame %03d CRC %x matches", i, framebufCRC);
+		}
+		else
+		{
+			//LOGINFO("Frame %03d CRC %x does not match reference CRC %x", i, framebufCRC, pGameDebugStats->FramebufferCRCs[i]);
+			numDiffs++;
 		}
 	}
 
-	pEmu->EnableGeargrafxCallbacks(true);
-
+	pPCEEmu->EnableGeargrafxCallbacks(true);
+	
+	if (bWasStopped)
+		debugger.Break();
+	
 	if (numDiffs)
+	{
 		LOGINFO("Test Failed. %d frames differ", numDiffs);
+	}
 	else
-		LOGINFO("Test passed. Frames are identical.");
+	{
+		if (GameFrameNo == kNumFramebufferCRCs)
+		{
+			LOGINFO("Test passed. %d frames are identical.", kNumFramebufferCRCs);
+			Results.bEmulatorTestOk = true;
+		}
+		else
+			LOGINFO("Test partially passed. %d frames are identical.", GameFrameNo);
+
+	}
 
 	return true;
+}
+
+void FAsmExportValidator::Reset()
+{
+	GameFrameNo = 0;
+
+	FramebufferCRCs.clear();
+	FramebufferCRCs.resize(kNumFramebufferCRCs);
+
+	Results.bAssembledOk = false;
+	Results.bEmulatorTestOk = false;
+	Results.bRomFileIdentical = false;
+	Results.bRomFilePartialMatch = false;
+}
+
+void FAsmExportValidator::Tick()
+{
+	if (GameFrameNo < kNumFramebufferCRCs)
+	{
+		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
+		FramebufferCRCs[GameFrameNo] = framebufCRC; 
+		LOGINFO("%03d Original CRC %x", GameFrameNo, framebufCRC);
+	}
+
+	GameFrameNo++;
 }

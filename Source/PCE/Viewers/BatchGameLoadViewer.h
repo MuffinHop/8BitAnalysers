@@ -13,11 +13,9 @@ public:
 	virtual void Shutdown() override {}
 	virtual void DrawUI() override;
 
-	void Tick();
-
 	bool IsAutomationActive() const { return bAutomationActive; }
-
 	float GetElapsedGameRunTime() const { return ElapsedGameRunTime; }
+	int GetTestingMethodology() const;
 
 private:
 	double GetNextButtonPressTime() const;
@@ -35,6 +33,8 @@ private:
 	float InputDelay = 0.5f;
 	int GameIndex = 0;
 	int GameRunTime = 10;
+	bool bUseFramesForRunTime = false;
+	int GameFrameCount = 0;
 	float ElapsedGameRunTime = 0.f;
 	int TimeUntilButtonPresses = 0;
 	double NextGameTime = DBL_MAX;

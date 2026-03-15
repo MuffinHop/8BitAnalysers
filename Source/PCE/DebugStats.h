@@ -8,9 +8,6 @@ class FPCEEmu;
 
 struct FGameDebugStats
 {
-	// should this be somewhere else?
-	std::vector<uint32_t> FramebufferCRCs;
-
 	int NumDupeBanks = 0;
 	int NumBanks = 0;
 	int NumBanksMapped = 0;
