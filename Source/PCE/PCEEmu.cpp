@@ -1511,8 +1511,8 @@ void FPCEEmu::SaveGameDbEntry()
 {
 	if (pCurrentProjectConfig && !pMedia->IsCDROM())
 	{
-		const std::string fname = "Mappings/" + pCurrentProjectConfig->Name + ".json";
-		EnsureDirectoryExists("Mappings");
+		const std::string fname = "GameDb/" + pCurrentProjectConfig->Name + ".json";
+		EnsureDirectoryExists("GameDb");
 		::SaveGameDbEntry(pCurrentProjectConfig->Name, fname);
 	}
 }

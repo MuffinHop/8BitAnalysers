@@ -169,6 +169,8 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 	return Results.bRomFileIdentical;
 }
 
+void NormaliseFilePath(char* outFilePath, const char* inFilePath);
+
 bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 {
 	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
@@ -203,17 +205,10 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
 		
-		LOGINFO("%03d created CRC %x", i, framebufCRC);
+		LOGINFO("%03d CRC %8x [%s]", i, framebufCRC, framebufCRC == FramebufferCRCs[i] ? "MATCH" : "DIFF");
 
-		if (framebufCRC == FramebufferCRCs[i])
-		{
-			//LOGINFO("Frame %03d CRC %x matches", i, framebufCRC);
-		}
-		else
-		{
-			//LOGINFO("Frame %03d CRC %x does not match reference CRC %x", i, framebufCRC, pGameDebugStats->FramebufferCRCs[i]);
+		if (framebufCRC != FramebufferCRCs[i])
 			numDiffs++;
-		}
 	}
 
 	pPCEEmu->EnableGeargrafxCallbacks(true);
@@ -230,12 +225,26 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 		if (GameFrameNo == kNumFramebufferCRCs)
 		{
 			LOGINFO("Test passed. %d frames are identical.", kNumFramebufferCRCs);
-			Results.bEmulatorTestOk = true;
 		}
 		else
 			LOGINFO("Test partially passed. %d frames are identical.", GameFrameNo);
 
+		Results.bEmulatorTestOk = true;
 	}
+
+	// copy pce to specific directory based on if it passed or not
+	EnsureDirectoryExists("PassedEmuTest");
+	EnsureDirectoryExists("FailedEmuTest");
+
+	char cmdTxt[256];
+	if (Results.bEmulatorTestOk)
+		snprintf(cmdTxt, 256, "copy \"%s\" PassedEmuTest", outputPceFname.c_str());
+	else
+		snprintf(cmdTxt, 256, "copy \"%s\" FailedEmuTest", outputPceFname.c_str());
+
+	char cmdTxtNormalised[256];
+	NormaliseFilePath(cmdTxtNormalised, cmdTxt);
+	std::system(cmdTxtNormalised);
 
 	return true;
 }
@@ -259,7 +268,7 @@ void FAsmExportValidator::Tick()
 	{
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
 		FramebufferCRCs[GameFrameNo] = framebufCRC; 
-		LOGINFO("%03d Original CRC %x", GameFrameNo, framebufCRC);
+		LOGINFO("%03d CRC %x", GameFrameNo, framebufCRC);
 	}
 
 	GameFrameNo++;
