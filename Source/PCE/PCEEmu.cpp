@@ -19,6 +19,7 @@
 #include "Viewers/SpriteViewer.h"
 #include "Viewers/VRAMViewer.h"
 #include "Viewers/PCEGraphicsViewer.h"
+#include "Viewers/GameDbViewer.h"
 #include "CodeAnalyser/AssemblerExport.h"
 #include "CodeAnalyser/UI/OverviewViewer.h"
 #include "CodeAnalyser/UI/GlobalsViewer.h"
@@ -71,12 +72,14 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 1
 #define DEBUG_STATS_VIEWER 1
+#define GAME_DB_VIEWER 1
 #endif
 #else
 #define LITE_MODE 0
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 0
 #define DEBUG_STATS_VIEWER 0
+#define GAME_DB_VIEWER 0
 #endif
 #endif
 
@@ -1022,6 +1025,9 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 #if DEBUG_STATS_VIEWER
 	AddViewer(new FDebugStatsViewer(this));
 #endif
+#if GAME_DB_VIEWER
+	AddViewer(new FGameDbViewer(this));
+#endif
 
 	CodeAnalysis.ViewState[0].Enabled = true;	// always have first view enabled
 
@@ -1434,7 +1440,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	if (!pMedia->IsCDROM())
 	{
-		const std::string fname = "Mappings/" + pGameConfig->Name + ".json";
+		const std::string fname = "GameDb/" + pGameConfig->Name + ".json";
 		if (!LoadGameDbEntry(pGameConfig->Name, fname.c_str()))
 		{
 			// Create new bank mappings if no file exists

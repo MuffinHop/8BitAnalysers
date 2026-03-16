@@ -159,27 +159,11 @@ void FDebugStatsViewer::DrawUI()
 	
 	if (ImGui::TreeNode("Games Bank mappings"))
 	{
-		if (ImGui::Button("Load all GameDb entries"))
-		{
-			auto findIt = pPCEEmu->GetGamesLists().find("Snapshot File");
-			if (findIt != pPCEEmu->GetGamesLists().end())
-			{
-				const FGamesList& gamesList = findIt->second;
-				for (int i = 0; i < gamesList.GetNoGames(); i++)
-				{
-					const FEmulatorFile& emuFile = gamesList.GetGame(i);
-					const std::string fname = "Mappings/" + emuFile.DisplayName + ".json";
-					LoadGameDbEntry(emuFile.DisplayName, fname);
-				}
-			}
-		}
-
 		TGameDb& gameDb = GetGameDb();
 		for (const auto it : gameDb)
 		{
 			const FGameDebugStats* pGameStats = pPCEEmu->pDebugStats->GetDebugStatsForGame(it.first);
-
-			const FGameDbEntry& entry = gameDb[it.first];
+			const FGameDbEntry& entry = it.second;
 			bool bTreeOpen = ImGui::TreeNode(it.first.c_str());
 
 			if (pGameStats)
