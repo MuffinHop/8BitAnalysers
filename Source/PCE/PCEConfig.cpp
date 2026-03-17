@@ -29,6 +29,9 @@ void FPCEConfig::ReadFromJson(const nlohmann::json& jsonConfigFile)
 
 	if (jsonConfigFile.contains("GameDbPath"))
 		GameDbPath = jsonConfigFile["GameDbPath"];
+
+	if (jsonConfigFile.contains("ValidatorPath"))
+		ValidatorPath = jsonConfigFile["ValidatorPath"];
 	
 	if (jsonConfigFile.contains("AsmExportValidator"))
 		bUseAsmExportValidator = jsonConfigFile["AsmExportValidator"];
@@ -45,6 +48,7 @@ void FPCEConfig::WriteToJson(nlohmann::json& jsonConfigFile) const
 	jsonConfigFile["GameDbPath"] = GameDbPath;
 
 #ifndef NDEBUG
+	jsonConfigFile["ValidatorPath"] = ValidatorPath;
 	jsonConfigFile["AsmExportValidator"] = bUseAsmExportValidator;
 #endif
 }
@@ -55,4 +59,10 @@ void FPCEConfig::FixupPaths(void)
 
 	if (BiosPath.back() != '/')
 		BiosPath += "/";
+
+	if (ValidatorPath.back() != '/')
+		ValidatorPath += "/";
+
+	if (GameDbPath.back() != '/')
+		GameDbPath += "/";
 }

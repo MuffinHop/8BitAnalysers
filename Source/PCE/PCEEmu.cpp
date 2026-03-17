@@ -1778,7 +1778,7 @@ void FPCEEmu::Tick()
 			int audioSampleCount = 0;
 			pCore->RunToVBlank(pFrameBuffer, pAudioBuf, &audioSampleCount);
 
-			if (pAsmExportValidator)
+			if (pAsmExportValidator && GetPCEGlobalConfig()->bUseAsmExportValidator)
 				pAsmExportValidator->Tick();
 
 			CodeAnalysis.OnFrameEnd();

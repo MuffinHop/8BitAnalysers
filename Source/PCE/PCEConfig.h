@@ -13,6 +13,9 @@ struct FPCEConfig : public FGlobalConfig
 	 bool bUseAsmExportValidator = false;
 
 	 std::string GameDbPath = "./GameDb/";
+	 
+	 // asm export validator temporary output path
+	 std::string ValidatorPath = "./Validator/";
 
 protected:
 

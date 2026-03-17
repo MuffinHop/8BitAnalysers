@@ -244,14 +244,14 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 	}
 
 	// copy pce to specific directory based on if it passed or not
-	EnsureDirectoryExists("EmuTestPassed");
-	EnsureDirectoryExists("EmuTestFailed");
+	const std::string validatorPath = pPCEEmu->GetPCEGlobalConfig()->ValidatorPath;
+	const std::string passedPath = validatorPath + "EmuTestPassed";
+	const std::string failedPath = validatorPath + "EmuTestFailed";
+	EnsureDirectoryExists(passedPath.c_str());
+	EnsureDirectoryExists(failedPath.c_str());
 
 	char cmdTxt[256];
-	if (Results.bEmulatorTestOk)
-		snprintf(cmdTxt, 256, "copy \"%s\" EmuTestPassed", outputPceFname.c_str());
-	else
-		snprintf(cmdTxt, 256, "copy \"%s\" EmuTestFailed", outputPceFname.c_str());
+	snprintf(cmdTxt, 256, "copy \"%s\" \"%s\"", outputPceFname.c_str(), Results.bEmulatorTestOk ? passedPath.c_str() : failedPath.c_str());
 
 	char cmdTxtNormalised[256];
 	NormaliseFilePath(cmdTxtNormalised, cmdTxt);
@@ -282,5 +282,4 @@ void FAsmExportValidator::Tick()
 		LOGINFO("%03d CRC %x", GameFrameNo, framebufCRC);
 		GameFrameNo++;
 	}
-
 }
