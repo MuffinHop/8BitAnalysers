@@ -27,6 +27,12 @@ void FPCEConfig::ReadFromJson(const nlohmann::json& jsonConfigFile)
 	if (jsonConfigFile.contains("BiosFilename"))
 		BiosFilename = jsonConfigFile["BiosFilename"];
 
+	if (jsonConfigFile.contains("GameDbPath"))
+		GameDbPath = jsonConfigFile["GameDbPath"];
+	
+	if (jsonConfigFile.contains("AsmExportValidator"))
+		bUseAsmExportValidator = jsonConfigFile["AsmExportValidator"];
+
 	FixupPaths();
 }
 
@@ -36,6 +42,11 @@ void FPCEConfig::WriteToJson(nlohmann::json& jsonConfigFile) const
 
 	jsonConfigFile["BiosPath"] = BiosPath;
 	jsonConfigFile["BiosFilename"] = BiosFilename;
+	jsonConfigFile["GameDbPath"] = GameDbPath;
+
+#ifndef NDEBUG
+	jsonConfigFile["AsmExportValidator"] = bUseAsmExportValidator;
+#endif
 }
 
 void FPCEConfig::FixupPaths(void)

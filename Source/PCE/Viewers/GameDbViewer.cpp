@@ -4,10 +4,7 @@
 
 #include "../PCEEmu.h"
 #include "../GameDb.h"
-//#include "../DebugStats.h"
-//#include "BatchGameLoadViewer.h"
-
-//#include <geargrafx_core.h>
+#include "../PCEConfig.h"
 
 enum EGameDbColumns
 {
@@ -117,7 +114,7 @@ void FGameDbViewer::DrawUI()
 			for (int i = 0; i < gamesList.GetNoGames(); i++)
 			{
 				const FEmulatorFile& emuFile = gamesList.GetGame(i);
-				const std::string fname = "GameDb/" + emuFile.DisplayName + ".json";
+				const std::string fname = pPCEEmu->GetPCEGlobalConfig()->GameDbPath + emuFile.DisplayName + ".json";
 				LoadGameDbEntry(emuFile.DisplayName, fname);
 			}
 		}

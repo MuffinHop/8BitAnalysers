@@ -463,9 +463,6 @@ void FPCEEmu::EnableGeargrafxCallbacks(bool bEnabled)
 #if LITE_MODE
 	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
 #else
-	//pCore->SetInstructionExecutedCallback(bEnabled ? ::OnInstructionExecuted : nullptr, this);
-	//pMemory->SetMemoryCallbacks(bEnabled ? OnMemoryRead : nullptr, bEnabled ? OnMemoryWritten : nullptr, BankChangeCallback, this);
-	//pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
 	if (bEnabled)
 	{
 		pCore->SetInstructionExecutedCallback(::OnInstructionExecuted, this);
@@ -866,16 +863,6 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	pMemory = pCore->GetMemory();
 
 	EnableGeargrafxCallbacks(true);
-
-	/*
-#if LITE_MODE
-	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
-#else
-	pCore->SetInstructionExecutedCallback(::OnInstructionExecuted, this);
-	pMemory->SetMemoryCallbacks(OnMemoryRead, OnMemoryWritten, BankChangeCallback, this);
-	pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
-#endif
-*/
 
 	pMedia = pCore->GetMedia();
 	//pMedia->PreloadCdRom(true);
@@ -1440,7 +1427,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	if (!pMedia->IsCDROM())
 	{
-		const std::string fname = "GameDb/" + pGameConfig->Name + ".json";
+		const std::string fname = GetPCEGlobalConfig()->GameDbPath + pGameConfig->Name + ".json";
 		if (!LoadGameDbEntry(pGameConfig->Name, fname.c_str()))
 		{
 			// Create new bank mappings if no file exists
@@ -1517,8 +1504,9 @@ void FPCEEmu::SaveGameDbEntry()
 {
 	if (pCurrentProjectConfig && !pMedia->IsCDROM())
 	{
-		const std::string fname = "GameDb/" + pCurrentProjectConfig->Name + ".json";
-		EnsureDirectoryExists("GameDb");
+		const std::string gameDbPath = GetPCEGlobalConfig()->GameDbPath;
+		const std::string fname = gameDbPath + pCurrentProjectConfig->Name + ".json";
+		EnsureDirectoryExists(gameDbPath.c_str());
 		::SaveGameDbEntry(pCurrentProjectConfig->Name, fname);
 	}
 }
@@ -1689,7 +1677,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 #if ASSEMBLE_AFTER_ASM_EXPORT
 	// make this an option in the menu.
 	// once the asm exporter is stable we wont need it.
-	if (pAsmExportValidator)
+	if (pAsmExportValidator && GetPCEGlobalConfig()->bUseAsmExportValidator)
 	{
 		pAsmExportValidator->Validate(banksToExport, outputAsmFname);
 		
@@ -1748,6 +1736,11 @@ void FPCEEmu::OptionsMenuAdditions(void)
 	{
 		EnableGeargrafxCallbacks(bCallbacksEnabled);
 	}
+
+#if ASSEMBLE_AFTER_ASM_EXPORT
+	FPCEConfig* pConfig = (FPCEConfig*)pGlobalConfig;
+	ImGui::MenuItem("Use ASM Export Validator", 0, &pConfig->bUseAsmExportValidator);
+#endif
 }
 
 void FPCEEmu::ActionMenuAdditions(void)
