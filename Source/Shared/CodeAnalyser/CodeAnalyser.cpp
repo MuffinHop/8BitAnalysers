@@ -920,8 +920,10 @@ uint16_t WriteCodeInfoForAddress(FCodeAnalysisState &state, uint16_t pc)
 		{
 			const FAddressRef ptrAddr = state.AddressRefFromPhysicalAddress(ptr);
 			pCodeInfo->OperandAddress = ptrAddr;
-			//if(pCodeInfo->OperandType == EOperandType::Unknown)
-			//	pCodeInfo->OperandType = EOperandType::Pointer;
+			
+			// sam. this code is enabled in master but was commented out here. I've enabled it.
+			if(pCodeInfo->OperandType == EOperandType::Unknown)
+				pCodeInfo->OperandType = EOperandType::Pointer;
 
 			//FLabelInfo* pLabel = GenerateLabelForAddress(state, ptrAddr, ELabelType::Data);
 			//if (pLabel)
@@ -1164,7 +1166,7 @@ void RegisterDataRead(FCodeAnalysisState& state, uint16_t pc, uint16_t dataAddr)
 {
 	if (dataAddr == g_DbgReadAddress)
 	{
-		LOGINFO("Access 0x%04X at PC:", g_DbgReadAddress, pc);
+		//LOGINFO("Access 0x%04X at PC:", g_DbgReadAddress, pc);
 	}
 
 	if (state.GetCodeInfoForPhysicalAddress(dataAddr) == nullptr)	// don't register instruction data reads
