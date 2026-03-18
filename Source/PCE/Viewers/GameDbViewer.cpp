@@ -183,14 +183,18 @@ void FGameDbViewer::DrawUI()
 			// ----- Row colouring -----
 			ImVec4 rowColor;
 
-			if (overall)
-				rowColor = ImVec4(0.f, 0.5f, 0.f, 1.0f);      // green
-			else if (entry.bRomFilePartialMatch)
-				rowColor = ImVec4(0.5f, 0.5f, 0.f, 1.0f);      // yellow
-			else
-				rowColor = ImVec4(0.5f, 0.0f, 0.0f, 1.0f);      // red
+			const bool bValid = entry.bAsmExportValidated;
+			if (bValid)
+			{
+				if (overall)
+					rowColor = ImVec4(0.f, 0.5f, 0.f, 1.0f);      // green
+				else if (entry.bRomFilePartialMatch)
+					rowColor = ImVec4(0.5f, 0.5f, 0.f, 1.0f);      // yellow
+				else
+					rowColor = ImVec4(0.5f, 0.0f, 0.0f, 1.0f);      // red
 
-			ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,	ImGui::ColorConvertFloat4ToU32(rowColor));
+				ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, ImGui::ColorConvertFloat4ToU32(rowColor));
+			}
 
 			// ----- Columns -----
 
@@ -198,16 +202,16 @@ void FGameDbViewer::DrawUI()
 			ImGui::TextUnformatted(gameName.c_str());
 
 			ImGui::TableSetColumnIndex(Col_Overall);
-			ImGui::TextUnformatted(overall ? "PASS" : "FAIL");
+			ImGui::TextUnformatted(bValid ? overall ? "Pass" : "Fail" : "-");
 
 			ImGui::TableSetColumnIndex(Col_AssemblesOk);
-			ImGui::TextUnformatted(entry.bAssemblesOk ? "OK" : "Fail");
+			ImGui::TextUnformatted(bValid ? entry.bAssemblesOk ? "Ok" : "Fail" : "-");
 
 			ImGui::TableSetColumnIndex(Col_RomStatus);
-			ImGui::TextUnformatted(GetRomStatus(entry));
+			ImGui::TextUnformatted(bValid ? GetRomStatus(entry) : "-");
 
 			ImGui::TableSetColumnIndex(Col_EmulatorTestOk);
-			ImGui::TextUnformatted(entry.bEmulatorTestOk ? "OK" : "Fail");
+			ImGui::TextUnformatted(bValid ? entry.bEmulatorTestOk ? "Ok" : "Fail" : "-");
 
 			ImGui::TableSetColumnIndex(Col_TestMethodology);
 

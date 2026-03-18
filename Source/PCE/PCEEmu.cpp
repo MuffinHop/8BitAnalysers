@@ -1291,7 +1291,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	CodeAnalysis.Init(this);
 	
 	if (pAsmExportValidator)
-		pAsmExportValidator->Reset();
+		pAsmExportValidator->Reset(GetPCEGlobalConfig()->bUseAsmExportValidator);
 
 	GetGlobalsViewer()->Reset();
 	if (pVRAMViewer)
@@ -1684,6 +1684,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 		const FAsmExportValidator::FResults& results = pAsmExportValidator->GetResults();
 		if (pGameDbEntry)
 		{
+			pGameDbEntry->bAsmExportValidated = true;
 			pGameDbEntry->bAssemblesOk = results.bAssembledOk;
 			pGameDbEntry->bEmulatorTestOk = results.bEmulatorTestOk;
 			pGameDbEntry->bRomFileIdentical = results.bRomFileIdentical;
@@ -1739,7 +1740,7 @@ void FPCEEmu::OptionsMenuAdditions(void)
 
 #if ASSEMBLE_AFTER_ASM_EXPORT
 	FPCEConfig* pConfig = (FPCEConfig*)pGlobalConfig;
-	ImGui::MenuItem("Use ASM Export Validator", 0, &pConfig->bUseAsmExportValidator);
+	ImGui::MenuItem("Validate After ASM Export", 0, &pConfig->bUseAsmExportValidator);
 #endif
 }
 

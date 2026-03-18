@@ -5,16 +5,12 @@
 #include "crc.h"
 
 #include "PCEEmu.h"
-#include "GameDb.h"
 
 //#include <chrono>
 #include "PCEConfig.h"
 #include "Util/FileUtil.h"
 #include "Debug/DebugLog.h"
 #include "PCEGameConfig.h"
-#include "DebugStats.h"
-
-// todo copy failed pces to a directory for easier manual inspection?
 
 bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname)
 {
@@ -30,8 +26,11 @@ bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, co
 
 	RunEmulatorTest(asmFname);
 
-	// todo return if it failed
-	return true;
+	bIsValidating = false;
+
+	return Results.DidPass();
+#else
+	return false;
 #endif
 }
 
@@ -173,10 +172,6 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 
 void NormaliseFilePath(char* outFilePath, const char* inFilePath);
 
-// problematic games:
-// false positives:
-// false negatives:
-
 bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 {
 	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
@@ -209,7 +204,6 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 		pPCEEmu->GetCore()->RunToVBlank(pPCEEmu->GetFrameBuffer(), pPCEEmu->GetAudioBuffer(), &audioSampleCount);
 
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
-		
 		LOGINFO("%03d CRC %8x [%s]%s", i, framebufCRC, framebufCRC == FramebufferCRCs[i] ? "MATCH" : "DIFF", i < kNumIgnoredCRCs ? "[IGNORED]" : "");
 
 		// Skip the first few frames because the frame CRCs often don't match - for some unknown reason
@@ -231,16 +225,15 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 	}
 	else
 	{
-		// todo take into account diffs we ignored?
-
 		if (GameFrameNo == kNumFramebufferCRCs)
 		{
-			LOGINFO("Test passed. %d frames are identical.", kNumFramebufferCRCs);
+			LOGINFO("Test passed.");
+			Results.bEmulatorTestOk = true;
 		}
 		else
+		{
 			LOGINFO("Test partially passed. %d frames are identical.", GameFrameNo);
-
-		Results.bEmulatorTestOk = true;
+		}
 	}
 
 	// copy pce to specific directory based on if it passed or not
@@ -260,8 +253,10 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 	return true;
 }
 
-void FAsmExportValidator::Reset()
+void FAsmExportValidator::Reset(bool bStartValidating)
 {
+	bIsValidating = bStartValidating;
+
 	GameFrameNo = 0;
 
 	FramebufferCRCs.clear();
@@ -275,6 +270,9 @@ void FAsmExportValidator::Reset()
 
 void FAsmExportValidator::Tick()
 {
+	if (!bIsValidating)
+		return;
+
 	if (GameFrameNo < kNumFramebufferCRCs)
 	{
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
