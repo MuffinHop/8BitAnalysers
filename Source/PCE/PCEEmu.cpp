@@ -19,6 +19,7 @@
 #include "Viewers/SpriteViewer.h"
 #include "Viewers/VRAMViewer.h"
 #include "Viewers/PCEGraphicsViewer.h"
+#include "Viewers/GameDbViewer.h"
 #include "CodeAnalyser/AssemblerExport.h"
 #include "CodeAnalyser/UI/OverviewViewer.h"
 #include "CodeAnalyser/UI/GlobalsViewer.h"
@@ -71,12 +72,14 @@ constexpr uint16_t kDefaultInitialBankAddr = kDefaultPrimaryMappedPage * FCodeAn
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 1
 #define DEBUG_STATS_VIEWER 1
+#define GAME_DB_VIEWER 1
 #endif
 #else
 #define LITE_MODE 0
 #if !LITE_MODE
 #define BATCH_GAME_VIEWER 0
 #define DEBUG_STATS_VIEWER 0
+#define GAME_DB_VIEWER 0
 #endif
 #endif
 
@@ -460,9 +463,6 @@ void FPCEEmu::EnableGeargrafxCallbacks(bool bEnabled)
 #if LITE_MODE
 	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
 #else
-	//pCore->SetInstructionExecutedCallback(bEnabled ? ::OnInstructionExecuted : nullptr, this);
-	//pMemory->SetMemoryCallbacks(bEnabled ? OnMemoryRead : nullptr, bEnabled ? OnMemoryWritten : nullptr, BankChangeCallback, this);
-	//pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
 	if (bEnabled)
 	{
 		pCore->SetInstructionExecutedCallback(::OnInstructionExecuted, this);
@@ -864,16 +864,6 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 
 	EnableGeargrafxCallbacks(true);
 
-	/*
-#if LITE_MODE
-	pMemory->SetMemoryCallbacks(nullptr, nullptr, BankChangeCallback, this);
-#else
-	pCore->SetInstructionExecutedCallback(::OnInstructionExecuted, this);
-	pMemory->SetMemoryCallbacks(OnMemoryRead, OnMemoryWritten, BankChangeCallback, this);
-	pCore->GetHuC6270_1()->SetCallback(::OnVRAMWritten, this);
-#endif
-*/
-
 	pMedia = pCore->GetMedia();
 	//pMedia->PreloadCdRom(true);
 
@@ -1021,6 +1011,9 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 #endif
 #if DEBUG_STATS_VIEWER
 	AddViewer(new FDebugStatsViewer(this));
+#endif
+#if GAME_DB_VIEWER
+	AddViewer(new FGameDbViewer(this));
 #endif
 
 	CodeAnalysis.ViewState[0].Enabled = true;	// always have first view enabled
@@ -1298,7 +1291,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 	CodeAnalysis.Init(this);
 	
 	if (pAsmExportValidator)
-		pAsmExportValidator->Reset();
+		pAsmExportValidator->Reset(GetPCEGlobalConfig()->bUseAsmExportValidator);
 
 	GetGlobalsViewer()->Reset();
 	if (pVRAMViewer)
@@ -1434,7 +1427,7 @@ bool FPCEEmu::LoadProject(FProjectConfig* pGameConfig, bool bLoadGameData /* =  
 
 	if (!pMedia->IsCDROM())
 	{
-		const std::string fname = "Mappings/" + pGameConfig->Name + ".json";
+		const std::string fname = GetPCEGlobalConfig()->GameDbPath + pGameConfig->Name + ".json";
 		if (!LoadGameDbEntry(pGameConfig->Name, fname.c_str()))
 		{
 			// Create new bank mappings if no file exists
@@ -1511,8 +1504,9 @@ void FPCEEmu::SaveGameDbEntry()
 {
 	if (pCurrentProjectConfig && !pMedia->IsCDROM())
 	{
-		const std::string fname = "Mappings/" + pCurrentProjectConfig->Name + ".json";
-		EnsureDirectoryExists("Mappings");
+		const std::string gameDbPath = GetPCEGlobalConfig()->GameDbPath;
+		const std::string fname = gameDbPath + pCurrentProjectConfig->Name + ".json";
+		EnsureDirectoryExists(gameDbPath.c_str());
 		::SaveGameDbEntry(pCurrentProjectConfig->Name, fname);
 	}
 }
@@ -1683,13 +1677,14 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 #if ASSEMBLE_AFTER_ASM_EXPORT
 	// make this an option in the menu.
 	// once the asm exporter is stable we wont need it.
-	if (pAsmExportValidator)
+	if (pAsmExportValidator && GetPCEGlobalConfig()->bUseAsmExportValidator)
 	{
 		pAsmExportValidator->Validate(banksToExport, outputAsmFname);
 		
 		const FAsmExportValidator::FResults& results = pAsmExportValidator->GetResults();
 		if (pGameDbEntry)
 		{
+			pGameDbEntry->bAsmExportValidated = true;
 			pGameDbEntry->bAssemblesOk = results.bAssembledOk;
 			pGameDbEntry->bEmulatorTestOk = results.bEmulatorTestOk;
 			pGameDbEntry->bRomFileIdentical = results.bRomFileIdentical;
@@ -1742,6 +1737,11 @@ void FPCEEmu::OptionsMenuAdditions(void)
 	{
 		EnableGeargrafxCallbacks(bCallbacksEnabled);
 	}
+
+#if ASSEMBLE_AFTER_ASM_EXPORT
+	FPCEConfig* pConfig = (FPCEConfig*)pGlobalConfig;
+	ImGui::MenuItem("Validate After ASM Export", 0, &pConfig->bUseAsmExportValidator);
+#endif
 }
 
 void FPCEEmu::ActionMenuAdditions(void)
@@ -1779,7 +1779,7 @@ void FPCEEmu::Tick()
 			int audioSampleCount = 0;
 			pCore->RunToVBlank(pFrameBuffer, pAudioBuf, &audioSampleCount);
 
-			if (pAsmExportValidator)
+			if (pAsmExportValidator && GetPCEGlobalConfig()->bUseAsmExportValidator)
 				pAsmExportValidator->Tick();
 
 			CodeAnalysis.OnFrameEnd();

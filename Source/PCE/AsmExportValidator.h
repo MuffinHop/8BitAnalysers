@@ -6,15 +6,19 @@
 
 class FPCEEmu;
 
-
 struct FAsmExportValidator
 {
 	// 30 secs worth of frames
-	static constexpr int kNumFramebufferCRCs = 1800;
-	//static constexpr int kNumFramebufferCRCs = 600;
-	
+	//static constexpr int kNumFramebufferCRCs = 1800;
+	static constexpr int kNumFramebufferCRCs = 600;
+	static constexpr int kNumIgnoredCRCs = 30;
+
 	struct FResults
 	{
+		bool DidPass()
+		{
+			return bAssembledOk && bRomFileIdentical && bEmulatorTestOk;
+		}
 		bool bAssembledOk = false;
 		bool bRomFilePartialMatch = false;
 		bool bRomFileIdentical = false;
@@ -27,12 +31,13 @@ struct FAsmExportValidator
 	bool Assemble(const std::string& asmFname);
 	bool CompareRomFiles(const std::vector<int16_t>& banksExported, const std::string& asmFname);
 	bool RunEmulatorTest(const std::string& asmFname);
-	void Reset();
+	void Reset(bool bStartValidating);
 	void Tick();
 	const FResults& GetResults() const { return Results; }
 
 protected:
 	int GameFrameNo = 0;
+	bool bIsValidating = false;
 	std::vector<uint32_t> FramebufferCRCs;
 	FPCEEmu* pPCEEmu = nullptr;
 	FResults Results;

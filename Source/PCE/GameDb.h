@@ -20,6 +20,8 @@ struct FGameDbEntry
 {
 	std::vector<FGameDbBank> Banks;
 
+	// these could be flags?
+	bool bAsmExportValidated = false;
 	bool bAssemblesOk = false;
 	bool bRomFilePartialMatch = false;
 	bool bRomFileIdentical = false;

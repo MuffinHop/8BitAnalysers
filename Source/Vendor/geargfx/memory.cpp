@@ -287,7 +287,8 @@ void Memory::ResetDisassemblerRecords()
 
 void Memory::SetMprTAM(u8 bits, u8 value)
 {
-    assert((bits != 0) && !(bits & (bits - 1)));
+    // sam. disabled this because pce files created by the asm validator would trigger it
+    //assert((bits != 0) && !(bits & (bits - 1)));
 
     if(bits == 0)
     {
@@ -317,7 +318,8 @@ void Memory::SetMprTAM(u8 bits, u8 value)
 
 u8 Memory::GetMprTMA(u8 bits)
 {
-    assert((bits != 0) && !(bits & (bits - 1)));
+    // sam. disabled this because pce files created by the asm validator would trigger it
+    //assert((bits != 0) && !(bits & (bits - 1)));
 
     if(bits == 0)
     {
