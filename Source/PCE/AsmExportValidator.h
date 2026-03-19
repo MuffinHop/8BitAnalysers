@@ -8,6 +8,7 @@ class FPCEEmu;
 
 struct FAsmExportValidator
 {
+	// maybe this should get passed in?
 	// 30 secs worth of frames
 	//static constexpr int kNumFramebufferCRCs = 1800;
 	static constexpr int kNumFramebufferCRCs = 600;
@@ -27,8 +28,8 @@ struct FAsmExportValidator
 
 	FAsmExportValidator(FPCEEmu* pEmu) : pPCEEmu(pEmu) {}
 
-	bool Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname);
-	bool Assemble(const std::string& asmFname);
+	bool Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname, bool bOutputListing = false);
+	bool Assemble(const std::string& asmFname, bool bOutputListing);
 	bool CompareRomFiles(const std::vector<int16_t>& banksExported, const std::string& asmFname);
 	bool RunEmulatorTest(const std::string& asmFname);
 	void Reset(bool bStartValidating);

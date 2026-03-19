@@ -144,8 +144,8 @@ public:
 
 	void AddHeader(void) override
 	{
-		// needed?
 		//Output("\t.cpu 6280\n");
+		Output("\t.list\n");
 	}
 	void AddBankSection(const FCodeAnalysisBank* pBank) override
 	{

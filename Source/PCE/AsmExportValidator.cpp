@@ -12,12 +12,12 @@
 #include "Debug/DebugLog.h"
 #include "PCEGameConfig.h"
 
-bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname)
+bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname, bool bOutputListing/* = false*/)
 {
 #ifdef _WIN32
 	LOGINFO("Assembling: %s. [%d/%d banks]", pPCEEmu->GetProjectConfig()->Name.c_str(), (int)banksExported.size(), pPCEEmu->GetBankCount());
 
-	if (!Assemble(asmFname))
+	if (!Assemble(asmFname, bOutputListing))
 	{
 		return false;
 	}
@@ -34,7 +34,7 @@ bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, co
 #endif
 }
 
-bool FAsmExportValidator::Assemble(const std::string& asmFname)
+bool FAsmExportValidator::Assemble(const std::string& asmFname, bool bOutputListing)
 {
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
@@ -51,7 +51,8 @@ bool FAsmExportValidator::Assemble(const std::string& asmFname)
 	char cmdTxt[256];
 
 	// append the results to out.txt
-	snprintf(cmdTxt, 256, "pceas.exe --raw \"%s\" >> tmp.txt", asmFname.c_str());
+	snprintf(cmdTxt, 256, "pceas.exe --raw %s\"%s\" >> tmp.txt", bOutputListing ? "-l3 " : "", asmFname.c_str());
+
 	const int errorCode = std::system(cmdTxt);
 
 	// append to the batch log file
@@ -107,7 +108,6 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 			}
 
 			int numDiffs = 0;
-
 			// check the data for the exported pce file matches the original pce file.
 			// only check the bytes for the banks we exported.
 			for (auto bankId : banksExported)
@@ -121,10 +121,19 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 				if (bankIndex < bankCount)
 				{
 					int numBankDiffs = 0;
+					int numDiffsLogged = 0;
 					for (int i = 0; i < 0x2000; i++)
 					{
 						if (pNewBankData[i] != pOrigBankData[i])
+						{
 							numBankDiffs++;
+
+							if (numDiffsLogged < 4)
+							{
+								LOGINFO("[%s][%04x] %02x -> %02x", pBank->Name.c_str(), pBank->GetMappedAddress() + i, pOrigBankData[i], pNewBankData[i]);
+								numDiffsLogged++;
+							}
+						}
 					}
 
 					if (numBankDiffs)
