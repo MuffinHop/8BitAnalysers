@@ -21,7 +21,7 @@ struct FGameDbEntry
 	std::vector<FGameDbBank> Banks;
 
 	// these could be flags?
-	bool bAsmExportValidated = false;
+	bool bValidated = false;
 	bool bAssemblesOk = false;
 	bool bRomFilePartialMatch = false;
 	bool bRomFileIdentical = false;
@@ -46,4 +46,3 @@ TGameDb& GetGameDb();
 
 bool SaveGameDbEntry(const std::string& gameName, const std::string& fname);
 bool LoadGameDbEntry(const std::string& gameName, const std::string& fname);
-

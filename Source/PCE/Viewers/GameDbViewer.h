@@ -14,6 +14,10 @@ public:
 	virtual void DrawUI() override;
 
 protected:
+	void DrawGameDbTable();
+	void DrawOverview();
+
+protected:
 	
 	FPCEEmu* pPCEEmu = nullptr;
 };

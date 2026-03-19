@@ -285,7 +285,10 @@ void FASMExporter::ExportDataInfoASM(FAddressRef addr)
 bool FASMExporter::ExportAddressRange(const std::vector<FCodeAnalysisItem>& itemList, uint16_t startAddr , uint16_t endAddr, bool bIsPhysicalMem)
 {
 	if (itemList.empty())
+	{
+		LOGWARNING("ASM Exporter: Cannot export address range. Item list is empty.");
 		return false;
+	}
 
 	FCodeAnalysisState& state = pEmulator->GetCodeAnalysis();
 

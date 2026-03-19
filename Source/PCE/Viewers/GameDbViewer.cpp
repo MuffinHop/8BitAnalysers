@@ -105,6 +105,25 @@ bool FGameDbViewer::Init()
 
 void FGameDbViewer::DrawUI()
 {
+	if (ImGui::BeginTabBar("gamedb_tab_bar"))
+	{
+		if (ImGui::BeginTabItem("Table"))
+		{
+			DrawGameDbTable();
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Overview"))
+		{
+			DrawOverview();
+			ImGui::EndTabItem();
+		}
+
+		ImGui::EndTabBar();
+	}
+}
+
+void FGameDbViewer::DrawGameDbTable()
+{
 	if (ImGui::Button("Load All"))
 	{
 		auto findIt = pPCEEmu->GetGamesLists().find("Snapshot File");
@@ -134,7 +153,7 @@ void FGameDbViewer::DrawUI()
 		ImGuiTableFlags_Sortable |
 		ImGuiTableFlags_ScrollY;
 
-	if (ImGui::BeginTable("GameDbTable", Col_Count,	flags))
+	if (ImGui::BeginTable("GameDbTable", Col_Count, flags))
 	{
 		ImGui::TableSetupScrollFreeze(0, 1);
 
@@ -183,7 +202,7 @@ void FGameDbViewer::DrawUI()
 			// ----- Row colouring -----
 			ImVec4 rowColor;
 
-			const bool bValid = entry.bAsmExportValidated;
+			const bool bValid = entry.bValidated;
 			if (bValid)
 			{
 				if (overall)
@@ -224,3 +243,30 @@ void FGameDbViewer::DrawUI()
 		ImGui::EndTable();
 	}
 }
+
+void FGameDbViewer::DrawOverview()
+{
+	int numAssembles = 0;
+	int numIdenticalRom = 0;
+	int numPassOverall = 0;
+	int numEmuTestPassed = 0;
+
+	TGameDb& gameDb = GetGameDb();
+	for (const auto& entry : gameDb)
+	{
+		if (!entry.second.bValidated)
+			continue;
+
+		if (entry.second.bAssemblesOk)
+			numAssembles++;
+
+		if (entry.second.bEmulatorTestOk)
+			numEmuTestPassed++;
+	}
+
+	const int totNum = (int)gameDb.size();
+
+	ImGui::Text("Assembles:   %3d / %3d", numAssembles, totNum);
+	ImGui::Text("Emu test ok: %3d / %3d", numEmuTestPassed, totNum);
+}
+

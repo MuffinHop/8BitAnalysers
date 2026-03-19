@@ -47,10 +47,11 @@ bool SaveGameDbEntry(const std::string& gameName, const std::string& fname)
 	jsonFile["Name"] = gameName;
 	jsonFile["NumBanks"] = entry.Banks.size();
 	
-	jsonFile["bAssemblesOk"] = entry.bAssemblesOk;
-	jsonFile["bRomFilePartialMatch"] = entry.bRomFilePartialMatch;
-	jsonFile["bRomFileIdentical"] = entry.bRomFileIdentical;
-	jsonFile["bEmulatorTestOk"] = entry.bEmulatorTestOk;
+	jsonFile["Validated"] = entry.bValidated;
+	jsonFile["AssemblesOk"] = entry.bAssemblesOk;
+	jsonFile["RomFilePartialMatch"] = entry.bRomFilePartialMatch;
+	jsonFile["RomFileIdentical"] = entry.bRomFileIdentical;
+	jsonFile["EmulatorTestOk"] = entry.bEmulatorTestOk;
 
 	jsonFile["TestingMethodology"] = entry.TestingMethodology;
 
@@ -91,10 +92,11 @@ bool LoadGameDbEntry(const std::string& gameName, const std::string& fname)
 	const int numBanks = jsonFile["NumBanks"];
 
 	FGameDbEntry& entry = gGameDb[name];
-	entry.bAssemblesOk = jsonFile["bAssemblesOk"];
-	entry.bRomFilePartialMatch = jsonFile["bRomFilePartialMatch"];
-	entry.bRomFileIdentical = jsonFile["bRomFileIdentical"];
-	entry.bEmulatorTestOk = jsonFile["bEmulatorTestOk"];
+	entry.bValidated = jsonFile["Validated"];
+	entry.bAssemblesOk = jsonFile["AssemblesOk"];
+	entry.bRomFilePartialMatch = jsonFile["RomFilePartialMatch"];
+	entry.bRomFileIdentical = jsonFile["RomFileIdentical"];
+	entry.bEmulatorTestOk = jsonFile["EmulatorTestOk"];
 	entry.TestingMethodology = jsonFile["TestingMethodology"];
 
 	entry.Banks.clear();

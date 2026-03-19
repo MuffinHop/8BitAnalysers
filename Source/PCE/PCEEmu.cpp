@@ -1684,7 +1684,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 		const FAsmExportValidator::FResults& results = pAsmExportValidator->GetResults();
 		if (pGameDbEntry)
 		{
-			pGameDbEntry->bAsmExportValidated = true;
+			pGameDbEntry->bValidated = true;
 			pGameDbEntry->bAssemblesOk = results.bAssembledOk;
 			pGameDbEntry->bEmulatorTestOk = results.bEmulatorTestOk;
 			pGameDbEntry->bRomFileIdentical = results.bRomFileIdentical;
