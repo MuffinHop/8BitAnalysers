@@ -128,7 +128,7 @@ bool FASMExporter::IsLabelStubbed(const char* pLabelName) const
 }
 
 int16_t g_DbgBank = 76;
-uint16_t g_DbgAddress = 0x4000;
+uint16_t g_DbgAddress = 0xe62f;
 
 void AppendCharToString(char ch, std::string& outString);
 
@@ -472,11 +472,15 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 		{
 			pExporter->AddBankSection(pBank);
 			
-			const uint16_t startAddr = pBank->GetMappedAddress();
-			const uint16_t endAddr = startAddr + pBank->GetSizeBytes() - 1;
+			const uint16_t mappedAddr = pBank->GetMappedAddress();
+			const uint16_t endAddr = mappedAddr + pBank->GetSizeBytes() - 1;
 
-			LOGINFO("Exporting bank %03d '%s' [0x%04x - 0x%04x]", pBank->Id, pBank->Name.c_str(), startAddr, endAddr);
-			pExporter->ExportAddressRange(pBank->ItemList, startAddr, endAddr, false);
+			const uint16_t firstItemAddr = pBank->ItemList.front().AddressRef.GetAddress();
+			if (firstItemAddr != mappedAddr)
+				LOGINFO("First item starts at 0x%x even though mapped address is 0x%x", firstItemAddr, mappedAddr);
+
+			LOGINFO("Exporting bank %03d '%s' [0x%04x - 0x%04x]", pBank->Id, pBank->Name.c_str(), firstItemAddr, endAddr);
+			pExporter->ExportAddressRange(pBank->ItemList, firstItemAddr, endAddr, false);
 		}
 	}
 	

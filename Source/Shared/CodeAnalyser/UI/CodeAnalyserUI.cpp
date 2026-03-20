@@ -1147,6 +1147,7 @@ void UpdateItemList(FCodeAnalysisState &state)
 		//int nextItemAddress = 0;
 
 		int startOffset = 0;
+		FCodeAnalysisBank* pPrevBank = nullptr;
 		for (int b = 0; b < FCodeAnalysisState::BankCount; b++)
 		{
 			FCodeAnalysisBank& bank = state.GetBanks()[b];
@@ -1156,11 +1157,24 @@ void UpdateItemList(FCodeAnalysisState &state)
 
 			if (bank.bIsDirty || bank.ItemList.empty())
 			{
+#ifndef NDEBUG
+				if (startOffset > 0)
+				{
+					const int prevBankEndAddr = (pPrevBank->PrimaryMappedPage + pPrevBank->NoPages) * FCodeAnalysisPage::kPageSize;
+					assert(bank.GetMappedAddress() == prevBankEndAddr);
+				}
+#endif
+
 				UpdateItemListForBank(state, bank, startOffset);
 				bank.bIsDirty = false;
 			}
+			pPrevBank = &bank;
 
 			// calculate start offset for next bank
+			// sam. this code deals with instructions that span banks.
+			// it presumes that the two banks are next to each other in the bank list.
+			// there is no guarantee this is the case for PC engine bank arrangement.
+			// I have added an assert above to trap cases where this logic breaks.
 			const FCodeAnalysisItem& lastItem = bank.ItemList.back();
 			const int itemEndAddr = lastItem.AddressRef.GetAddress() + lastItem.Item->ByteSize;
 			const int bankEndAddr = (bank.PrimaryMappedPage + bank.NoPages) * FCodeAnalysisPage::kPageSize;
