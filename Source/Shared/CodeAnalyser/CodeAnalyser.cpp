@@ -779,19 +779,29 @@ FLabelInfo* GenerateLabelForAddress(FCodeAnalysisState &state, FAddressRef addre
 	switch (labelType)
 	{
 		case ELabelType::Function:
-			snprintf(label, kLabelSize,"function_%04X", address.GetAddress());
+		{
+			// sam. add bank name to label. fixes assemble failures related to duplicate labels across different banks.
+			FCodeAnalysisBank* pBank = state.GetBank(address.GetBankId());
+			snprintf(label, kLabelSize,"function_%s_%04X", pBank ? pBank->Name.c_str() : "unknown", address.GetAddress());
 			pLabel->Global = true;
 			break;
+		}
 		case ELabelType::Code:
-			snprintf(label, kLabelSize, "label_%04X", address.GetAddress());
+		{
+			// sam. add bank name to label. fixes assemble failures related to duplicate labels across different banks.
+			FCodeAnalysisBank* pBank = state.GetBank(address.GetBankId());
+			snprintf(label, kLabelSize, "label_%s_%04X", pBank ? pBank->Name.c_str() : "unknown", address.GetAddress());
 			break;
+		}
 		case ELabelType::Data:
 		{
 			FDataInfo* pDataInfo = state.GetDataInfoForAddress(address);
+			// sam. add bank name to label. fixes assemble failures related to duplicate labels across different banks.
+			FCodeAnalysisBank* pBank = state.GetBank(address.GetBankId());
 			if(bLabelOnOperand)
-				snprintf(label, kLabelSize, "operand_%04X", address.GetAddress());
+				snprintf(label, kLabelSize, "operand_%s_%04X", pBank ? pBank->Name.c_str() : "unknown", address.GetAddress());
 			else
-				snprintf(label, kLabelSize, "data_%04X", address.GetAddress());
+				snprintf(label, kLabelSize, "data_%s_%04X", pBank ? pBank->Name.c_str() : "unknown", address.GetAddress());
 
 			// zero page labels for 6502
 			if ((state.CPUInterface->CPUType == ECPUType::M6502 && address.GetAddress() < 256) ||

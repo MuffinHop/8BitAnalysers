@@ -891,7 +891,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	const bool bLoadedBios = pCore->LoadBios(fullBiosPath.c_str(), true);
 	LOGINFO("%s Bios '%s'", bLoadedBios ? "Loaded" : "Failed to load", fullBiosPath.c_str());
 
-	std::string bankPostFix[8] = { "", " #2", " #3", " #4", " #5", " #6", " #7", " #8" };
+	std::string bankPostFix[8] = { "", "_2", "_3", "_4", "_5", "_6", "_7", "_8" };
 	char bankName[32];
 
 	// Hardware page. (IO)
@@ -901,7 +901,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	for (int d = 0; d < kNumBankSetIds; d++)
 	{
 		// Creating as machine ROM, so it doesn't get exported by the asm exporter.
-		sprintf(bankName, "HW PAGE%s", bankPostFix[d].c_str());
+		sprintf(bankName, "HW_PAGE%s", bankPostFix[d].c_str());
 		BankSets[kBankHWPage].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pCore->GetMemory()->GetHWPageMemory(), true /*bMachineROM*/, 0x0));
 	}
 
@@ -916,7 +916,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	// Note: pMemory->GetBackupRAMSize() will report 2048 bytes but Geargfx actually has a 8192 bytes buffer.
 	for (int d = 0; d < kNumBankSetIds; d++)
 	{
-		sprintf(bankName, "SAVE RAM%s", bankPostFix[d].c_str());
+		sprintf(bankName, "SAVE_RAM%s", bankPostFix[d].c_str());
 		BankSets[kBankSaveRAM].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pMemory->GetBackupRAM(), false /*bMachineROM*/, kDefaultInitialBankAddr));
 	}
 
@@ -926,7 +926,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	{
 		for (int d = 0; d < kNumBankSetIds; d++)
 		{
-			sprintf(bankName, "CD RAM %d%s", i, bankPostFix[d].c_str());
+			sprintf(bankName, "CD_RAM_%d%s", i, bankPostFix[d].c_str());
 			BankSets[b].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pUnusedMem, false /*bMachineROM*/, kDefaultInitialBankAddr));
 		}
 	}
@@ -942,7 +942,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	{
 		for (int d = 0; d < kNumBankSetIds; d++)
 		{
-			sprintf(bankName, "ROM %02d%s", b, bankPostFix[d].c_str());
+			sprintf(bankName, "ROM_%02d%s", b, bankPostFix[d].c_str());
 			BankSets[b].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pUnusedMem, false /*bMachineROM*/, kDefaultInitialBankAddr));
 		}
 	}
@@ -950,7 +950,7 @@ bool FPCEEmu::Init(const FEmulatorLaunchConfig& config)
 	// Unused banks. One for each mpr slot.
 	for (int d = 0; d < kNumMprSlots; d++)
 	{
-		sprintf(bankName, "UNUSED %02d", d);
+		sprintf(bankName, "UNUSED_%02d", d);
 		BankSets[kBankUnusedStart].AddBankId(CodeAnalysis.CreateBank(bankName, 8, pMemory->GetUnusedMemory(), false /*bMachineROM*/, kDefaultInitialBankAddr));
 	}
 
@@ -1186,7 +1186,7 @@ void FPCEEmu::ResetBanks()
 			FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(BankSets[b].GetBankId(d));
 			pBank->Memory = pBankMemory;
 
-			sprintf(bankName, "%s %02d%s", bIsCdRom ? "BIOS" : "ROM", b, bankPostFix[d].c_str());
+			sprintf(bankName, "%s_%02d%s", bIsCdRom ? "BIOS" : "ROM", b, bankPostFix[d].c_str());
 			pBank->Name = bankName;
 
 			pBank->bMachineROM = bIsCdRom;
