@@ -63,7 +63,7 @@ bool FAsmExportValidator::Assemble(const std::string& asmFname, bool bOutputList
 
 	LOGINFO("Assembled '%s' : %s", pPCEEmu->GetProjectConfig()->Name.c_str(), errorCode ? "FAILURE" : "SUCESS");
 
-	std::system("echo -------------------------------------------------------------------------------------------------------- >> BatchAssembleLog.txt");
+	std::system("echo -------------------------------------------------------------------------------------------------------- >> AssembleLog.txt");
 	printf("--------------------------------------------------------------------------------------------------------\n");
 
 	Results.bAssembledOk = errorCode == 0 ? true : false;
@@ -213,7 +213,7 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 		pPCEEmu->GetCore()->RunToVBlank(pPCEEmu->GetFrameBuffer(), pPCEEmu->GetAudioBuffer(), &audioSampleCount);
 
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
-		LOGINFO("%03d CRC %8x [%s]%s", i, framebufCRC, framebufCRC == FramebufferCRCs[i] ? "MATCH" : "DIFF", i < kNumIgnoredCRCs ? "[IGNORED]" : "");
+		//LOGINFO("%03d CRC %8x [%s]%s", i, framebufCRC, framebufCRC == FramebufferCRCs[i] ? "MATCH" : "DIFF", i < kNumIgnoredCRCs ? "[IGNORED]" : "");
 
 		// Skip the first few frames because the frame CRCs often don't match - for some unknown reason
 		if (i < kNumIgnoredCRCs)
@@ -286,7 +286,7 @@ void FAsmExportValidator::Tick()
 	{
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
 		FramebufferCRCs[GameFrameNo] = framebufCRC; 
-		LOGINFO("%03d CRC %x", GameFrameNo, framebufCRC);
+		//LOGINFO("%03d CRC %x", GameFrameNo, framebufCRC);
 		GameFrameNo++;
 	}
 }

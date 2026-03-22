@@ -10,8 +10,8 @@ struct FAsmExportValidator
 {
 	// maybe this should get passed in?
 	// 30 secs worth of frames
-	//static constexpr int kNumFramebufferCRCs = 1800;
-	static constexpr int kNumFramebufferCRCs = 600;
+	static constexpr int kNumFramebufferCRCs = 1800;
+	//static constexpr int kNumFramebufferCRCs = 600;
 	static constexpr int kNumIgnoredCRCs = 30;
 
 	struct FResults

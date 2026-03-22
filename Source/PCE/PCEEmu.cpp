@@ -1086,7 +1086,7 @@ void FPCEEmu::ResetBanks()
 		Banks[kBankSaveRAM] = &BankSets[kBankSaveRAM];
 	}
 	
-	std::string bankPostFix[8] = { "", " #2", " #3", " #4", " #5", " #6", " #7", " #8" };
+	std::string bankPostFix[8] = { "", "_2", "_3", "_4", "_5", "_6", "_7", "_8" };
 	char bankName[32];
 	
 	if (bIsCdRom)
@@ -1132,7 +1132,7 @@ void FPCEEmu::ResetBanks()
 				FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(BankSets[r].GetBankId(d));
 				pBank->Memory = pBankMemory;
 				
-				sprintf(bankName, "CARD RAM %02d%s", r - cardRamStart, bankPostFix[d].c_str());
+				sprintf(bankName, "CARD_RAM_%02d%s", r - cardRamStart, bankPostFix[d].c_str());
 				pBank->Name = bankName;
 			}
 			Banks[r] = &BankSets[r];
