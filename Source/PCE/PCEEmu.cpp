@@ -1642,6 +1642,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 		{
 			if (FCodeAnalysisBank* pBank = CodeAnalysis.GetBank(bankId))
 			{
+#if 0
 				bool bExport = false;
 				if (pBank->bEverBeenMapped)
 				{
@@ -1659,6 +1660,7 @@ bool FPCEEmu::ExportAsmForCurrentGame()
 					}*/
 				}
 				if (bExport)
+#endif
 					banksToExport.push_back(Banks[i]->GetBankId());
 			}
 		}

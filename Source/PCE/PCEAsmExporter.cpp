@@ -153,11 +153,15 @@ public:
 
 		FPCEEmu* pPCEEmu = static_cast<FPCEEmu*>(pEmulator);
 		const uint8_t bankIndex = pPCEEmu->GetBankIndexForBankId(pBank->Id);
+		if (!pBank->bEverBeenMapped)
+			Output("\t; Note: this bank has never been mapped so the correct org address is unknown.\n", bankIndex);
 		Output("\t.bank %d\n", bankIndex);
 
 		if (bankIndex == 0xff)
 			LOGERROR("Could not lookup bank index for bank id %d", pBank->Id);
 	}
+
+protected:
 	std::string ZeroPagePrefix = "<";
 };
 

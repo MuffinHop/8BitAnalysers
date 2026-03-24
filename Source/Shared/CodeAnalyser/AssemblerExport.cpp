@@ -468,7 +468,7 @@ bool ExportAssemblerForBanks(class FEmuBase* pEmu, const char* pTextFileName, co
 
 	for (const FCodeAnalysisBank* pBank : pExporter->ExportBanks)
 	{
-		if (pBank->PrimaryMappedPage != -1 && !pBank->bMachineROM && pBank->bEverBeenMapped)
+		if (pBank->PrimaryMappedPage != -1 && !pBank->bMachineROM/* && pBank->bEverBeenMapped*/)
 		{
 			pExporter->AddBankSection(pBank);
 			

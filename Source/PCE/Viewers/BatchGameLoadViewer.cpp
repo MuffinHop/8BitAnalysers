@@ -252,6 +252,7 @@ void FBatchGameLoadViewer::DrawUI()
 			const FEmulatorFile& game = gamesList.GetGame(GameIndex);
 			ImGui::Text("(%d/%d) %s", GameIndex + 1, numGamesInList, game.DisplayName.c_str());
 			ImGui::InputInt("Game index", &GameIndex);
+			GameIndex = CLAMP(GameIndex, 0, numGamesInList);
 		}
 
 		if (ImGui::Button("Prev game") || ImGui::IsKeyPressed(ImGuiKey_F1))

@@ -262,11 +262,15 @@ void FGameDbViewer::DrawOverview()
 
 		if (entry.second.bEmulatorTestOk)
 			numEmuTestPassed++;
+		
+		if (entry.second.bRomFileIdentical)
+			numIdenticalRom++;
 	}
 
 	const int totNum = (int)gameDb.size();
 
-	ImGui::Text("Assembles:   %3d / %3d", numAssembles, totNum);
-	ImGui::Text("Emu test ok: %3d / %3d", numEmuTestPassed, totNum);
+	ImGui::Text("Assembles:     %3d / %3d", numAssembles, totNum);
+	ImGui::Text("Identical ROM: %3d / %3d", numIdenticalRom, totNum);
+	ImGui::Text("Emu test ok:   %3d / %3d", numEmuTestPassed, totNum);
 }
 

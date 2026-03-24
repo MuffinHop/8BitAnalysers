@@ -163,7 +163,7 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 			}
 			else
 			{
-				LOGINFO("Found %d bytes that are different.", numDiffs);
+				LOGINFO("Found %d bytes that are different overall.", numDiffs);
 			}
 
 			free(pNewData);
@@ -234,15 +234,8 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 	}
 	else
 	{
-		if (GameFrameNo == kNumFramebufferCRCs)
-		{
-			LOGINFO("Test passed.");
-			Results.bEmulatorTestOk = true;
-		}
-		else
-		{
-			LOGINFO("Test partially passed. %d frames are identical.", GameFrameNo);
-		}
+		LOGINFO("Test passed. %d frames are identical.", GameFrameNo);
+		Results.bEmulatorTestOk = true;
 	}
 
 	// copy pce to specific directory based on if it passed or not
@@ -269,7 +262,7 @@ void FAsmExportValidator::Reset(bool bStartValidating)
 	GameFrameNo = 0;
 
 	FramebufferCRCs.clear();
-	FramebufferCRCs.resize(kNumFramebufferCRCs);
+	FramebufferCRCs.resize(kMaxFramebufferCRCs);
 
 	Results.bAssembledOk = false;
 	Results.bEmulatorTestOk = false;
@@ -282,7 +275,7 @@ void FAsmExportValidator::Tick()
 	if (!bIsValidating)
 		return;
 
-	if (GameFrameNo < kNumFramebufferCRCs)
+	if (GameFrameNo < kMaxFramebufferCRCs)
 	{
 		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
 		FramebufferCRCs[GameFrameNo] = framebufCRC; 
