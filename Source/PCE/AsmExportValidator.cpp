@@ -12,6 +12,28 @@
 #include "Debug/DebugLog.h"
 #include "PCEGameConfig.h"
 
+// I couldn't get this to work. The framebuffer CRCs would not match for certain games even though I wrote pngs
+// to disk and verified they matched. Might be better to calculate CRCs on the contents of VRAM and SAT combined?
+// 
+// Ended up coming to the conclusion that running an emulator test is a waste of time.
+// Better to pursue the goal of creating identical pce rom files. If we have identical pce
+// file we don't need to run an emulator test on it.
+#define ASM_EXPORT_VALIDATOR_USE_EMU_TEST 0
+
+#if ASM_EXPORT_VALIDATOR_USE_EMU_TEST
+static constexpr int kMaxFramebufferCRCs = 1800;
+static constexpr int kNumIgnoredCRCs = 30;
+#endif
+
+bool FAsmExportValidator::FResults::DidPass()
+{
+#if ASM_EXPORT_VALIDATOR_USE_EMU_TEST
+		return bAssembledOk && bRomFileIdentical && bEmulatorTestOk;
+#else
+	return bAssembledOk && bRomFileIdentical;
+#endif
+}
+
 bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, const std::string& asmFname, bool bOutputListing/* = false*/)
 {
 #ifdef _WIN32
@@ -24,7 +46,9 @@ bool FAsmExportValidator::Validate(const std::vector<int16_t>& banksExported, co
 
 	CompareRomFiles(banksExported, asmFname);
 
+#if ASM_EXPORT_VALIDATOR_USE_EMU_TEST
 	RunEmulatorTest(asmFname);
+#endif
 
 	bIsValidating = false;
 
@@ -83,7 +107,7 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 		return false;
 	}
 
-	LOGINFO("Produced .pce is %d bytes, %.1fKB", newFileSize, (float)newFileSize / 1024.f);
+	//LOGINFO("Produced ROM is %d bytes, %.1fKB", newFileSize, (float)newFileSize / 1024.f);
 
 	size_t origFileSize = 0;
 	uint8_t* pNewData = nullptr;
@@ -95,20 +119,16 @@ bool FAsmExportValidator::CompareRomFiles(const std::vector<int16_t>& banksExpor
 		pNewData = (uint8_t*)LoadBinaryFile(origFname.c_str(), origFileSize);
 		if (pNewData != nullptr)
 		{
-			LOGINFO("Original .pce is %d bytes, %.1fKB", origFileSize, (float)origFileSize / 1024.f);
+			LOGINFO("Produced ROM is %d bytes, %.1fKB. Original ROM is %d bytes, %.1fKB. [%s]", newFileSize, (float)newFileSize / 1024.f, origFileSize, (float)origFileSize / 1024.f, newFileSize == origFileSize ? "MATCH" : "DIFF");
 
-			if (newFileSize == origFileSize)
-			{
-				LOGINFO(".pce files are the same size.");
-			}
-			else
+			if (newFileSize != origFileSize)
 			{
 				const long diffBytes = abs((long)(newFileSize - origFileSize));
-				LOGINFO("pce files size do not match. Difference is %d bytes (0x%x) [%.1fKB]", diffBytes, diffBytes, (float)diffBytes / 1024.0f);
+				LOGINFO("ROM files size do not match. Difference is %d bytes (0x%x) [%.1fKB]", diffBytes, diffBytes, (float)diffBytes / 1024.0f);
 			}
 
 			int numDiffs = 0;
-			// check the data for the exported pce file matches the original pce file.
+			// check the data for the exported ROM file matches the original ROM.
 			// only check the bytes for the banks we exported.
 			for (auto bankId : banksExported)
 			{
@@ -183,6 +203,7 @@ void NormaliseFilePath(char* outFilePath, const char* inFilePath);
 
 bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 {
+#if ASM_EXPORT_VALIDATOR_USE_EMU_TEST
 	const std::string outputPceFname = RemoveFileExtension(asmFname.c_str()) + ".pce";
 
 	// turn off callback to improve performance
@@ -206,21 +227,38 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 
 	LOGINFO("Checking %d frames...", GameFrameNo);
 	
-	int numDiffs = 0;
+	int numMatches = 0;
+	int numCountedDiffs = 0;
+	int numInitialDiffs = 0;
+	bool bInInitialDiffs = true;
 	for (int i = 0; i < GameFrameNo; i++)
 	{
 		int audioSampleCount = 0;
 		pPCEEmu->GetCore()->RunToVBlank(pPCEEmu->GetFrameBuffer(), pPCEEmu->GetAudioBuffer(), &audioSampleCount);
 
-		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
-		//LOGINFO("%03d CRC %8x [%s]%s", i, framebufCRC, framebufCRC == FramebufferCRCs[i] ? "MATCH" : "DIFF", i < kNumIgnoredCRCs ? "[IGNORED]" : "");
+		const int width = pPCEEmu->GetCore()->GetHuC6260()->GetCurrentWidth();
+		const int height = pPCEEmu->GetCore()->GetHuC6260()->GetCurrentHeight();
+		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), width * height * 4);
+		//LOGINFO("%03d CRC %8x [%s]%s (%d bytes)", i, framebufCRC, framebufCRC == FramebufferCRCs[i] ? "MATCH" : "DIFF", i < kNumIgnoredCRCs ? "[IGNORED]" : "", width * height * 4);
+
+		const bool bCRCMatch = framebufCRC == FramebufferCRCs[i];
+		if (bCRCMatch)
+		{
+			bInInitialDiffs = false;
+			numMatches++;
+		}
+		if (bInInitialDiffs)
+		{
+			if (!bCRCMatch)
+				numInitialDiffs++;
+		}
 
 		// Skip the first few frames because the frame CRCs often don't match - for some unknown reason
 		if (i < kNumIgnoredCRCs)
 			continue;
 
-		if (framebufCRC != FramebufferCRCs[i])
-			numDiffs++;
+		if (!bCRCMatch)
+			numCountedDiffs++;
 	}
 
 	pPCEEmu->EnableGeargrafxCallbacks(true);
@@ -228,13 +266,19 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 	if (bWasStopped)
 		debugger.Break();
 	
-	if (numDiffs)
+	if (numInitialDiffs)
+		LOGINFO("First %d frames were different.", numInitialDiffs);
+
+	if (numCountedDiffs)
 	{
-		LOGINFO("Test Failed. %d frames differ", numDiffs);
+		LOGINFO("Test Failed. %d frames differ.", numCountedDiffs);
 	}
 	else
 	{
-		LOGINFO("Test passed. %d frames are identical.", GameFrameNo);
+		if (numMatches == GameFrameNo)
+			LOGINFO("Test passed. All frames are identical.");
+		else
+			LOGINFO("Test passed. %d frames are identical. Ignored %d frames", numMatches, kNumIgnoredCRCs);
 		Results.bEmulatorTestOk = true;
 	}
 
@@ -251,7 +295,7 @@ bool FAsmExportValidator::RunEmulatorTest(const std::string& asmFname)
 	char cmdTxtNormalised[256];
 	NormaliseFilePath(cmdTxtNormalised, cmdTxt);
 	std::system(cmdTxtNormalised);
-
+#endif
 	return true;
 }
 
@@ -261,8 +305,10 @@ void FAsmExportValidator::Reset(bool bStartValidating)
 
 	GameFrameNo = 0;
 
+#if ASM_EXPORT_VALIDATOR_USE_EMU_TEST
 	FramebufferCRCs.clear();
 	FramebufferCRCs.resize(kMaxFramebufferCRCs);
+#endif
 
 	Results.bAssembledOk = false;
 	Results.bEmulatorTestOk = false;
@@ -272,14 +318,20 @@ void FAsmExportValidator::Reset(bool bStartValidating)
 
 void FAsmExportValidator::Tick()
 {
+#if ASM_EXPORT_VALIDATOR_USE_EMU_TEST
 	if (!bIsValidating)
 		return;
 
 	if (GameFrameNo < kMaxFramebufferCRCs)
 	{
-		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), FPCEEmu::kFramebufferSize);
-		FramebufferCRCs[GameFrameNo] = framebufCRC; 
-		//LOGINFO("%03d CRC %x", GameFrameNo, framebufCRC);
+		const int width = pPCEEmu->GetCore()->GetHuC6260()->GetCurrentWidth();
+		const int height = pPCEEmu->GetCore()->GetHuC6260()->GetCurrentHeight();
+		const u32 framebufCRC = CalculateCRC32(0, pPCEEmu->GetFrameBuffer(), width * height * 4);
+
+		//LOGINFO("%03d CRC %x (%d bytes)", GameFrameNo, framebufCRC, width * height * 4);
+
+		FramebufferCRCs[GameFrameNo] = framebufCRC;
 		GameFrameNo++;
 	}
+#endif
 }

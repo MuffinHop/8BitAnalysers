@@ -12,16 +12,14 @@ enum EGameDbColumns
 	Col_Overall,
 	Col_AssemblesOk,
 	Col_RomStatus,
-	Col_EmulatorTestOk,
+	//Col_EmulatorTestOk,
 	Col_TestMethodology,
 	Col_Count
 };
 
 bool GetOverallResult(const FGameDbEntry& entry)
 {
-	return entry.bAssemblesOk &&
-		entry.bRomFileIdentical &&
-		entry.bEmulatorTestOk;
+	return entry.bAssemblesOk && entry.bRomFileIdentical /*&& entry.bEmulatorTestOk*/;
 }
 
 const char* GetRomStatus(const FGameDbEntry& entry)
@@ -29,8 +27,8 @@ const char* GetRomStatus(const FGameDbEntry& entry)
 	if (entry.bRomFileIdentical)
 		return "Identical";
 
-	if (entry.bRomFilePartialMatch)
-		return "Partial";
+	//if (entry.bRomFilePartialMatch)
+	//	return "Partial";
 
 	return "Fail";
 }
@@ -75,9 +73,9 @@ static void SortGameDbTable(std::vector<std::pair<std::string, FGameDbEntry*>>& 
 				break;
 			}
 
-			case Col_EmulatorTestOk:
+			/*case Col_EmulatorTestOk:
 				result = (int)entryA.bEmulatorTestOk - (int)entryB.bEmulatorTestOk;
-				break;
+				break;*/
 
 			case Col_TestMethodology:
 				result = entryA.TestingMethodology - entryB.TestingMethodology;
@@ -161,7 +159,7 @@ void FGameDbViewer::DrawGameDbTable()
 		ImGui::TableSetupColumn("Overall");
 		ImGui::TableSetupColumn("Assembles");
 		ImGui::TableSetupColumn("ROM");
-		ImGui::TableSetupColumn("Emu Test");
+		//ImGui::TableSetupColumn("Emu Test");
 		ImGui::TableSetupColumn("Test Method");
 		ImGui::TableHeadersRow();
 
@@ -229,8 +227,8 @@ void FGameDbViewer::DrawGameDbTable()
 			ImGui::TableSetColumnIndex(Col_RomStatus);
 			ImGui::TextUnformatted(bValid ? GetRomStatus(entry) : "-");
 
-			ImGui::TableSetColumnIndex(Col_EmulatorTestOk);
-			ImGui::TextUnformatted(bValid ? entry.bEmulatorTestOk ? "Ok" : "Fail" : "-");
+			//ImGui::TableSetColumnIndex(Col_EmulatorTestOk);
+			//ImGui::TextUnformatted(bValid ? entry.bEmulatorTestOk ? "Ok" : "Fail" : "-");
 
 			ImGui::TableSetColumnIndex(Col_TestMethodology);
 
@@ -249,7 +247,7 @@ void FGameDbViewer::DrawOverview()
 	int numAssembles = 0;
 	int numIdenticalRom = 0;
 	int numPassOverall = 0;
-	int numEmuTestPassed = 0;
+	//int numEmuTestPassed = 0;
 
 	TGameDb& gameDb = GetGameDb();
 	for (const auto& entry : gameDb)
@@ -260,8 +258,8 @@ void FGameDbViewer::DrawOverview()
 		if (entry.second.bAssemblesOk)
 			numAssembles++;
 
-		if (entry.second.bEmulatorTestOk)
-			numEmuTestPassed++;
+		//if (entry.second.bEmulatorTestOk)
+		//	numEmuTestPassed++;
 		
 		if (entry.second.bRomFileIdentical)
 			numIdenticalRom++;
@@ -271,6 +269,6 @@ void FGameDbViewer::DrawOverview()
 
 	ImGui::Text("Assembles:     %3d / %3d", numAssembles, totNum);
 	ImGui::Text("Identical ROM: %3d / %3d", numIdenticalRom, totNum);
-	ImGui::Text("Emu test ok:   %3d / %3d", numEmuTestPassed, totNum);
+	//ImGui::Text("Emu test ok:   %3d / %3d", numEmuTestPassed, totNum);
 }
 

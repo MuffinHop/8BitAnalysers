@@ -2024,3 +2024,14 @@ void FPCELaunchConfig::ParseCommandline(int argc, char** argv)
 		++argIt;
 	}*/
 }
+
+/*
+// todo move somewhere else & include header
+extern "C" int stbi_write_png(char const* filename, int x, int y, int comp, const void* data, int stride_bytes);
+bool WriteScreenshot(FPCEEmu* pEmu, const char* pFilename)
+{
+	const int width = pEmu->GetCore()->GetHuC6260()->GetCurrentWidth();
+	const int height = pEmu->GetCore()->GetHuC6260()->GetCurrentHeight();
+	stbi_write_png(pFilename, width, height, 4, pEmu->GetFrameBuffer(), width * 4);
+}
+*/
