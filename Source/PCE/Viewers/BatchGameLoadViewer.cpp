@@ -35,8 +35,6 @@ void FBatchGameLoadViewer::StartAutomation()
 {
 	bAutomationActive = true;
 	bLoadGame = true;
-	NumAssembledOk = 0;
-	NumFailedToAssemble = 0;
 	GameFrameCount = 0;
 
 	if (bPressRandomButtons)
@@ -123,9 +121,6 @@ void FBatchGameLoadViewer::DrawUI()
 	if (bExportAsm)
 		ImGui::Text("THIS WILL AFFECT PERFORMANCE");
 
-	ImGui::Text("Assemble Success: %d", NumAssembledOk);
-	ImGui::Text("Assemble Failure: %d", NumFailedToAssemble);
-
 	ImGui::SeparatorText("Bank Mapping");
 	bool bMapped = false;
 	if (const FProjectConfig* pConfig = pPCEEmu->GetProjectConfig())
@@ -189,6 +184,11 @@ void FBatchGameLoadViewer::DrawUI()
 				}
 				else
 					bNextGame = true;
+
+				if (bExportAsm)
+				{
+					pPCEEmu->ExportAsmForCurrentGame();
+				}
 			}
 
 			if (bSkipWhenMapped && bMapped)
@@ -272,14 +272,6 @@ void FBatchGameLoadViewer::DrawUI()
 				GameIndex++;
 				GameFrameCount = 0;
 				bLoadGame = true;
-
-				if (bExportAsm && bNextGame)
-				{
-					if (pPCEEmu->ExportAsmForCurrentGame())
-						NumAssembledOk++;
-					else
-						NumFailedToAssemble++;
-				}
 			}
 		}
 		if (ImGui::IsKeyPressed(ImGuiKey_F3))

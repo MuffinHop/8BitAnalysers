@@ -38,8 +38,6 @@ private:
 	float ElapsedGameRunTime = 0.f;
 	int TimeUntilButtonPresses = 0;
 	double NextGameTime = DBL_MAX;
-	int NumAssembledOk = 0;
-	int NumFailedToAssemble = 0;
 
 	FPCEEmu* pPCEEmu = nullptr;
 };
