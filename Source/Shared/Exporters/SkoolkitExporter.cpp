@@ -433,9 +433,9 @@ bool ExportSkoolFile(FCodeAnalysisState& state, const char* pTextFileName, FSkoo
 	else
 		SetNumberDisplayMode(ENumberDisplayMode::Decimal);
 
-	bool bExportedOk = exporter.Export(pTextFileName, startAddr, endAddr, base);
+	bool bAssembledOk = exporter.Export(pTextFileName, startAddr, endAddr, base);
 
-	if (bExportedOk)
+	if (bAssembledOk)
 		LOGINFO("Successfully exported '%s' with range $%x - $%x", pTextFileName, startAddr, endAddr);
 	else
 		LOGINFO("Failed to export '%s'", pTextFileName);

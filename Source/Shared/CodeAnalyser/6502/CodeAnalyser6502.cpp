@@ -226,6 +226,8 @@ bool CheckJumpInstruction6502(const FCodeAnalysisState& state, uint16_t pc, uint
 			return true;
 		}
 			
+		// todo add BSR
+		
 		// to absolute 16 address
 		case 0x20:	// JSR
 		case 0x4C:	// JMP abs
@@ -246,6 +248,7 @@ bool CheckCallInstruction6502(const FCodeAnalysisState& state, uint16_t pc)
 	switch (instrByte)
 	{
 	case 0x20:	// JSR
+	case 0x44:	// BSR 6280
 		return true;
 	}
 	return false;
@@ -280,6 +283,8 @@ bool RegisterCodeExecuted6502(FCodeAnalysisState& state, uint16_t pc, uint16_t o
 
 	switch (opcode)
 	{
+		// todo add BSR
+
 		case 0x20:  // JSR
 		{
 			FCPUFunctionCall callInfo;
@@ -322,8 +327,10 @@ EInstructionType GetInstructionType6502(FCodeAnalysisState& state, FAddressRef a
 		case 0x58:	// CLI
 			return EInstructionType::DisableInterrupts;
 
+		
 		// JSR
 		case 0x20:	
+		// todo add BSR
 			return EInstructionType::FunctionCall;
 
 		default:
