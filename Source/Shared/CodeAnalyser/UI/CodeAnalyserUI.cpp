@@ -1130,6 +1130,14 @@ void UpdateItemListForBank(FCodeAnalysisState& state, FCodeAnalysisBank& bank, i
 #endif
 }
 
+#ifndef NDEBUG
+#include <set>
+#include "Misc/GameConfig.h"
+
+std::set<std::string> gGamesWithBankSpanIssues;
+std::set<std::string> gGamesWithBankSpan;
+#endif
+
 void UpdateItemList(FCodeAnalysisState &state)
 {
 	// build item list - not every frame please!
@@ -1160,8 +1168,29 @@ void UpdateItemList(FCodeAnalysisState &state)
 #ifndef NDEBUG
 				if (startOffset > 0)
 				{
-					const int prevBankEndAddr = (pPrevBank->PrimaryMappedPage + pPrevBank->NoPages) * FCodeAnalysisPage::kPageSize;
-					assert(bank.GetMappedAddress() == prevBankEndAddr);
+					const uint16_t prevBankEndAddr = (pPrevBank->PrimaryMappedPage + pPrevBank->NoPages) * FCodeAnalysisPage::kPageSize;
+					const uint16_t mappedAddr = bank.GetMappedAddress();
+					{
+						if (const FProjectConfig* pConfig = state.GetEmulator()->GetProjectConfig())
+						{
+							const std::string& gameName = pConfig->Name;
+							
+							auto result = gGamesWithBankSpan.insert(gameName);
+							if (result.second)
+							{
+								LOGINFO("%s: bank span in bank %s", gameName.c_str(), bank.Name.c_str());
+							}
+
+							if (mappedAddr != prevBankEndAddr)
+							{
+								auto result = gGamesWithBankSpanIssues.insert(gameName);
+								if (result.second)
+								{
+									LOGERROR("%s: bank span error in bank %s", gameName.c_str(), bank.Name.c_str());
+								}
+							}
+						}
+					}
 				}
 #endif
 
@@ -1174,7 +1203,7 @@ void UpdateItemList(FCodeAnalysisState &state)
 			// sam. this code deals with instructions that span banks.
 			// it presumes that the two banks are next to each other in the bank list.
 			// there is no guarantee this is the case for PC engine bank arrangement.
-			// I have added an assert above to trap cases where this logic breaks.
+			// I have added an error above to trap cases where this logic breaks.
 			const FCodeAnalysisItem& lastItem = bank.ItemList.back();
 			const int itemEndAddr = lastItem.AddressRef.GetAddress() + lastItem.Item->ByteSize;
 			const int bankEndAddr = (bank.PrimaryMappedPage + bank.NoPages) * FCodeAnalysisPage::kPageSize;
