@@ -9,50 +9,6 @@
 
 mz800_sys_t g_mz800_sys;
 
-// --- PAL/NTSC video standard ---
-// NTPL=0 (PAL):  CLK=17,734,475 Hz, CPU=CLK/5=3,546,895 Hz, 312 lines × 1136 px → 50 Hz
-// NTPL=1 (NTSC): CLK=14,318,180 Hz, CPU=CLK/4=3,579,545 Hz, 262 lines × 912 px  → ~60 Hz
-// NTPL selects /4 or /5 to keep CPU near 3.55 MHz in both standards.
-// CTC0 = 16 px clocks tick (CLK/16). PSG = 16 CPU ticks (80 px PAL, 64 px NTSC).
-void mz800_set_video_standard(mz800_sys_t* sys, bool pal) {
-    sys->bPAL = pal;
-    video_timing_t* vt = &sys->vt;
-
-    if (pal) {
-        vt->cpu_divider        = 5;    // NTPL=0: CLK/5 path selected
-        vt->psg_pixel_divider  = 80;   // 16 CPU ticks × 5 px
-        vt->lines_per_frame    = 312;
-        vt->pixels_per_line    = 1136;
-        vt->tempo_toggle_lines = 229;  // 312×50÷(2×34) = 229.4
-        vt->hsync_width        = 80;
-        vt->hblank_start       = 1114;   // after display: 186 + 928
-        vt->hblank_end         = 186;    // back porch ends
-        vt->display_start_col  = 186;    // 80 sync + 106 back porch
-        vt->vblank_first_line  = 288;    // 46 top border + 200 canvas + 42 bottom border
-        vt->vblank_resume_line = 22;     // 3 vsync + 19 back porch
-        vt->vsync_first_line   = 309;    // last 3 lines
-        vt->border_top         = 46;
-        vt->border_bottom      = 42;
-        vt->display_height     = 288;    // 46 + 200 + 42
-    } else {
-        vt->cpu_divider        = 4;    // NTPL=1: CLK/4 path selected
-        vt->psg_pixel_divider  = 64;   // 16 CPU ticks × 4 px
-        vt->lines_per_frame    = 262;
-        vt->pixels_per_line    = 912;
-        vt->tempo_toggle_lines = 231;  // 262×60÷(2×34) = 230.9
-        vt->hsync_width        = 64;
-        vt->hblank_start       = 846;    // after display: 150 + 696, scaled proportionally
-        vt->hblank_end         = 150;    // back porch ends
-        vt->display_start_col  = 150;    // 64 sync + 86 back porch
-        vt->vblank_first_line  = 242;    // 20 top border + 200 canvas + 22 bottom border
-        vt->vblank_resume_line = 18;     // 3 vsync + 15 back porch
-        vt->vsync_first_line   = 259;    // last 3 lines
-        vt->border_top         = 20;
-        vt->border_bottom      = 22;
-        vt->display_height     = 242;    // 20 + 200 + 22
-    }
-}
-
 void mz800_sys_init(mz800_sys_t* sys)
 {
     sys->pins = z80_init(&sys->cpu);
@@ -181,230 +137,6 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->joy[1].state = 0xFF;
 }
 
-// --- Hardware scroll address transform ---
-static inline uint16_t hwscroll_shift_addr(mz800_sys_t* sys, uint16_t addr) {
-    if (sys->gdg_scroll_on) {
-        if (addr >= (uint16_t)sys->gdg_ssa && addr < (uint16_t)sys->gdg_sea) {
-            if (addr >= (uint16_t)(sys->gdg_sea - sys->gdg_sof)) {
-                return addr + sys->gdg_sof - sys->gdg_sw;
-            }
-            return addr + sys->gdg_sof;
-        }
-    }
-    return addr;
-}
-
-// --- Scroll register validation (called after any scroll reg write) ---
-static void hwscroll_regs_changed(mz800_sys_t* sys) {
-    if ((sys->gdg_sof > 0) &&
-        (sys->gdg_ssa <= 0x1E00) &&
-        (sys->gdg_sea >= 0x0140) &&
-        (sys->gdg_sw > sys->gdg_sof) &&
-        (sys->gdg_sea > sys->gdg_ssa) &&
-        (sys->gdg_sw == (sys->gdg_sea - sys->gdg_ssa))) {
-        sys->gdg_scroll_on = true;
-    } else {
-        sys->gdg_scroll_on = false;
-    }
-}
-
-// --- VRAM read helper (shared by 8000-9FFF and A000-BFFF paths) ---
-static inline uint8_t mz800_vram_read(mz800_sys_t* sys, uint16_t vaddr, int addr_is_odd,
-                                       bool dmd_scrw640, bool dmd_hicolor)
-{
-    uint8_t data;
-    if (sys->gdg_rf_search) {
-        // SEARCH mode: exact color match
-        uint8_t search = 0xFF;
-        uint8_t notsearch = 0x00;
-        if (dmd_scrw640) {
-            int p_even = sys->gdg_wfrf_vbank ? 2 : 0;
-            int p_odd  = p_even + 1;
-            int p = addr_is_odd ? p_odd : p_even;
-            if (sys->gdg_rf_plane & 0x01) {
-                search &= sys->vram[p][vaddr];
-            } else {
-                notsearch |= sys->vram[p][vaddr];
-            }
-        } else {
-            for (int p = 0; p < 4; p++) {
-                bool avail = dmd_hicolor || (sys->gdg_wfrf_vbank ? (p >= 2) : (p < 2));
-                if (!avail) continue;
-                if (sys->gdg_rf_plane & (1 << p)) {
-                    search &= sys->vram[p][vaddr];
-                } else {
-                    notsearch |= sys->vram[p][vaddr];
-                }
-            }
-        }
-        data = search & ~notsearch;
-    } else {
-        // SINGLE mode: AND-fold selected planes
-        if (sys->gdg_rf_plane == 0) {
-            data = 0xFF;
-        } else if (dmd_scrw640) {
-            int p_even = sys->gdg_wfrf_vbank ? 2 : 0;
-            int p_odd  = p_even + 1;
-            int p = addr_is_odd ? p_odd : p_even;
-            data = sys->vram[p][vaddr];
-        } else {
-            data = 0xFF;
-            for (int p = 0; p < 4; p++) {
-                if (sys->gdg_rf_plane & (1 << p)) {
-                    data &= sys->vram[p][vaddr];
-                }
-            }
-        }
-    }
-    return data;
-}
-
-// --- VRAM write helper (shared by 8000-9FFF and A000-BFFF paths) ---
-static inline void mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data,
-                                     int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor)
-{
-    uint8_t avlb = dmd_hicolor ? 0x0F : 0x00;
-    avlb |= sys->gdg_wfrf_vbank ? 0x0C : 0x03;
-    if (dmd_scrw640) avlb &= 0x05;
-
-    for (int p = 0; p < 4; p++) {
-        int pmask = 1 << p;
-        bool do_write = false;
-
-        if (dmd_scrw640) {
-            bool is_even_plane = (p == 0 || p == 2);
-            bool match = is_even_plane ? !addr_is_odd : addr_is_odd;
-            if (!match) continue;
-            int ctrl_bit = (p < 2) ? 0x01 : 0x04;
-            if (!(sys->gdg_wf_mode & 4)) {
-                if ((sys->gdg_wf_plane & ctrl_bit) && (avlb & (is_even_plane ? ctrl_bit : (ctrl_bit << 1))))
-                    do_write = true;
-            } else {
-                if (avlb & pmask) {
-                    do_write = (sys->gdg_wf_plane & ctrl_bit) ||
-                               (sys->gdg_wf_mode == 4 || sys->gdg_wf_mode == 6);
-                }
-            }
-        } else {
-            if (!(sys->gdg_wf_mode & 4)) {
-                if ((sys->gdg_wf_plane & pmask) && (avlb & pmask))
-                    do_write = true;
-            } else {
-                if (avlb & pmask) {
-                    do_write = (sys->gdg_wf_plane & pmask) ||
-                               (sys->gdg_wf_mode == 4 || sys->gdg_wf_mode == 6);
-                }
-            }
-        }
-
-        if (!do_write) continue;
-
-        bool plane_selected;
-        if (dmd_scrw640) {
-            int ctrl_bit = (p < 2) ? 0x01 : 0x04;
-            plane_selected = (sys->gdg_wf_plane & ctrl_bit) != 0;
-        } else {
-            plane_selected = (sys->gdg_wf_plane & pmask) != 0;
-        }
-
-        switch (sys->gdg_wf_mode) {
-            case 0: sys->vram[p][vaddr] = data; break;
-            case 1: sys->vram[p][vaddr] ^= data; break;
-            case 2: sys->vram[p][vaddr] |= data; break;
-            case 3: sys->vram[p][vaddr] &= ~data; break;
-            case 4: sys->vram[p][vaddr] = plane_selected ? data : 0x00; break;
-            case 6:
-                if (plane_selected) {
-                    sys->vram[p][vaddr] |= data;
-                } else {
-                    sys->vram[p][vaddr] &= ~data;
-                }
-                break;
-            default: sys->vram[p][vaddr] = data; break;
-        }
-    }
-}
-
-// --- PSG write byte (SN76489AN register protocol) ---
-static void psg_write_byte_internal(psg_t* psg, uint8_t value) {
-    int latch = value & 0x80;
-    int cs, attn;
-
-    if (latch) {
-        cs = (value >> 5) & 0x03;
-        attn = (value >> 4) & 0x01;
-        psg->latch_cs = cs;
-        psg->latch_attn = attn;
-    } else {
-        cs = psg->latch_cs;
-        attn = psg->latch_attn;
-    }
-
-    psg_channel_t* ch = &psg->ch[cs];
-
-    if (attn) {
-        ch->attn = value & 0x0F;
-    } else if (latch && ch->type == 0) {
-        // Tone latch: store low nibble
-        ch->latch_div = value & 0x0F;
-    } else {
-        if (ch->type == 0) {
-            // Tone data: combine high bits with latched low nibble
-            ch->divider = ((uint16_t)(value & 0x3F) << 4) | ch->latch_div;
-        } else {
-            // Noise: set div type and noise type
-            ch->noise_div_type = value & 0x03;
-            ch->noise_type = (value >> 2) & 0x01;
-        }
-    }
-}
-
-// --- PSG step: advance all channels by one PSG clock ---
-void psg_step(psg_t* psg) {
-    for (int cs = 0; cs < PSG_CHANNELS; cs++) {
-        psg_channel_t* ch = &psg->ch[cs];
-
-        if (ch->attn == 15) continue; // OFF
-
-        if (ch->type == 0) {
-            // Tone channel
-            if (ch->divider < 2) {
-                ch->output = 1;
-            } else if (ch->timer == 0) {
-                ch->timer = ch->divider - 1;
-                ch->output ^= 1;
-            } else {
-                ch->timer--;
-            }
-        } else {
-            // Noise channel
-            if (ch->noise_div_type == 3 && psg->ch[2].divider < 2) {
-                ch->output = 1;
-            } else if (ch->timer == 0) {
-                if (ch->noise_div_type == 3) {
-                    ch->timer = psg->ch[2].divider - 1;
-                } else {
-                    ch->timer = (0x10 << ch->noise_div_type) - 1;
-                }
-
-                uint8_t bit0 = ch->shift_reg & 0x01;
-
-                if (ch->noise_type == 1) {
-                    // White noise: XOR bit 0 and bit 3
-                    uint8_t bit3 = (ch->shift_reg >> 3) & 0x01;
-                    ch->shift_reg = (ch->shift_reg >> 1) | ((uint16_t)(bit0 ^ bit3) << 15);
-                } else {
-                    // Periodic noise
-                    ch->shift_reg = (ch->shift_reg >> 1) | ((uint16_t)bit0 << 15);
-                }
-                ch->output = ch->shift_reg & 0x01;
-            } else {
-                ch->timer--;
-            }
-        }
-    }
-}
-
 void mz800_sys_tick(mz800_sys_t* sys)
 {
     uint64_t pins = z80_tick(&sys->cpu, sys->pins);
@@ -468,7 +200,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 if (dmd_scrw640) vaddr >>= 1;
-                vaddr = hwscroll_shift_addr(sys, vaddr);
+                vaddr = mz800_hwscroll_addr(sys, vaddr);
                 vaddr &= 0x1FFF;
                 data = mz800_vram_read(sys, vaddr, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if ((addr_hi == 0x0A || addr_hi == 0x0B) && !dmd_mz700 && sys->vram_on && dmd_scrw640) {
@@ -476,7 +208,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 vaddr >>= 1;
-                vaddr = hwscroll_shift_addr(sys, vaddr);
+                vaddr = mz800_hwscroll_addr(sys, vaddr);
                 vaddr &= 0x1FFF;
                 data = mz800_vram_read(sys, vaddr, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
@@ -533,7 +265,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 if (dmd_scrw640) vaddr >>= 1;
-                vaddr = hwscroll_shift_addr(sys, vaddr);
+                vaddr = mz800_hwscroll_addr(sys, vaddr);
                 vaddr &= 0x1FFF;
                 mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if ((addr_hi == 0x0A || addr_hi == 0x0B) && !dmd_mz700 && sys->vram_on && dmd_scrw640) {
@@ -541,7 +273,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 vaddr >>= 1;
-                vaddr = hwscroll_shift_addr(sys, vaddr);
+                vaddr = mz800_hwscroll_addr(sys, vaddr);
                 vaddr &= 0x1FFF;
                 mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
@@ -623,7 +355,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                                     sys->gdg_sea = (data_io & 0x7F) << 6;
                                     break;
                             }
-                            hwscroll_regs_changed(sys);
+                            mz800_hwscroll_regs_changed(sys);
                         } else if (port_hi == 6) {
                             sys->gdg_border = data_io & 0x0F;
                         } else if (port_hi == 7) {
@@ -670,7 +402,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         break;
                     
                     case 0xF2: // PSG SN76489AN write
-                        psg_write_byte_internal(&sys->psg, data_io);
+                        mz800_psg_write_byte(&sys->psg, data_io);
                         break;
                     
                     case 0x01: { // CMT hack RHEAD — copy pre-loaded header to Z80 HL
@@ -908,47 +640,5 @@ void mz800_sys_key_up(mz800_sys_t* sys, int key) {
     }
 }
 
-// --- CMT hack: install ROM patches for RHEAD/RDATA interception ---
-static void cmthack_install_rom_patches(mz800_sys_t* sys) {
-    // RHEAD patch at 0x04D8: push HL; ld HL,0x10F0; out (0x01),a; pop HL; ret
-    sys->rom[0x04D8] = 0xE5;
-    sys->rom[0x04D9] = 0x21;
-    sys->rom[0x04DA] = 0xF0;
-    sys->rom[0x04DB] = 0x10;
-    sys->rom[0x04DC] = 0xD3;
-    sys->rom[0x04DD] = 0x01;
-    sys->rom[0x04DE] = 0xE1;
-    sys->rom[0x04DF] = 0xC9;
 
-    // RDATA patch at 0x04F8: push HL; push BC; ld HL,(0x1104); ld BC,(0x1102); out (0x02),a; pop BC; pop HL; ret
-    sys->rom[0x04F8] = 0xE5;
-    sys->rom[0x04F9] = 0xC5;
-    sys->rom[0x04FA] = 0x2A;
-    sys->rom[0x04FB] = 0x04;
-    sys->rom[0x04FC] = 0x11;
-    sys->rom[0x04FD] = 0xED;
-    sys->rom[0x04FE] = 0x4B;
-    sys->rom[0x04FF] = 0x02;
-    sys->rom[0x0500] = 0x11;
-    sys->rom[0x0501] = 0xD3;
-    sys->rom[0x0502] = 0x02;
-    sys->rom[0x0503] = 0xC1;
-    sys->rom[0x0504] = 0xE1;
-    sys->rom[0x0505] = 0xC9;
-}
-
-bool mz800_sys_load_mzf(mz800_sys_t* sys, const uint8_t* data, uint32_t size) {
-    if (!data || size < MZF_HEADER_SIZE) return false;
-
-    memcpy(sys->cmt.header, data, MZF_HEADER_SIZE);
-    sys->cmt.body = (uint8_t*)(data + MZF_HEADER_SIZE);
-    sys->cmt.body_size = size - MZF_HEADER_SIZE;
-    sys->cmt.has_file = true;
-    sys->cmt.header_loaded = false;
-
-    // Install ROM patches so monitor ROM's RHEAD/RDATA calls trigger OUT 0x01/0x02
-    cmthack_install_rom_patches(sys);
-
-    return true;
-}
 

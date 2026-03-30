@@ -148,19 +148,27 @@ typedef struct {
 
 extern mz800_sys_t g_mz800_sys;
 
+// --- Core system ---
 void mz800_sys_init(mz800_sys_t* sys);
 void mz800_sys_tick(mz800_sys_t* sys);
 void mz800_sys_reset(mz800_sys_t* sys);
-void mz800_set_video_standard(mz800_sys_t* sys, bool pal);
 void mz800_sys_key_down(mz800_sys_t* sys, int key);
 void mz800_sys_key_up(mz800_sys_t* sys, int key);
 
-// CMT hack: load an MZF file into the hack buffer (call before emulation or from UI)
-// Returns true on success. After this, the ROM hack patches on OUT 0x01/0x02 will use this data.
-bool mz800_sys_load_mzf(mz800_sys_t* sys, const uint8_t* data, uint32_t size);
+// --- GDG / video (mz800_gdg.c) ---
+void     mz800_set_video_standard(mz800_sys_t* sys, bool pal);
+void     mz800_hwscroll_regs_changed(mz800_sys_t* sys);
+uint16_t mz800_hwscroll_addr(mz800_sys_t* sys, uint16_t addr);
+uint8_t  mz800_vram_read(mz800_sys_t* sys, uint16_t vaddr, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
+void     mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
 
-// PSG step: advance all PSG channels by one PSG clock
+// --- PSG SN76489AN (mz800_psg.c) ---
 void psg_step(psg_t* psg);
+void mz800_psg_write_byte(psg_t* psg, uint8_t value);
+
+// --- CMT hack (mz800_cmt.c) ---
+// Load an MZF file; ROM patches on OUT 0x01/0x02 will use this data.
+bool mz800_sys_load_mzf(mz800_sys_t* sys, const uint8_t* data, uint32_t size);
 
 #ifdef __cplusplus
 }
