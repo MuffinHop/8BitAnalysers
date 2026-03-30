@@ -150,6 +150,7 @@ typedef struct {
 
     // GDG DMD register (4 bits)
     uint8_t gdg_dmd;     // bit3=MZ700, bit2=SCRW640, bit1=HICOLOR, bit0=VBANK
+    uint8_t gdg_regct53g7; // Cached E008 bit 0 — gates CTC0 in MZ-700 mode
     bool    mz800_switch; // Hardware DIP switch: true=MZ-800 mode
 
     // Video standard

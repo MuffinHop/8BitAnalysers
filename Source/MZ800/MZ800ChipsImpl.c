@@ -96,6 +96,7 @@ void mz800_sys_init(mz800_sys_t* sys)
 
     // GDG defaults
     sys->gdg_dmd = 0;
+    sys->gdg_regct53g7 = 0;
     sys->mz800_switch = true; // Hardware DIP: MZ-800 mode
     mz800_set_video_standard(sys, true); // Default: PAL
     sys->gdg_wf_plane = 0;
@@ -249,7 +250,16 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 if (addr_low <= 0x08) {
                     if (addr_low == 0x08) {
                         // E008: Gate CTC0 (bit0: 1=counting enabled, 0=stopped)
-                        i8253_gate(&sys->pit, 0, data & 0x01);
+                        // Cache value in gdg_regct53g7; only call gate if changed
+                        uint8_t new_g7 = data & 0x01;
+                        if (new_g7 != sys->gdg_regct53g7) {
+                            sys->gdg_regct53g7 = new_g7;
+                            // In MZ-700 mode, CTC0 gate tracks regct53g7
+                            // In MZ-800 mode, CTC0 gate is always 1 (set by DMD write)
+                            if (sys->gdg_dmd & 0x08) {
+                                i8253_gate(&sys->pit, 0, new_g7);
+                            }
+                        }
                     } else if (addr_low & 0x04) {
                         // E004-E007: CTC8253 write
                         i8253_write(&sys->pit, addr_low & 0x03, data);
@@ -344,6 +354,13 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         break;
                     case 0xCE: // DMD register (4 bits only)
                         sys->gdg_dmd = data_io & 0x0F;
+                        // DMD→CTC0 gate: MZ-800 mode forces gate HIGH,
+                        // MZ-700 mode uses cached regct53g7
+                        if (data_io & 0x08) {
+                            i8253_gate(&sys->pit, 0, sys->gdg_regct53g7);
+                        } else {
+                            i8253_gate(&sys->pit, 0, 1);
+                        }
                         break;
                     case 0xCF: { // Hardware scroll + border (selected by port high byte)
                         if (port_hi >= 1 && port_hi <= 5) {
@@ -482,12 +499,6 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 }
             } else {
                 switch (port) {
-                    case 0xCC: // Read WF register
-                        data = sys->gdg_wf_plane | (sys->gdg_wfrf_vbank << 4) | (sys->gdg_wf_mode << 5);
-                        break;
-                    case 0xCD: // Read RF register
-                        data = sys->gdg_rf_plane | (sys->gdg_wfrf_vbank << 4) | (sys->gdg_rf_search << 7);
-                        break;
                     case 0xCE: {
                         // Video status register (pixel-accurate, PAL/NTSC parameterized)
                         // Bit 7: HBLANK, Bit 6: VBLANK, Bit 5: HSYNC, Bit 4: VSYNC
@@ -617,8 +628,6 @@ void mz800_sys_tick(mz800_sys_t* sys)
             // PIOZ80 has higher priority — deliver IM2 vector
             uint8_t vector = pioz80_interrupt_ack_im2(&sys->pioz80, sys);
             Z80_SET_DATA(pins, vector);
-        } else {
-            sys->pit.channels[2].out = 0;
         }
     }
 
@@ -636,6 +645,7 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->rom_e000_on = true;
     sys->vram_on = false;  // OFF at reset — monitor ROM enables via OUT E4
     sys->gdg_dmd = 0;
+    sys->gdg_regct53g7 = 0;
     // Preserve PAL/NTSC setting across reset, but refresh timing struct
     mz800_set_video_standard(sys, sys->bPAL);
     sys->gdg_wf_plane = 0;
