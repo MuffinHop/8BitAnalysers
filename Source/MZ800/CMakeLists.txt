@@ -296,5 +296,5 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	#sinclude(CPack)
  
 endif()
-target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c)
-target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c)
+target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c i8253.c)
+target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c i8253.c)

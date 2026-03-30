@@ -1,0 +1,19 @@
+--- MZ800Emu.cpp
++++ MZ800Emu.cpp
+@@ -48,15 +48,7 @@
+     mz800_sys_tick(&g_mz800_sys);
+ 
+     // Draw UI
+-    ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_Always);
+-    ImGui::SetNextWindowSize(ImVec2(400, 300), ImGuiCond_Always);
+-    if (ImGui::Begin("TEST WINDOW"))
+-    {
+-        ImGui::Text("If you can see this, ImGui works!");
+-        ImGui::Text("Tick: %d", g_mz800_sys.tick_count);
+-    }
+-    ImGui::End();
+-    //DrawDockingView();
++    DrawDockingView();
+ }
+ 
+ void FMZ800Emu::Reset()

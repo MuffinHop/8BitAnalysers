@@ -4,6 +4,8 @@
 
 struct FMZ800GlobalConfig : public FGlobalConfig
 {
+    bool bPAL = true;
+
     bool Init(void) override { return true; }
 
 protected:
