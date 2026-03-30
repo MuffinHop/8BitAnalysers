@@ -132,6 +132,10 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->vras_phase = 1;  // Start in CPU phase
     sys->vras_sub = 0;
     sys->cpu_wait_vram = false;
+    sys->vram_read_wait_counter = 0;
+    sys->mz700_wr_latch_count = 0;
+    sys->mz700_in_hblank = true;
+    sys->vram_wait_stalls = 0;
     memset(sys->gdg_shift, 0, sizeof(sys->gdg_shift));
     sys->gdg_shift_cnt = 0;
     sys->gdg_vram_col = 0;
@@ -237,9 +241,18 @@ void mz800_sys_tick(mz800_sys_t* sys)
             } else if (addr_hi == 0x0F && sys->rom_e000_on) {
                 data = sys->rom[addr & 0x3FFF]; // F000-FFFF: upper ROM
             } else if ((addr_hi == 0x08 || addr_hi == 0x09) && !dmd_mz700 && sys->vram_on) {
-                // 8000-9FFF: MZ-800 VRAM (always mapped when vram_on in 800 mode)
-                // WAIT: CPU reads during DISP phase are stalled until CPU phase
-                if (sys->vras_phase == 0) {
+                // 8000-9FFF: MZ-800 VRAM read
+                // WAIT: CPU reads are stalled for one full DRAM access cycle.
+                // Reference formula: wait = (16 - vras_pos) + conditional_8 + 16
+                // This ensures the read aligns to a CPU phase boundary + one access cycle.
+                {
+                    int vras_pos = (sys->vras_phase == 0)
+                        ? sys->vras_sub : (8 + sys->vras_sub);
+                    int wait_ticks = 16 - vras_pos;
+                    if (wait_ticks == 0) wait_ticks = 16;
+                    if (wait_ticks <= 7) wait_ticks += 8;
+                    wait_ticks += 16;
+                    sys->vram_read_wait_counter = (uint8_t)wait_ticks;
                     sys->cpu_wait_vram = true;
                 }
                 uint16_t vaddr = addr - 0x8000;
@@ -249,8 +262,15 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 vaddr &= 0x1FFF;
                 data = mz800_vram_read(sys, vaddr, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if ((addr_hi == 0x0A || addr_hi == 0x0B) && !dmd_mz700 && sys->vram_on && dmd_scrw640) {
-                // A000-BFFF: VRAM only in 640-wide mode
-                if (sys->vras_phase == 0) {
+                // A000-BFFF: VRAM read only in 640-wide mode (same timing as 8000-9FFF)
+                {
+                    int vras_pos = (sys->vras_phase == 0)
+                        ? sys->vras_sub : (8 + sys->vras_sub);
+                    int wait_ticks = 16 - vras_pos;
+                    if (wait_ticks == 0) wait_ticks = 16;
+                    if (wait_ticks <= 7) wait_ticks += 8;
+                    wait_ticks += 16;
+                    sys->vram_read_wait_counter = (uint8_t)wait_ticks;
                     sys->cpu_wait_vram = true;
                 }
                 uint16_t vaddr = addr - 0x8000;
@@ -260,14 +280,16 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 vaddr &= 0x1FFF;
                 data = mz800_vram_read(sys, vaddr, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
-                // C000-CFFF: MZ-700 CG-RAM → VRAM plane I lower half
-                if (sys->vras_phase == 0) {
+                // C000-CFFF: MZ-700 CG-RAM read → VRAM plane I lower half
+                // MZ-700 mode: CPU waits for HBLANK if beam is in visible area
+                if (!sys->mz700_in_hblank) {
                     sys->cpu_wait_vram = true;
                 }
                 data = sys->vram[0][addr & 0x0FFF];
             } else if (addr_hi == 0x0D && dmd_mz700 && sys->rom_e000_on) {
-                // D000-DFFF: MZ-700 attribute VRAM → VRAM plane I upper half
-                if (sys->vras_phase == 0) {
+                // D000-DFFF: MZ-700 char/attr VRAM read → VRAM plane I upper half
+                // MZ-700 mode: CPU waits for HBLANK if beam is in visible area
+                if (!sys->mz700_in_hblank) {
                     sys->cpu_wait_vram = true;
                 }
                 data = sys->vram[0][0x1000 | (addr & 0x0FFF)];
@@ -359,10 +381,21 @@ void mz800_sys_tick(mz800_sys_t* sys)
                     mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
                 }
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
-                // C000-CFFF: MZ-700 CG-RAM write (direct — MZ-700 VRAM is simpler)
+                // C000-CFFF: MZ-700 CG-RAM write
+                // MZ-700 write latch: first write per visible scanline is free,
+                // second and subsequent writes wait for HBLANK
+                if (!sys->mz700_in_hblank && sys->mz700_wr_latch_count > 0) {
+                    sys->cpu_wait_vram = true;
+                }
+                sys->mz700_wr_latch_count++;
                 sys->vram[0][addr & 0x0FFF] = data;
             } else if (addr_hi == 0x0D && dmd_mz700 && sys->rom_e000_on) {
-                // D000-DFFF: MZ-700 attribute VRAM write (direct)
+                // D000-DFFF: MZ-700 char/attr VRAM write
+                // Same write latch logic as C000-CFFF
+                if (!sys->mz700_in_hblank && sys->mz700_wr_latch_count > 0) {
+                    sys->cpu_wait_vram = true;
+                }
+                sys->mz700_wr_latch_count++;
                 sys->vram[0][0x1000 | (addr & 0x0FFF)] = data;
             } else {
                 sys->ram[addr] = data;
@@ -754,6 +787,10 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->vras_phase = 1;
     sys->vras_sub = 0;
     sys->cpu_wait_vram = false;
+    sys->vram_read_wait_counter = 0;
+    sys->mz700_wr_latch_count = 0;
+    sys->mz700_in_hblank = true;  // start in HBLANK (before first visible line)
+    sys->vram_wait_stalls = 0;
     memset(sys->gdg_shift, 0, sizeof(sys->gdg_shift));
     sys->gdg_shift_cnt = 0;
     sys->gdg_vram_col = 0;
