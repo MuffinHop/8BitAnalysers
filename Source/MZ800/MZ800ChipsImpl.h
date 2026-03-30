@@ -124,6 +124,19 @@ typedef struct {
     uint32_t border_top;          // PAL=46, NTSC=20
     uint32_t border_bottom;       // PAL=42, NTSC=20
     uint32_t display_height;      // PAL=288, NTSC=240 (borders + 200 canvas)
+
+    // Active graphics pixel boundaries within line
+    uint32_t active_start;        // PAL=340, NTSC=196 (hsync + back porch + left border)
+    uint32_t active_end;          // PAL=980, NTSC=836 (active_start + 640)
+    // Left/right border boundaries
+    uint32_t border_left_start;   // PAL=186, NTSC=138 (hsync + back porch)
+    uint32_t border_right_end;    // PAL=1114, NTSC=890 (active_end + right border)
+
+    // Vertical active lines (first/last display line including borders)
+    uint32_t vdisp_first_line;    // First visible line (after top blanking)
+    uint32_t vdisp_last_line;     // Last visible line (before bottom blanking), exclusive
+    uint32_t canvas_first_line;   // First active graphics line (after top border)
+    uint32_t canvas_last_line;    // Last active graphics line (before bottom border), exclusive
 } video_timing_t;
 
 typedef struct {
@@ -195,6 +208,53 @@ typedef struct {
 
     // DBUS latch (last byte on data bus — returned for unconnected reads)
     uint8_t dbus_latch;
+
+    // === GDG Display Engine ===
+    // Framebuffer: full beam output (1136×312 PAL or 912×262 NTSC)
+    // Each byte = 4-bit IGRB palette index (0-15), 0 = black
+    // Host converts to RGBA for display texture.
+    #define GDG_FB_MAX_W 1136
+    #define GDG_FB_MAX_H 312
+    uint8_t  fb[GDG_FB_MAX_W * GDG_FB_MAX_H];
+    uint8_t* fb_line;           // Pointer to start of current scanline in fb
+
+    // VRAS arbitration: 8px DISP + 8px CPU = 16px cycle
+    // vras_phase toggles every 8 pixel clocks: 0=DISP(GDG owns VRAM), 1=CPU(VRAM available)
+    uint8_t  vras_phase;        // 0=DISP cycle, 1=CPU cycle
+    uint8_t  vras_sub;          // pixel clock counter within phase (0..7)
+    bool     cpu_wait_vram;     // true if CPU is stalled waiting for VRAM access to complete
+    uint8_t  vram_read_wait_counter; // pixel-tick countdown for MZ-800 VRAM read access cycle
+
+    // MZ-700 mode VRAM access timing (HBLANK-based arbitration)
+    uint8_t  mz700_wr_latch_count;  // writes to VRAM during current visible scanline (0=first free)
+    bool     mz700_in_hblank;       // true when beam is in HBLANK zone (CPU can access VRAM freely)
+
+    // GDG internal shift register (fetched during DISP cycle)
+    // In 320-mode: 1 fetch = 8 pixels (planes I+II or III+IV, 2bpp)
+    // In 640-mode: 1 fetch = 8 pixels (1 plane at a time, 1bpp)
+    uint8_t  gdg_shift[4];     // Shift register per plane (8 bits each)
+    uint8_t  gdg_shift_cnt;    // bits remaining in current shift group
+    uint16_t gdg_vram_col;     // VRAM byte offset for current scanline (GDG fetch pointer)
+    uint16_t gdg_vram_row_base;// VRAM base address for current display row
+    uint8_t  gdg_row_within_char; // For MZ-700 mode: pixel row within character cell (0-7)
+
+    // CPU→VRAM write buffer (single-byte latch, flushed during next DISP cycle)
+    bool     gdg_wr_pending;   // A write is buffered
+    uint16_t gdg_wr_addr;      // Buffered VRAM address
+    uint8_t  gdg_wr_data;      // Buffered data byte
+    bool     gdg_wr_scrw640;   // DMD state at time of write
+    bool     gdg_wr_hicolor;   // DMD state at time of write
+    int      gdg_wr_odd;       // Address odd flag at time of write
+
+    // MZ-700 mode character rendering state
+    uint8_t  mz700_char_code;  // Last fetched character code
+    uint8_t  mz700_attr;       // Last fetched attribute byte
+    uint8_t  mz700_cg_pattern; // CG-RAM fetched pattern for this row
+    uint8_t  mz700_fg_color;   // Current foreground IGRB
+    uint8_t  mz700_bg_color;   // Current background IGRB
+
+    // Debug / status
+    uint32_t vram_wait_stalls; // count of VRAM wait-state insertions this frame (debug)
 } mz800_sys_t;
 
 extern mz800_sys_t g_mz800_sys;
@@ -212,6 +272,8 @@ void     mz800_hwscroll_regs_changed(mz800_sys_t* sys);
 uint16_t mz800_hwscroll_addr(mz800_sys_t* sys, uint16_t addr);
 uint8_t  mz800_vram_read(mz800_sys_t* sys, uint16_t vaddr, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
 void     mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
+void     mz800_gdg_pixel_tick(mz800_sys_t* sys);
+void     mz800_gdg_scanline_start(mz800_sys_t* sys);
 
 // --- PSG SN76489AN (mz800_psg.c) ---
 void psg_step(psg_t* psg);

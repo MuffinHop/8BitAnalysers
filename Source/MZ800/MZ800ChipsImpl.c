@@ -105,6 +105,11 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->gdg_rf_plane = 0;
     sys->gdg_rf_search = 0;
     sys->gdg_palgrp = 0;
+    // Palette defaults match mz800emu: PAL0=0x09, PAL1=0x0F, PAL2=0x09, PAL3=0x0F
+    sys->gdg_pal[0] = 0x09;
+    sys->gdg_pal[1] = 0x0F;
+    sys->gdg_pal[2] = 0x09;
+    sys->gdg_pal[3] = 0x0F;
     sys->gdg_border = 0;
     sys->gdg_sof = 0;
     sys->gdg_sw = 0;
@@ -120,6 +125,29 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->tempo = 0;
     sys->tempo_divider = 0;
     sys->dbus_latch = 0xFF;
+
+    // GDG display engine init
+    memset(sys->fb, 0, sizeof(sys->fb));
+    sys->fb_line = sys->fb;
+    sys->vras_phase = 1;  // Start in CPU phase
+    sys->vras_sub = 0;
+    sys->cpu_wait_vram = false;
+    memset(sys->gdg_shift, 0, sizeof(sys->gdg_shift));
+    sys->gdg_shift_cnt = 0;
+    sys->gdg_vram_col = 0;
+    sys->gdg_vram_row_base = 0;
+    sys->gdg_row_within_char = 0;
+    sys->gdg_wr_pending = false;
+    sys->gdg_wr_addr = 0;
+    sys->gdg_wr_data = 0;
+    sys->gdg_wr_odd = 0;
+    sys->gdg_wr_scrw640 = false;
+    sys->gdg_wr_hicolor = false;
+    sys->mz700_char_code = 0;
+    sys->mz700_attr = 0;
+    sys->mz700_cg_pattern = 0;
+    sys->mz700_fg_color = 0;
+    sys->mz700_bg_color = 0;
 
     // PSG init — all channels off
     memset(&sys->psg, 0, sizeof(sys->psg));
@@ -176,6 +204,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                     // Memory-mapped peripherals
                     if (addr_low == 0x08) {
                         // E008: HBLANK (bit7) + TEMPO (bit0) — NOT the same as port 0xCE
+                        data = 0x00;
                         if (sys->pixel_line >= sys->vt.hblank_start ||
                             sys->pixel_line < sys->vt.hblank_end) {
                             data |= 0x80;
@@ -209,6 +238,10 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 data = sys->rom[addr & 0x3FFF]; // F000-FFFF: upper ROM
             } else if ((addr_hi == 0x08 || addr_hi == 0x09) && !dmd_mz700 && sys->vram_on) {
                 // 8000-9FFF: MZ-800 VRAM (always mapped when vram_on in 800 mode)
+                // WAIT: CPU reads during DISP phase are stalled until CPU phase
+                if (sys->vras_phase == 0) {
+                    sys->cpu_wait_vram = true;
+                }
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 if (dmd_scrw640) vaddr >>= 1;
@@ -217,6 +250,9 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 data = mz800_vram_read(sys, vaddr, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if ((addr_hi == 0x0A || addr_hi == 0x0B) && !dmd_mz700 && sys->vram_on && dmd_scrw640) {
                 // A000-BFFF: VRAM only in 640-wide mode
+                if (sys->vras_phase == 0) {
+                    sys->cpu_wait_vram = true;
+                }
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 vaddr >>= 1;
@@ -225,9 +261,15 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 data = mz800_vram_read(sys, vaddr, addr_is_odd, dmd_scrw640, dmd_hicolor);
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
                 // C000-CFFF: MZ-700 CG-RAM → VRAM plane I lower half
+                if (sys->vras_phase == 0) {
+                    sys->cpu_wait_vram = true;
+                }
                 data = sys->vram[0][addr & 0x0FFF];
             } else if (addr_hi == 0x0D && dmd_mz700 && sys->rom_e000_on) {
                 // D000-DFFF: MZ-700 attribute VRAM → VRAM plane I upper half
+                if (sys->vras_phase == 0) {
+                    sys->cpu_wait_vram = true;
+                }
                 data = sys->vram[0][0x1000 | (addr & 0x0FFF)];
             } else {
                 data = sys->ram[addr];
@@ -282,26 +324,45 @@ void mz800_sys_tick(mz800_sys_t* sys)
             } else if (addr_hi == 0x0F && sys->rom_e000_on) {
                 // discard write under ROM
             } else if ((addr_hi == 0x08 || addr_hi == 0x09) && !dmd_mz700 && sys->vram_on) {
-                // 8000-9FFF: MZ-800 VRAM write
+                // 8000-9FFF: MZ-800 VRAM write (buffered during DISP phase)
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 if (dmd_scrw640) vaddr >>= 1;
                 vaddr = mz800_hwscroll_addr(sys, vaddr);
                 vaddr &= 0x1FFF;
-                mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
+                if (sys->vras_phase == 0) {
+                    // DISP phase: buffer the write for later flush
+                    sys->gdg_wr_pending = true;
+                    sys->gdg_wr_addr = vaddr;
+                    sys->gdg_wr_data = data;
+                    sys->gdg_wr_odd = addr_is_odd;
+                    sys->gdg_wr_scrw640 = dmd_scrw640;
+                    sys->gdg_wr_hicolor = dmd_hicolor;
+                } else {
+                    mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
+                }
             } else if ((addr_hi == 0x0A || addr_hi == 0x0B) && !dmd_mz700 && sys->vram_on && dmd_scrw640) {
-                // A000-BFFF: VRAM write only in 640-wide mode
+                // A000-BFFF: VRAM write only in 640-wide mode (buffered during DISP phase)
                 uint16_t vaddr = addr - 0x8000;
                 int addr_is_odd = vaddr & 0x01;
                 vaddr >>= 1;
                 vaddr = mz800_hwscroll_addr(sys, vaddr);
                 vaddr &= 0x1FFF;
-                mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
+                if (sys->vras_phase == 0) {
+                    sys->gdg_wr_pending = true;
+                    sys->gdg_wr_addr = vaddr;
+                    sys->gdg_wr_data = data;
+                    sys->gdg_wr_odd = addr_is_odd;
+                    sys->gdg_wr_scrw640 = dmd_scrw640;
+                    sys->gdg_wr_hicolor = dmd_hicolor;
+                } else {
+                    mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
+                }
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
-                // C000-CFFF: MZ-700 CG-RAM write
+                // C000-CFFF: MZ-700 CG-RAM write (direct — MZ-700 VRAM is simpler)
                 sys->vram[0][addr & 0x0FFF] = data;
             } else if (addr_hi == 0x0D && dmd_mz700 && sys->rom_e000_on) {
-                // D000-DFFF: MZ-700 attribute VRAM write
+                // D000-DFFF: MZ-700 attribute VRAM write (direct)
                 sys->vram[0][0x1000 | (addr & 0x0FFF)] = data;
             } else {
                 sys->ram[addr] = data;
@@ -600,6 +661,10 @@ void mz800_sys_tick(mz800_sys_t* sys)
             if (sys->line_counter >= sys->vt.lines_per_frame) {
                 sys->line_counter = 0;
             }
+
+            // Start-of-scanline GDG display engine setup
+            mz800_gdg_scanline_start(sys);
+
             bool new_vblank = (sys->line_counter >= sys->vt.vblank_first_line ||
                                sys->line_counter < sys->vt.vblank_resume_line);
             if (new_vblank != sys->vblank_active) {
@@ -608,9 +673,17 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 pioz80_port_event(&sys->pioz80, 0, sys);
             }
         }
+
+        // GDG display engine: emit one pixel per pixel clock
+        mz800_gdg_pixel_tick(sys);
     }
     // Derive CPU-level line_cycle for status register reads
     sys->line_cycle = sys->pixel_line / sys->vt.cpu_divider;
+
+    // VRAM access WAIT — stall CPU during DISP phase
+    if (sys->cpu_wait_vram) {
+        pins |= Z80_WAIT;
+    }
 
     // CTC2 output drives Z80 INT (masked by PPI PC2)
     uint8_t pc2_mask = (sys->ppi.pc.outp >> 2) & 0x01;
@@ -654,7 +727,11 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->gdg_rf_plane = 0;
     sys->gdg_rf_search = 0;
     sys->gdg_palgrp = 0;
-    memset(sys->gdg_pal, 0, sizeof(sys->gdg_pal));
+    // Palette defaults match mz800emu: PAL0=0x09, PAL1=0x0F, PAL2=0x09, PAL3=0x0F
+    sys->gdg_pal[0] = 0x09;
+    sys->gdg_pal[1] = 0x0F;
+    sys->gdg_pal[2] = 0x09;
+    sys->gdg_pal[3] = 0x0F;
     sys->gdg_border = 0;
     sys->gdg_sof = 0;
     sys->gdg_sw = 0;
@@ -670,6 +747,29 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->tempo = 0;
     sys->tempo_divider = 0;
     sys->dbus_latch = 0xFF;
+
+    // GDG display engine reset
+    memset(sys->fb, 0, sizeof(sys->fb));
+    sys->fb_line = sys->fb;
+    sys->vras_phase = 1;
+    sys->vras_sub = 0;
+    sys->cpu_wait_vram = false;
+    memset(sys->gdg_shift, 0, sizeof(sys->gdg_shift));
+    sys->gdg_shift_cnt = 0;
+    sys->gdg_vram_col = 0;
+    sys->gdg_vram_row_base = 0;
+    sys->gdg_row_within_char = 0;
+    sys->gdg_wr_pending = false;
+    sys->gdg_wr_addr = 0;
+    sys->gdg_wr_data = 0;
+    sys->gdg_wr_odd = 0;
+    sys->gdg_wr_scrw640 = false;
+    sys->gdg_wr_hicolor = false;
+    sys->mz700_char_code = 0;
+    sys->mz700_attr = 0;
+    sys->mz700_cg_pattern = 0;
+    sys->mz700_fg_color = 0;
+    sys->mz700_bg_color = 0;
 
     // PSG reset — all channels off
     memset(&sys->psg, 0, sizeof(sys->psg));
