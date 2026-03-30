@@ -34,6 +34,20 @@ typedef struct {
     psg_channel_t ch[PSG_CHANNELS];
 } psg_t;
 
+// --- Z80 PIO (PIOZ80) --- ports 0xFC-0xFF
+// Port A: bit0-1 = 0x03 always, bit4 = ~CTC0_output, bit5 = vblank
+// Port B: general-purpose (open)
+typedef struct {
+    uint8_t port_a_out;   // Port A output latch (written by CPU)
+    uint8_t port_b_out;   // Port B output latch
+    uint8_t io_mask_a;    // Port A IO mask: 1=input, 0=output (default 0xFF = all inputs)
+    uint8_t io_mask_b;    // Port B IO mask
+    uint8_t int_vector;   // Mode 2 interrupt vector
+    uint8_t ctrl_word_a;  // Last control word for port A
+    uint8_t ctrl_word_b;  // Last control word for port B
+    bool    int_pending;  // Interrupt pending from PIOZ80
+} pioz80_t;
+
 // --- CMT hack (MZF direct loading) ---
 #define MZF_HEADER_SIZE 128
 
@@ -87,6 +101,7 @@ typedef struct {
     i8253_t pit;
     kbd_t kbd;
     psg_t psg;
+    pioz80_t pioz80;
     cmt_hack_t cmt;
     joy_dev_t joy[2];
 
@@ -141,6 +156,9 @@ typedef struct {
     uint32_t psg_sub;        // PSG fractional accumulator (counts pixel clocks 0..vt.psg_pixel_divider-1)
     uint32_t tempo;          // Tempo counter (bit 0 = TEMPO signal)
     uint32_t tempo_divider;  // Tempo divider: toggles every 229 scanlines
+    bool     vblank_active;  // True when in vertical blanking interval (fed to PIOZ80 PA5)
+    uint8_t  ctc1_prev_out;  // Previous CTC1 output state (for falling-edge detection → clock CTC2)
+    uint8_t  ctc0_prev_out;  // Previous CTC0 output state (for edge detection → PIOZ80 PA4)
 
     // DBUS latch (last byte on data bus — returned for unconnected reads)
     uint8_t dbus_latch;
@@ -165,6 +183,12 @@ void     mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data, int ad
 // --- PSG SN76489AN (mz800_psg.c) ---
 void psg_step(psg_t* psg);
 void mz800_psg_write_byte(psg_t* psg, uint8_t value);
+
+// --- PIOZ80 (mz800_pioz80.c) ---
+// Returns port A data: bits 0-1=0x03, bit4=~CTC0, bit5=VBLN
+uint8_t  pioz80_read(pioz80_t* pio, uint8_t addr, mz800_sys_t* sys);
+void     pioz80_write(pioz80_t* pio, uint8_t addr, uint8_t value);
+void     pioz80_init(pioz80_t* pio);
 
 // --- CMT hack (mz800_cmt.c) ---
 // Load an MZF file; ROM patches on OUT 0x01/0x02 will use this data.
