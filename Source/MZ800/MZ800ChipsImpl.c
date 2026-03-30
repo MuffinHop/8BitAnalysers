@@ -9,6 +9,50 @@
 
 mz800_sys_t g_mz800_sys;
 
+// --- PAL/NTSC video standard ---
+// NTPL=0 (PAL):  CLK=17,734,475 Hz, CPU=CLK/5=3,546,895 Hz, 312 lines × 1136 px → 50 Hz
+// NTPL=1 (NTSC): CLK=14,318,180 Hz, CPU=CLK/4=3,579,545 Hz, 262 lines × 912 px  → ~60 Hz
+// NTPL selects /4 or /5 to keep CPU near 3.55 MHz in both standards.
+// CTC0 = 16 px clocks tick (CLK/16). PSG = 16 CPU ticks (80 px PAL, 64 px NTSC).
+void mz800_set_video_standard(mz800_sys_t* sys, bool pal) {
+    sys->bPAL = pal;
+    video_timing_t* vt = &sys->vt;
+
+    if (pal) {
+        vt->cpu_divider        = 5;    // NTPL=0: CLK/5 path selected
+        vt->psg_pixel_divider  = 80;   // 16 CPU ticks × 5 px
+        vt->lines_per_frame    = 312;
+        vt->pixels_per_line    = 1136;
+        vt->tempo_toggle_lines = 229;  // 312×50÷(2×34) = 229.4
+        vt->hsync_width        = 80;
+        vt->hblank_start       = 1114;   // after display: 186 + 928
+        vt->hblank_end         = 186;    // back porch ends
+        vt->display_start_col  = 186;    // 80 sync + 106 back porch
+        vt->vblank_first_line  = 288;    // 46 top border + 200 canvas + 42 bottom border
+        vt->vblank_resume_line = 22;     // 3 vsync + 19 back porch
+        vt->vsync_first_line   = 309;    // last 3 lines
+        vt->border_top         = 46;
+        vt->border_bottom      = 42;
+        vt->display_height     = 288;    // 46 + 200 + 42
+    } else {
+        vt->cpu_divider        = 4;    // NTPL=1: CLK/4 path selected
+        vt->psg_pixel_divider  = 64;   // 16 CPU ticks × 4 px
+        vt->lines_per_frame    = 262;
+        vt->pixels_per_line    = 912;
+        vt->tempo_toggle_lines = 231;  // 262×60÷(2×34) = 230.9
+        vt->hsync_width        = 64;
+        vt->hblank_start       = 846;    // after display: 150 + 696, scaled proportionally
+        vt->hblank_end         = 150;    // back porch ends
+        vt->display_start_col  = 150;    // 64 sync + 86 back porch
+        vt->vblank_first_line  = 242;    // 20 top border + 200 canvas + 22 bottom border
+        vt->vblank_resume_line = 18;     // 3 vsync + 15 back porch
+        vt->vsync_first_line   = 259;    // last 3 lines
+        vt->border_top         = 20;
+        vt->border_bottom      = 22;
+        vt->display_height     = 242;    // 20 + 200 + 22
+    }
+}
+
 void mz800_sys_init(mz800_sys_t* sys)
 {
     sys->pins = z80_init(&sys->cpu);
@@ -97,6 +141,7 @@ void mz800_sys_init(mz800_sys_t* sys)
     // GDG defaults
     sys->gdg_dmd = 0;
     sys->mz800_switch = true; // Hardware DIP: MZ-800 mode
+    mz800_set_video_standard(sys, true); // Default: PAL
     sys->gdg_wf_plane = 0;
     sys->gdg_wf_mode = 0;
     sys->gdg_wfrf_vbank = 0;
@@ -111,6 +156,10 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->gdg_scroll_on = false;
     sys->line_counter = 0;
     sys->line_cycle = 0;
+    sys->pixel_tick = 0;
+    sys->pixel_line = 0;
+    sys->ctc0_sub = 0;
+    sys->psg_sub = 0;
     sys->tempo = 0;
     sys->tempo_divider = 0;
     sys->dbus_latch = 0xFF;
@@ -577,6 +626,9 @@ void mz800_sys_tick(mz800_sys_t* sys)
                             hwscroll_regs_changed(sys);
                         } else if (port_hi == 6) {
                             sys->gdg_border = data_io & 0x0F;
+                        } else if (port_hi == 7) {
+                            // PAL/NTSC selection: bit 7 set = NTSC
+                            mz800_set_video_standard(sys, (data_io & 0x80) == 0);
                         }
                         break;
                     }
@@ -681,23 +733,29 @@ void mz800_sys_tick(mz800_sys_t* sys)
             } else {
                 switch (port) {
                     case 0xCE: {
-                        // Video status register
+                        // Video status register (pixel-accurate, PAL/NTSC parameterized)
                         // Bit 7: HBLANK, Bit 6: VBLANK, Bit 5: HSYNC, Bit 4: VSYNC
                         // Bit 1: hardware switch (1=MZ-800), Bit 0: TEMPO
                         data = sys->mz800_switch ? 0x02 : 0x00;
-                        if (sys->line_counter >= 200) {
-                            data |= 0x40; // VBLANK
+                        // VBLANK: outside display area
+                        if (sys->line_counter >= sys->vt.vblank_first_line ||
+                            sys->line_counter < sys->vt.vblank_resume_line) {
+                            data |= 0x40;
                         }
-                        if (sys->line_counter >= 200 && sys->line_counter < 203) {
-                            data |= 0x10; // VSYNC (3 lines)
+                        // VSYNC: last 3 lines
+                        if (sys->line_counter >= sys->vt.vsync_first_line) {
+                            data |= 0x10;
                         }
-                        if (sys->line_cycle >= 200) {
-                            data |= 0x80; // HBLANK
-                            if (sys->line_cycle >= 210) {
-                                data |= 0x20; // HSYNC
-                            }
+                        // HBLANK: outside enabled region
+                        if (sys->pixel_line >= sys->vt.hblank_start ||
+                            sys->pixel_line < sys->vt.hblank_end) {
+                            data |= 0x80;
                         }
-                        data |= (sys->tempo & 1); // TEMPO bit 0
+                        // HSYNC: beginning of line
+                        if (sys->pixel_line < sys->vt.hsync_width) {
+                            data |= 0x20;
+                        }
+                        data |= (sys->tempo & 1);
                         break;
                     }
                     case 0xE0: // IN E0: map CGROM + VRAM
@@ -724,46 +782,66 @@ void mz800_sys_tick(mz800_sys_t* sys)
         }
     }
 
-    // Tick the PIT channels
-    // CTC0: clocked by CLK1M1 (~1.1 MHz = CPU_CLK / 3.2 ≈ every 3 ticks)
-    // CTC1: clocked by HSYNC (once per scanline, at end of line)
-    // CTC2: clocked by CTC1 output (cascaded)
-    if ((sys->tick_count % 3) == 0) {
-        i8253_tick(&sys->pit, 0);
-    }
-    // CTC1 ticks once per scanline (when line_cycle wraps)
-    if (sys->line_cycle == 0 && sys->tick_count > 0) {
-        i8253_tick(&sys->pit, 1);
-        // CTC2 cascaded from CTC1 output
-        if (sys->pit.channels[1].output) {
-            i8253_tick(&sys->pit, 2);
+    // === Timing: advance vt.cpu_divider pixel clocks per CPU tick ===
+    // PAL: cpu_divider=5 (CLK/5). NTSC: cpu_divider=4 (CLK/4). Both give ~3.55 MHz CPU.
+    // CTC0 clocks every 16 pixel clocks (CLK/16, standard-independent).
+    // PSG steps every vt.psg_pixel_divider pixel clocks (16 CPU ticks: 80 px PAL, 64 px NTSC).
+    // Line = vt.pixels_per_line pixel clocks (1136 PAL, 912 NTSC).
+    // Mid-frame PAL↔NTSC switching: counters wrap naturally at new limits.
+    
+    const uint32_t cpu_div = sys->vt.cpu_divider;
+    for (uint32_t px = 0; px < cpu_div; px++) {
+        sys->ctc0_sub++;
+        if (sys->ctc0_sub >= 16) {
+            sys->ctc0_sub = 0;
+            i8253_tick(&sys->pit, 0);
+        }
+        
+        sys->psg_sub++;
+        if (sys->psg_sub >= sys->vt.psg_pixel_divider) {
+            sys->psg_sub = 0;
+            psg_step(&sys->psg);
+        }
+        
+        sys->pixel_line++;
+        if (sys->pixel_line >= sys->vt.pixels_per_line) {
+            sys->pixel_line = 0;
+            sys->line_counter++;
+
+            // CTC1 clocked by HSYNC falling edge (once per line)
+            i8253_tick(&sys->pit, 1);
+            if (sys->pit.channels[1].output) {
+                i8253_tick(&sys->pit, 2);
+            }
+
+            // TEMPO toggles every N scanlines (~34 Hz for both PAL and NTSC)
+            sys->tempo_divider++;
+            if (sys->tempo_divider >= sys->vt.tempo_toggle_lines) {
+                sys->tempo_divider = 0;
+                sys->tempo++;
+            }
+
+            if (sys->line_counter >= sys->vt.lines_per_frame) {
+                sys->line_counter = 0;
+            }
         }
     }
+    // Derive CPU-level line_cycle for status register reads
+    sys->line_cycle = sys->pixel_line / sys->vt.cpu_divider;
 
     // CTC2 output drives Z80 INT (masked by PPI PC2)
-    // PC2 is port C bit 2 output: 0 = interrupt disabled
     uint8_t pc2_mask = (sys->ppi.pc.outp >> 2) & 0x01;
     if (sys->pit.channels[2].output && pc2_mask) {
         pins |= Z80_INT;
     }
     
-    // Check for interrupt acknowledge (M1 + IORQ)
+    // Interrupt acknowledge (M1 + IORQ)
     if ((pins & Z80_M1) && (pins & Z80_IORQ)) {
         sys->pit.channels[2].output = false; 
     }
 
     sys->pins = pins;
     sys->tick_count++;
-
-    // Advance video timing: PAL = 227 cycles/line, 312 lines/frame
-    sys->line_cycle++;
-    if (sys->line_cycle >= 227) {
-        sys->line_cycle = 0;
-        sys->line_counter++;
-        if (sys->line_counter >= 312) {
-            sys->line_counter = 0;
-        }
-    }
 }
 
 void mz800_sys_reset(mz800_sys_t* sys)
@@ -776,6 +854,8 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->rom_e000_on = true;
     sys->vram_on = false;  // OFF at reset — monitor ROM enables via OUT E4
     sys->gdg_dmd = 0;
+    // Preserve PAL/NTSC setting across reset, but refresh timing struct
+    mz800_set_video_standard(sys, sys->bPAL);
     sys->gdg_wf_plane = 0;
     sys->gdg_wf_mode = 0;
     sys->gdg_wfrf_vbank = 0;
@@ -791,6 +871,10 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->gdg_scroll_on = false;
     sys->line_counter = 0;
     sys->line_cycle = 0;
+    sys->pixel_tick = 0;
+    sys->pixel_line = 0;
+    sys->ctc0_sub = 0;
+    sys->psg_sub = 0;
     sys->tempo = 0;
     sys->tempo_divider = 0;
     sys->dbus_latch = 0xFF;

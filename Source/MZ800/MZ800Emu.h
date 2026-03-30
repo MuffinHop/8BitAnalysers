@@ -1,5 +1,7 @@
 #pragma once
 #include "Misc/EmuBase.h"
+#include <vector>
+#include <cstdint>
 
 struct FMZ800GlobalConfig;
 
@@ -28,5 +30,12 @@ public:
     void* GetCPUEmulator(void) const override;
 
 private:
+    bool LoadROM();
+    bool LoadMZF(const char* path);
+
     int16_t MainRAMBankId = -1;
+    bool    bRomLoaded    = false;
+
+    // MZF file buffer — must outlive sys->cmt.body pointer
+    std::vector<uint8_t> MzfBuffer;
 };

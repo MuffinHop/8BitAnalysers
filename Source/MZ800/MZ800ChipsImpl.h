@@ -50,6 +50,36 @@ typedef struct {
     uint8_t state;  // bits: 0=up,1=down,2=left,3=right,4=trig1,5=trig2 (active low)
 } joy_dev_t;
 
+// --- Video timing (PAL/NTSC parameterized) ---
+// NTPL=0 (low) = PAL:  CLK=17,734,475 Hz, CPU=CLK/5=3,546,895 Hz, 1 CPU tick = 5 pixel clocks
+// NTPL=1 (high)= NTSC: CLK=14,318,180 Hz, CPU=CLK/4=3,579,545 Hz, 1 CPU tick = 4 pixel clocks
+// Both give ~3.55 MHz CPU — NTPL selects /4 or /5 divider path so CPU speed is preserved.
+// CTC0 = CLK/16 (pixel clocks — same divisor in px clocks for both standards).
+// PSG  = 16 CPU ticks = 80 px (PAL, 16×5) or 64 px (NTSC, 16×4).
+typedef struct {
+    uint32_t cpu_divider;         // Pixel clocks per CPU tick: PAL=5, NTSC=4
+    uint32_t psg_pixel_divider;   // Pixel clocks per PSG step: PAL=80, NTSC=64
+    uint32_t lines_per_frame;     // PAL=312, NTSC=262
+    uint32_t pixels_per_line;     // PAL=1136, NTSC=912
+    uint32_t tempo_toggle_lines;  // PAL=229, NTSC=231 (both ≈34 Hz: lines×fps÷(2×34))
+
+    // Horizontal timing (pixel clock positions within line)
+    uint32_t hsync_width;         // PAL=80, NTSC=64
+    uint32_t hblank_start;        // first pixel of HBLANK (after display)
+    uint32_t hblank_end;          // last pixel of HBLANK (before display starts)
+    uint32_t display_start_col;   // first visible pixel column
+
+    // Vertical timing (scanline numbers)
+    uint32_t vblank_first_line;   // PAL=288, NTSC=242
+    uint32_t vblank_resume_line;  // PAL=22, NTSC=20  (display resumes here)
+    uint32_t vsync_first_line;    // PAL=309, NTSC=259
+
+    // Canvas geometry
+    uint32_t border_top;          // PAL=46, NTSC=20
+    uint32_t border_bottom;       // PAL=42, NTSC=20
+    uint32_t display_height;      // PAL=288, NTSC=240 (borders + 200 canvas)
+} video_timing_t;
+
 typedef struct {
     z80_t cpu;
     uint64_t pins;
@@ -75,6 +105,10 @@ typedef struct {
     uint8_t gdg_dmd;     // bit3=MZ700, bit2=SCRW640, bit1=HICOLOR, bit0=VBANK
     bool    mz800_switch; // Hardware DIP switch: true=MZ-800 mode
 
+    // Video standard
+    bool    bPAL;          // true=PAL (50Hz, 312 lines), false=NTSC (60Hz, 262 lines)
+    video_timing_t vt;     // current timing parameters (derived from bPAL)
+
     // GDG WF register (decomposed from port 0xCC)
     uint8_t gdg_wf_plane;  // WF plane mask (bits 0-3)
     uint8_t gdg_wf_mode;   // WF mode: 0=SINGLE,1=EXOR,2=OR,3=RESET,4=REPLACE,6=PSET
@@ -96,11 +130,17 @@ typedef struct {
     int     gdg_sea;       // Scroll end address
     bool    gdg_scroll_on; // Scroll enabled (derived from register validation)
 
-    // Video timing — PAL: 312 lines x 227 cy/line
-    uint32_t line_counter;   // Current scanline (0..311)
-    uint32_t line_cycle;     // Cycle within current line (0..226)
+    // Video timing — parameterized by vt (PAL or NTSC)
+    // NTPL selects /4 (NTSC) or /5 (PAL) CPU divider; 1 CPU tick = vt.cpu_divider pixel clocks.
+    // Mid-frame PAL↔NTSC switching: counters wrap naturally at new limits.
+    uint32_t line_counter;   // Current scanline (0..vt.lines_per_frame-1)
+    uint32_t line_cycle;     // CPU cycle within current line (derived)
+    uint32_t pixel_tick;     // Sub-CPU pixel clock accumulator (0..4)
+    uint32_t pixel_line;     // Pixel clock position within line (0..vt.pixels_per_line-1)
+    uint32_t ctc0_sub;       // CTC0 fractional accumulator (counts pixel clocks 0..15)
+    uint32_t psg_sub;        // PSG fractional accumulator (counts pixel clocks 0..vt.psg_pixel_divider-1)
     uint32_t tempo;          // Tempo counter (bit 0 = TEMPO signal)
-    uint32_t tempo_divider;  // Tempo divider counter
+    uint32_t tempo_divider;  // Tempo divider: toggles every 229 scanlines
 
     // DBUS latch (last byte on data bus — returned for unconnected reads)
     uint8_t dbus_latch;
@@ -111,6 +151,7 @@ extern mz800_sys_t g_mz800_sys;
 void mz800_sys_init(mz800_sys_t* sys);
 void mz800_sys_tick(mz800_sys_t* sys);
 void mz800_sys_reset(mz800_sys_t* sys);
+void mz800_set_video_standard(mz800_sys_t* sys, bool pal);
 void mz800_sys_key_down(mz800_sys_t* sys, int key);
 void mz800_sys_key_up(mz800_sys_t* sys, int key);
 
