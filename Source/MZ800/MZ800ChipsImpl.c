@@ -138,8 +138,7 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->vblank_active  = false;
     sys->ctc1_prev_out  = 0;
     sys->ctc0_prev_out  = 0;
-    // CTC0 gate starts enabled (GATE=1)
-    sys->pit.channels[0].gate = true;
+    // CTC0 gate starts LOW (controlled by E008); CTC1/CTC2 gates set in i8253_init
 
     // Joystick — all released (active low = 0xFF)
     sys->joy[0].state = 0xFF;
@@ -149,6 +148,12 @@ void mz800_sys_init(mz800_sys_t* sys)
 void mz800_sys_tick(mz800_sys_t* sys)
 {
     uint64_t pins = z80_tick(&sys->cpu, sys->pins);
+
+    // RETI detection: Z80 sets RETI pin when it decodes the instruction
+    if (pins & Z80_RETI) {
+        pioz80_interrupt_reti(&sys->pioz80, sys);
+    }
+
     bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
     bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
     bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
@@ -244,7 +249,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 if (addr_low <= 0x08) {
                     if (addr_low == 0x08) {
                         // E008: Gate CTC0 (bit0: 1=counting enabled, 0=stopped)
-                        sys->pit.channels[0].gate = (data & 0x01) != 0;
+                        i8253_gate(&sys->pit, 0, data & 0x01);
                     } else if (addr_low & 0x04) {
                         // E004-E007: CTC8253 write
                         i8253_write(&sys->pit, addr_low & 0x03, data);
@@ -411,7 +416,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         mz800_psg_write_byte(&sys->psg, data_io);
                         break;
                     case 0xFC: case 0xFD: case 0xFE: case 0xFF: // Z80 PIO (PIOZ80)
-                        pioz80_write(&sys->pioz80, port & 0x03, data_io);
+                        pioz80_write(&sys->pioz80, port & 0x03, data_io, sys);
                         break;
                     
                     case 0x01: { // CMT hack RHEAD — copy pre-loaded header to Z80 HL
@@ -452,7 +457,11 @@ void mz800_sys_tick(mz800_sys_t* sys)
             uint8_t data = sys->dbus_latch; // default: last bus value
             if (port >= 0xD4 && port <= 0xD7) {
                 if (!dmd_mz700_mode) {
-                    data = i8253_read(&sys->pit, port);
+                    if ((port & 0x03) == 3) {
+                        data = sys->dbus_latch; // D7 (CW register) is write-only
+                    } else {
+                        data = i8253_read(&sys->pit, port);
+                    }
                 }
             } else if (port >= 0xD0 && port <= 0xD3) {
                 if (!dmd_mz700_mode) {
@@ -473,6 +482,12 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 }
             } else {
                 switch (port) {
+                    case 0xCC: // Read WF register
+                        data = sys->gdg_wf_plane | (sys->gdg_wfrf_vbank << 4) | (sys->gdg_wf_mode << 5);
+                        break;
+                    case 0xCD: // Read RF register
+                        data = sys->gdg_rf_plane | (sys->gdg_wfrf_vbank << 4) | (sys->gdg_rf_search << 7);
+                        break;
                     case 0xCE: {
                         // Video status register (pixel-accurate, PAL/NTSC parameterized)
                         // Bit 7: HBLANK, Bit 6: VBLANK, Bit 5: HSYNC, Bit 4: VSYNC
@@ -538,7 +553,12 @@ void mz800_sys_tick(mz800_sys_t* sys)
         sys->ctc0_sub++;
         if (sys->ctc0_sub >= 16) {
             sys->ctc0_sub = 0;
+            uint8_t prev_ctc0_out = sys->pit.channels[0].out;
             i8253_tick(&sys->pit, 0);
+            // CTC0 output change → PIOZ80 port A event (bit 4 = ~CTC0)
+            if (sys->pit.channels[0].out != prev_ctc0_out) {
+                pioz80_port_event(&sys->pioz80, 0, sys);
+            }
         }
         
         sys->psg_sub++;
@@ -553,9 +573,9 @@ void mz800_sys_tick(mz800_sys_t* sys)
             sys->line_counter++;
 
             // CTC1 clocked by HSYNC (once per line); CTC2 clocked by CTC1 falling edge
-            sys->ctc1_prev_out = sys->pit.channels[1].output ? 1 : 0;
+            sys->ctc1_prev_out = sys->pit.channels[1].out;
             i8253_tick(&sys->pit, 1);
-            if (sys->ctc1_prev_out && !sys->pit.channels[1].output) {
+            if (sys->ctc1_prev_out && !sys->pit.channels[1].out) {
                 i8253_tick(&sys->pit, 2);
             }
 
@@ -569,8 +589,13 @@ void mz800_sys_tick(mz800_sys_t* sys)
             if (sys->line_counter >= sys->vt.lines_per_frame) {
                 sys->line_counter = 0;
             }
-            sys->vblank_active = (sys->line_counter >= sys->vt.vblank_first_line ||
-                                   sys->line_counter < sys->vt.vblank_resume_line);
+            bool new_vblank = (sys->line_counter >= sys->vt.vblank_first_line ||
+                               sys->line_counter < sys->vt.vblank_resume_line);
+            if (new_vblank != sys->vblank_active) {
+                sys->vblank_active = new_vblank;
+                // VBLANK edge → PIOZ80 port A event (bit 5)
+                pioz80_port_event(&sys->pioz80, 0, sys);
+            }
         }
     }
     // Derive CPU-level line_cycle for status register reads
@@ -578,17 +603,23 @@ void mz800_sys_tick(mz800_sys_t* sys)
 
     // CTC2 output drives Z80 INT (masked by PPI PC2)
     uint8_t pc2_mask = (sys->ppi.pc.outp >> 2) & 0x01;
-    if (sys->pit.channels[2].output && pc2_mask) {
+    if (sys->pit.channels[2].out && pc2_mask) {
         pins |= Z80_INT;
     }
     // PIOZ80 interrupt pending → Z80 INT
-    if (sys->pioz80.int_pending) {
+    if (sys->pioz80.interrupt == PIOZ80_INT_PENDING) {
         pins |= Z80_INT;
     }
     
     // Interrupt acknowledge (M1 + IORQ)
     if ((pins & Z80_M1) && (pins & Z80_IORQ)) {
-        sys->pit.channels[2].output = false; 
+        if (sys->pioz80.interrupt == PIOZ80_INT_PENDING) {
+            // PIOZ80 has higher priority — deliver IM2 vector
+            uint8_t vector = pioz80_interrupt_ack_im2(&sys->pioz80, sys);
+            Z80_SET_DATA(pins, vector);
+        } else {
+            sys->pit.channels[2].out = 0;
+        }
     }
 
     sys->pins = pins;
@@ -647,7 +678,7 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->vblank_active = false;
     sys->ctc1_prev_out = 0;
     sys->ctc0_prev_out = 0;
-    sys->pit.channels[0].gate = true;
+    // CTC0 gate starts LOW (i8253_init sets it); CTC1/CTC2 already HIGH from init
 
     // Joystick: all released
     sys->joy[0].state = 0xFF;

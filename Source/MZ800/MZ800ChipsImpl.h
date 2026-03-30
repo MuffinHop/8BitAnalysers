@@ -35,17 +35,49 @@ typedef struct {
 } psg_t;
 
 // --- Z80 PIO (PIOZ80) --- ports 0xFC-0xFF
-// Port A: bit0-1 = 0x03 always, bit4 = ~CTC0_output, bit5 = vblank
-// Port B: general-purpose (open)
+// Address mapping (matching real hardware):
+//   bit 0 = port_id:   0=Port A, 1=Port B
+//   bit 1 = addr_type:  0=CTRL,   1=DATA
+//   0xFC=CTRL_A, 0xFD=CTRL_B, 0xFE=DATA_A, 0xFF=DATA_B
+
+typedef enum {
+    PIOZ80_PORT_INT_NONE      = 0x00,
+    PIOZ80_PORT_INT_PENDING   = 0x01,
+    PIOZ80_PORT_INT_RECEIVED  = 0x02,
+    PIOZ80_PORT_INT_REPENDING = 0x03
+} pioz80_port_int_t;
+
+typedef enum {
+    PIOZ80_EXPECT_COMMAND = 0,
+    PIOZ80_EXPECT_IOMCW,
+    PIOZ80_EXPECT_INTMCW
+} pioz80_ctrl_expect_t;
+
+typedef enum {
+    PIOZ80_INT_NONE     = 0x00,
+    PIOZ80_INT_PENDING  = 0x03,
+    PIOZ80_INT_RECEIVED = 0x02
+} pioz80_interrupt_t;
+
 typedef struct {
-    uint8_t port_a_out;   // Port A output latch (written by CPU)
-    uint8_t port_b_out;   // Port B output latch
-    uint8_t io_mask_a;    // Port A IO mask: 1=input, 0=output (default 0xFF = all inputs)
-    uint8_t io_mask_b;    // Port B IO mask
-    uint8_t int_vector;   // Mode 2 interrupt vector
-    uint8_t ctrl_word_a;  // Last control word for port A
-    uint8_t ctrl_word_b;  // Last control word for port B
-    bool    int_pending;  // Interrupt pending from PIOZ80
+    uint8_t mode;               // 0=output, 1=input, 2=bidir, 3=user
+    uint8_t io_mask;            // per-bit: 1=input, 0=output
+    uint8_t icmask;             // interrupt control mask: 0=monitored, 1=masked
+    uint8_t data_output;        // output latch
+    uint8_t masked_input;       // cached masked input state
+    uint8_t interrupt_vector;   // IM2 vector (bit 0 always 0)
+    pioz80_ctrl_expect_t ctrl_expect;
+    uint8_t icfnc;              // 0=OR, 1=AND
+    uint8_t iclvl;              // 0=LOW, 1=HIGH
+    uint8_t icena;              // 0=disabled, 1=enabled
+    pioz80_port_int_t port_int;
+    uint8_t last_intfnc_result; // 0=false, 1=true
+} pioz80_port_t;
+
+typedef struct {
+    pioz80_port_t port[2];       // [0]=A, [1]=B
+    pioz80_interrupt_t interrupt;
+    int8_t interrupt_port_id;    // -1=none, 0=A, 1=B
 } pioz80_t;
 
 // --- CMT hack (MZF direct loading) ---
@@ -185,10 +217,12 @@ void psg_step(psg_t* psg);
 void mz800_psg_write_byte(psg_t* psg, uint8_t value);
 
 // --- PIOZ80 (mz800_pioz80.c) ---
-// Returns port A data: bits 0-1=0x03, bit4=~CTC0, bit5=VBLN
-uint8_t  pioz80_read(pioz80_t* pio, uint8_t addr, mz800_sys_t* sys);
-void     pioz80_write(pioz80_t* pio, uint8_t addr, uint8_t value);
 void     pioz80_init(pioz80_t* pio);
+uint8_t  pioz80_read(pioz80_t* pio, uint8_t addr, mz800_sys_t* sys);
+void     pioz80_write(pioz80_t* pio, uint8_t addr, uint8_t value, mz800_sys_t* sys);
+void     pioz80_port_event(pioz80_t* pio, int port_id, mz800_sys_t* sys);
+uint8_t  pioz80_interrupt_ack_im2(pioz80_t* pio, mz800_sys_t* sys);
+void     pioz80_interrupt_reti(pioz80_t* pio, mz800_sys_t* sys);
 
 // --- CMT hack (mz800_cmt.c) ---
 // Load an MZF file; ROM patches on OUT 0x01/0x02 will use this data.
