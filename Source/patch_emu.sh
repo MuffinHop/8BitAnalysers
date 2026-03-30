@@ -1,0 +1,1 @@
+sed -i '' 's/bool FMZ800Emu::Init/bool FMZ800Emu::Init(const FEmulatorLaunchConfig\& launchConfig)\\n{\\nprintf("FMZ800Emu::Init called\\n");/g' /Users/sofiasavilampi/Repositories/8BitAnalysers/Source/MZ800/MZ800Emu.cpp
