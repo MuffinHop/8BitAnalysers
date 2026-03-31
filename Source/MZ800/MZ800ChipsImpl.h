@@ -185,10 +185,10 @@ typedef struct {
     uint8_t gdg_border;    // Border color IGRB nibble
 
     // GDG hardware scroll (decomposed register values)
-    int     gdg_sof;       // Scroll offset (13-bit: SOF_HI:SOF_LO << 3)
-    int     gdg_sw;        // Scroll width
-    int     gdg_ssa;       // Scroll start address
-    int     gdg_sea;       // Scroll end address
+    uint16_t    gdg_sof;       // Scroll offset (13-bit: SOF_HI:SOF_LO << 3)
+    uint8_t     gdg_sw;        // Scroll width
+    uint8_t     gdg_ssa;       // Scroll start address
+    uint8_t     gdg_sea;       // Scroll end address
     bool    gdg_scroll_on; // Scroll enabled (derived from register validation)
 
     // Video timing — parameterized by vt (PAL or NTSC)
@@ -255,6 +255,19 @@ typedef struct {
 
     // Debug / status
     uint32_t vram_wait_stalls; // count of VRAM wait-state insertions this frame (debug)
+    // --- MZ-800 hardware extensions ---
+    bool gdg_superimpose;      // Superimpose/CKSW state (set by port 0xCF, high byte 0x07)
+    bool forbidden_mode;       // True if GDG is in a forbidden/illegal mode
+
+    // --- Hardware signal emulation (for debugging/analysis) ---
+    bool vras;        // VRAM row strobe (VRAS)
+    bool vcas;        // VRAM column strobe (VCAS)
+    bool voe;         // Video output enable (VOE)
+    uint8_t vod;      // VRAM address output (VOD0..7)
+    bool vrwr;        // VRAM write strobe (VRWR)
+    bool hbln;        // HBLANK signal (HBLN)
+    bool cpu_wr;      // CPU write cycle (CPU.WR)
+    bool vram_wr;     // Actual VRAM write occurs (VRAM.WR)
 } mz800_sys_t;
 
 extern mz800_sys_t g_mz800_sys;
@@ -274,6 +287,8 @@ uint8_t  mz800_vram_read(mz800_sys_t* sys, uint16_t vaddr, int addr_is_odd, bool
 void     mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
 void     mz800_gdg_pixel_tick(mz800_sys_t* sys);
 void     mz800_gdg_scanline_start(mz800_sys_t* sys);
+// GDG per-pixel timing and signal logic
+void     mz800_gdg_tick(mz800_sys_t* sys);
 
 // --- PSG SN76489AN (mz800_psg.c) ---
 void psg_step(psg_t* psg);

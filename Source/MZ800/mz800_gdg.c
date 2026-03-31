@@ -1,3 +1,75 @@
+// --- GDG register write handlers ---
+void mz800_gdg_write_wf(mz800_sys_t* sys, uint8_t data) {
+    sys->gdg_wf_plane = data & 0x0F;
+    sys->gdg_wfrf_vbank = (data >> 4) & 0x01;
+    if (data & 0x80) {
+        sys->gdg_wf_mode = (data >> 5) & 0x06; // 0,2,4,6
+    } else {
+        sys->gdg_wf_mode = (data >> 5) & 0x07; // 0-7
+    }
+}
+
+void mz800_gdg_write_rf(mz800_sys_t* sys, uint8_t data) {
+    sys->gdg_rf_plane = data & 0x0F;
+    sys->gdg_wfrf_vbank = (data >> 4) & 0x01;
+    sys->gdg_rf_search = (data >> 7) & 0x01;
+}
+
+void mz800_gdg_write_dmd(mz800_sys_t* sys, uint8_t data) {
+    sys->gdg_dmd = data & 0x0F;
+    // DMD→CTC0 gate: MZ-800 mode forces gate HIGH,
+    // MZ-700 mode uses cached regct53g7
+    if (data & 0x08) {
+        i8253_gate(&sys->pit, 0, sys->gdg_regct53g7);
+    } else {
+        i8253_gate(&sys->pit, 0, 1);
+    }
+}
+
+void mz800_gdg_write_scroll(mz800_sys_t* sys, uint8_t port_hi, uint8_t data) {
+    switch (port_hi) {
+        case 1: // SOF_LO
+            sys->gdg_sof &= 0x03 << 11;
+            sys->gdg_sof |= (data & 0xFF) << 3;
+            break;
+        case 2: // SOF_HI
+            sys->gdg_sof &= 0xFF << 3;
+            sys->gdg_sof |= (data & 0x03) << 11;
+            break;
+        case 3: // SW
+            sys->gdg_sw = (data & 0x7F) << 6;
+            break;
+        case 4: // SSA
+            sys->gdg_ssa = (data & 0x7F) << 6;
+            break;
+        case 5: // SEA
+            sys->gdg_sea = (data & 0x7F) << 6;
+            break;
+    }
+    mz800_hwscroll_regs_changed(sys);
+}
+
+void mz800_gdg_write_border(mz800_sys_t* sys, uint8_t data) {
+    sys->gdg_border = data & 0x0F;
+}
+
+void mz800_gdg_write_superimpose(mz800_sys_t* sys, uint8_t data) {
+    // PAL/NTSC selection: bit 7 set = NTSC
+    mz800_set_video_standard(sys, (data & 0x80) == 0);
+    // Superimpose/CKSW: bit 0 = superimpose enable, bit 1 = CKSW
+    sys->gdg_superimpose = (data & 0x01) != 0;
+    // CKSW could be stored if needed: bool cksw = (data & 0x02) != 0;
+}
+
+void mz800_gdg_write_palette(mz800_sys_t* sys, uint8_t data) {
+    if (data & 0x40) {
+        sys->gdg_palgrp = data & 0x03;
+    } else {
+        uint8_t pal_value = data & 0x0F;
+        uint8_t pal_idx = (data >> 4) & 0x03;
+        sys->gdg_pal[pal_idx] = pal_value;
+    }
+}
 // mz800_gdg.c — GDG graphics display generator: video timing, hardware scroll, VRAM read/write
 #include "MZ800ChipsImpl.h"
 
@@ -43,26 +115,30 @@ void mz800_set_video_standard(mz800_sys_t* sys, bool pal) {
         vt->pixels_per_line    = 912;
         vt->tempo_toggle_lines = 231;  // 262×60÷(2×34) = 230.9
         vt->hsync_width        = 64;
-        vt->hblank_start       = 846;  // after display: 150 + 696    ← 138+58+640+54=890, wrong?
-        vt->hblank_end         = 150;  // back porch ends             ← wiki: 64+74=138
+        vt->hblank_start       = 846;  // after display: 150 + 696
+        vt->hblank_end         = 150;  // back porch ends
         vt->display_start_col  = 150;  // 64 sync + 86 back porch
-        vt->vblank_first_line  = 242;  // 20 top border + 200 canvas + 22 bottom border
-        vt->vblank_resume_line = 18;   // 3 vsync + 15 back porch
-        vt->vsync_first_line   = 259;  // last 3 lines
-        vt->border_top         = 20;
-        vt->border_bottom      = 22;
-        vt->display_height     = 242;  // 20 + 200 + 22
+
+        // --- Updated vertical timing based on Nobomi reference ---
+        vt->vblank_resume_line = 18;   // first non-black line (border starts)
+        vt->border_top         = 23;   // lines 18–40: 23 lines of top border
+        vt->canvas_first_line  = 41;   // first line with image data inside border
+        vt->canvas_last_line   = 241;  // exclusive, so 200 lines: 41–240
+        vt->border_bottom      = 17;   // lines 241–257: 17 lines of bottom border
+        vt->vblank_first_line  = 258;  // lines 258–261: black
+        vt->vsync_first_line   = 259;  // last 3 lines: 259–261
+
+        vt->display_height     = 240;  // 23 + 200 + 17 = 240 (matches 41–240)
         // Active graphics boundaries (within 912px line)
         // HSYNC(64) + backporch(74) + left border(58) = 196
         vt->active_start       = 196;
         vt->active_end         = 836;  // 196 + 640
         vt->border_left_start  = 138;  // HSYNC(64) + backporch(74)
         vt->border_right_end   = 890;  // 836 + 54
+
         // Vertical active region
-        vt->vdisp_first_line   = 18;   // vblank_resume_line
-        vt->vdisp_last_line    = 242;  // vblank_first_line
-        vt->canvas_first_line  = 38;   // 18 + 20 top border
-        vt->canvas_last_line   = 238;  // 38 + 200
+        vt->vdisp_first_line   = 18;   // first non-black line (border starts)
+        vt->vdisp_last_line    = 258;  // first black line (exclusive)
     }
 }
 
@@ -214,379 +290,50 @@ void mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data,
 // GDG Display Engine — pixel-accurate rendering with VRAS arbitration
 // ============================================================================
 
-// MZ-700 color map: 3-bit attribute color → 4-bit IGRB
-// MZ-700 colors are all bright (intensity bit set), matching mz800emu
-static const uint8_t MZ700_COLORMAP[8] = {
-    0x00, // 0: black
-    0x09, // 1: blue    (I+B)
-    0x0A, // 2: red     (I+R)
-    0x0B, // 3: magenta (I+R+B)
-    0x0C, // 4: green   (I+G)
-    0x0D, // 5: cyan    (I+G+B)
-    0x0E, // 6: yellow  (I+G+R)
-    0x0F, // 7: white   (I+G+R+B)
-};
-
-// Called at the start of each new scanline (pixel_line wrapped to 0)
-void mz800_gdg_scanline_start(mz800_sys_t* sys)
-{
-    uint32_t line = sys->line_counter;
-
-    // Set fb_line pointer for this scanline
-    if (line < GDG_FB_MAX_H) {
-        sys->fb_line = &sys->fb[line * GDG_FB_MAX_W];
+// GDG per-pixel timing and hardware signal logic
+void mz800_gdg_tick(mz800_sys_t* sys) {
+    // --- Hardware signal: HBLN (HBLANK) ---
+    if (sys->pixel_line >= sys->vt.hblank_start || sys->pixel_line < sys->vt.hblank_end) {
+        sys->hbln = true;
     } else {
-        sys->fb_line = 0; // shouldn't happen, but safety
+        sys->hbln = false;
     }
 
-    // Reset per-line GDG state
-    sys->gdg_vram_col = 0;
-    sys->gdg_shift_cnt = 0;
+    // --- Hardware signal: VRAS (VRAM Row Strobe) ---
+    sys->vras = (sys->vras_phase == 0);
 
-    // Compute VRAM row base address for display fetch
-    bool dmd_mz700 = (sys->gdg_dmd & 0x08) != 0;
-    bool in_canvas = (line >= sys->vt.canvas_first_line && line < sys->vt.canvas_last_line);
+    // --- Hardware signal: VCAS (VRAM Column Strobe) ---
+    sys->vcas = (sys->vras_phase == 0 && sys->vras_sub == 0);
 
-    if (in_canvas) {
-        uint32_t canvas_row = line - sys->vt.canvas_first_line;
-        if (dmd_mz700) {
-            // MZ-700 mode: 40 chars per row, 8 pixel rows per character
-            uint32_t char_row = canvas_row / 8;
-            sys->gdg_vram_row_base = char_row * 40;
-            sys->gdg_row_within_char = canvas_row & 7;
-        } else {
-            // MZ-800 mode: all modes use 40 bytes/line per plane pair.
-            // 640 mode gets double width by interleaving even/odd planes,
-            // not by doubling the address range.
-            sys->gdg_vram_row_base = canvas_row * 40;
-        }
+    // --- Hardware signal: VOE (Video Output Enable) ---
+    sys->voe =
+        (sys->line_counter >= sys->vt.vdisp_first_line &&
+         sys->line_counter < sys->vt.vdisp_last_line &&
+         !(sys->pixel_line >= sys->vt.hblank_start || sys->pixel_line < sys->vt.hblank_end));
+
+    // --- Hardware signal: VOD (VRAM address output) ---
+    if (sys->vras_phase == 0) {
+        sys->vod = (uint8_t)(sys->gdg_vram_col & 0xFF);
     } else {
-        sys->gdg_vram_row_base = 0;
+        sys->vod = 0;
     }
-}
 
-// Flush the CPU→VRAM write buffer. Called during DISP cycle.
-static void gdg_flush_write_buffer(mz800_sys_t* sys)
-{
-    if (sys->gdg_wr_pending) {
-        mz800_vram_write(sys, sys->gdg_wr_addr, sys->gdg_wr_data,
-                         sys->gdg_wr_odd, sys->gdg_wr_scrw640, sys->gdg_wr_hicolor);
-        sys->gdg_wr_pending = false;
-    }
-}
-
-// Fetch the next display byte(s) from VRAM into shift registers.
-// Called once per 16-pixel-clock DISP cycle during active graphics area.
-static void gdg_fetch_display_byte(mz800_sys_t* sys)
-{
-    bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
-    bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
-    uint16_t col = sys->gdg_vram_col;
-
-    if (dmd_mz700) {
-        // MZ-700 mode: fetch character + attribute + CG pattern
-        // Layout within VRAM plane I (matching mz800emu):
-        //   0x0000-0x07FF: CG-RAM (character generator patterns, loaded from ROM at boot)
-        //   0x1000-0x17FF: Character codes (40×25 = 1000 bytes)
-        //   0x1800-0x1FFF: Attributes (40×25 = 1000 bytes)
-        uint16_t char_offset = sys->gdg_vram_row_base + col;
-        if (char_offset < 0x0800) {
-            sys->mz700_char_code = sys->vram[0][0x1000 + char_offset];
-            sys->mz700_attr = sys->vram[0][0x1800 + char_offset];
-        } else {
-            sys->mz700_char_code = 0;
-            sys->mz700_attr = 0x70; // white on black default
-        }
-
-        // Decode attribute: bits 6-4 = FG color (3-bit), bits 2-0 = BG color (3-bit)
-        sys->mz700_fg_color = MZ700_COLORMAP[(sys->mz700_attr >> 4) & 0x07];
-        sys->mz700_bg_color = MZ700_COLORMAP[sys->mz700_attr & 0x07];
-
-        // CG-RAM lookup: bit 7 of attribute selects upper CG bank (0x0800 offset)
-        // CG patterns are in VRAM plane I at 0x0000, NOT in ROM
-        uint16_t cg_bank = ((sys->mz700_attr & 0x80) ? 0x0800 : 0x0000);
-        uint16_t cg_addr = cg_bank | (sys->mz700_char_code * 8) | sys->gdg_row_within_char;
-        if (cg_addr < 0x1000) {
-            sys->mz700_cg_pattern = sys->vram[0][cg_addr];
-        } else {
-            sys->mz700_cg_pattern = 0;
-        }
-        sys->gdg_shift_cnt = 8; // 8 pixels per character
-    } else if (dmd_scrw640) {
-        // 640 mode: fetch from same VRAM address across planes
-        // Even 8 pixels from plane I (or III), odd 8 pixels from plane II (or IV)
-        // In 4-color 640 mode (SCRW640+HICOLOR): even from I+III, odd from II+IV
-        uint16_t vaddr_base = sys->gdg_vram_row_base + col;
-        uint16_t vaddr = mz800_hwscroll_addr(sys, vaddr_base);
-        vaddr &= 0x1FFF;
-        bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-        bool dmd_vbank = (sys->gdg_dmd & 0x01) != 0;
-        if (dmd_hicolor) {
-            if (dmd_vbank) {
-                // Undocumented mode 0x07: only planes III+IV
-                sys->gdg_shift[0] = 0;
-                sys->gdg_shift[1] = 0;
-                sys->gdg_shift[2] = sys->vram[2][vaddr]; // plane III
-                sys->gdg_shift[3] = sys->vram[3][vaddr]; // plane IV
-            } else {
-                // Mode 0x06: all 4 planes, even bytes I+III, odd bytes II+IV
-                sys->gdg_shift[0] = sys->vram[0][vaddr]; // plane I (even LSB)
-                sys->gdg_shift[1] = sys->vram[1][vaddr]; // plane II (odd LSB)
-                sys->gdg_shift[2] = sys->vram[2][vaddr]; // plane III (even MSB)
-                sys->gdg_shift[3] = sys->vram[3][vaddr]; // plane IV (odd MSB)
-            }
-        } else {
-            // 640×200 2-color: 2 planes selected by DMD bit 0
-            int p_even = dmd_vbank ? 2 : 0;
-            int p_odd  = p_even + 1;
-            sys->gdg_shift[0] = sys->vram[p_even][vaddr]; // even 8 pixels
-            sys->gdg_shift[1] = sys->vram[p_odd][vaddr];  // odd 8 pixels
-            sys->gdg_shift[2] = 0;
-            sys->gdg_shift[3] = 0;
-        }
-        sys->gdg_shift_cnt = 16; // 16 pixels total
+    // --- Hardware signal: VRWR (VRAM write strobe) ---
+    if (sys->vras_phase == 0 && sys->gdg_wr_pending) {
+        sys->vrwr = true;
     } else {
-        // 320 mode: fetch 1 byte from each active plane (2 or 4 planes)
-        uint16_t vaddr_base = sys->gdg_vram_row_base + col;
-        uint16_t vaddr = mz800_hwscroll_addr(sys, vaddr_base);
-        vaddr &= 0x1FFF;
-        bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-        if (dmd_hicolor) {
-            // 16-color (modes 0x02/0x03): all 4 planes
-            sys->gdg_shift[0] = sys->vram[0][vaddr];
-            sys->gdg_shift[1] = sys->vram[1][vaddr];
-            sys->gdg_shift[2] = sys->vram[2][vaddr];
-            sys->gdg_shift[3] = sys->vram[3][vaddr];
-        } else {
-            // 4-color: 2 planes selected by DMD bit 0
-            int p0 = (sys->gdg_dmd & 0x01) ? 2 : 0;
-            int p1 = p0 + 1;
-            sys->gdg_shift[0] = sys->vram[p0][vaddr];
-            sys->gdg_shift[1] = sys->vram[p1][vaddr];
-            sys->gdg_shift[2] = 0;
-            sys->gdg_shift[3] = 0;
-        }
-        sys->gdg_shift_cnt = 8; // 8 pixels per byte in 320-wide mode
+        sys->vrwr = false;
     }
-    sys->gdg_vram_col++;
-}
 
-// Compute pixel color from shift registers without advancing.
-// The caller is responsible for shifting at the right rate.
-static uint8_t gdg_current_pixel(mz800_sys_t* sys)
-{
-    bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
-    bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
-
-    if (dmd_mz700) {
-        // MZ-700: 1bpp from CG pattern, LSB first (bit 0 = leftmost pixel)
-        uint8_t bit = sys->mz700_cg_pattern & 1;
-        return bit ? sys->mz700_fg_color : sys->mz700_bg_color;
-    } else if (dmd_scrw640) {
-        // 640 mode: even 8 pixels from shift[0], odd 8 from shift[1]
-        // gdg_shift_cnt counts down from 16: 16..9 = even (shift[0]), 8..1 = odd (shift[1])
-        bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-        if (dmd_hicolor) {
-            bool dmd_vbank = (sys->gdg_dmd & 0x01) != 0;
-            uint8_t plt_idx;
-            if (dmd_vbank) {
-                // Undocumented mode 0x07: both palette bits from same plane
-                if (sys->gdg_shift_cnt > 8) {
-                    // Even byte: plane III provides both bits
-                    plt_idx = (sys->gdg_shift[2] & 1) | ((sys->gdg_shift[2] & 1) << 1);
-                } else {
-                    // Odd byte: plane IV provides both bits
-                    plt_idx = (sys->gdg_shift[3] & 1) | ((sys->gdg_shift[3] & 1) << 1);
-                }
-            } else {
-                // Mode 0x06: even pixels from I+III, odd from II+IV
-                if (sys->gdg_shift_cnt > 8) {
-                    plt_idx = (sys->gdg_shift[0] & 1) | ((sys->gdg_shift[2] & 1) << 1);
-                } else {
-                    plt_idx = (sys->gdg_shift[1] & 1) | ((sys->gdg_shift[3] & 1) << 1);
-                }
-            }
-            return sys->gdg_pal[plt_idx];
-        } else {
-            // 640×200 2-color: LSB first from even or odd plane
-            uint8_t byte_idx = (sys->gdg_shift_cnt > 8) ? 0 : 1;
-            uint8_t bit = sys->gdg_shift[byte_idx] & 1;
-            return bit ? sys->gdg_pal[1] : sys->gdg_pal[0];
-        }
+    // --- Hardware signal: CPU.WR (CPU write cycle) ---
+    if ((sys->pins & Z80_MREQ) && (sys->pins & Z80_WR)) {
+        sys->cpu_wr = true;
     } else {
-        // 320 mode: multi-plane bitfield, LSB first (bit 0 = leftmost pixel)
-        bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-        uint8_t plt_idx;
-        if (dmd_hicolor) {
-            bool dmd_vbank = (sys->gdg_dmd & 0x01) != 0;
-            if (dmd_vbank) {
-                // Undocumented mode 0x03: PALGRP-dependent plane swizzle
-                uint8_t palgrp_test = ((sys->gdg_shift[3] & 1) << 1) | (sys->gdg_shift[2] & 1);
-                if (sys->gdg_palgrp == palgrp_test) {
-                    // PALGRP match: all 4 bits from planes III+IV only
-                    plt_idx = (sys->gdg_shift[2] & 1)       |  // plane III → bit 0
-                              ((sys->gdg_shift[3] & 1) << 1) |  // plane IV  → bit 1
-                              ((sys->gdg_shift[2] & 1) << 2) |  // plane III → bit 2
-                              ((sys->gdg_shift[3] & 1) << 3);   // plane IV  → bit 3
-                } else {
-                    // No PALGRP match: normal 4-plane index
-                    plt_idx = (sys->gdg_shift[0] & 1)       |  // plane I   → bit 0
-                              ((sys->gdg_shift[1] & 1) << 1) |  // plane II  → bit 1
-                              ((sys->gdg_shift[2] & 1) << 2) |  // plane III → bit 2
-                              ((sys->gdg_shift[3] & 1) << 3);   // plane IV  → bit 3
-                }
-            } else {
-                // Mode 0x02: standard 16-color
-                plt_idx = (sys->gdg_shift[0] & 1)       |  // plane I  → bit 0
-                          ((sys->gdg_shift[1] & 1) << 1) |  // plane II → bit 1
-                          ((sys->gdg_shift[2] & 1) << 2) |  // plane III→ bit 2
-                          ((sys->gdg_shift[3] & 1) << 3);   // plane IV → bit 3
-            }
-            // Palette group check: if PALGRP matches upper 2 bits, use palette
-            if (sys->gdg_palgrp == ((plt_idx >> 2) & 0x03)) {
-                return sys->gdg_pal[plt_idx & 0x03];
-            }
-            return plt_idx; // Direct 4-bit IGRB
-        } else {
-            // 4-color: 2 planes, LSB first
-            plt_idx = (sys->gdg_shift[0] & 1) | ((sys->gdg_shift[1] & 1) << 1);
-            return sys->gdg_pal[plt_idx];
-        }
-    }
-}
-
-// Advance the shift registers by one pixel position
-static void gdg_shift_advance(mz800_sys_t* sys)
-{
-    bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
-    bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
-
-    if (dmd_mz700) {
-        sys->mz700_cg_pattern >>= 1; // LSB first — shift right
-    } else if (dmd_scrw640) {
-        bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-        // Shift the active byte(s) — LSB first, shift right
-        if (sys->gdg_shift_cnt > 8) {
-            sys->gdg_shift[0] >>= 1;
-            if (dmd_hicolor) sys->gdg_shift[2] >>= 1; // plane III for even
-        } else {
-            sys->gdg_shift[1] >>= 1;
-            if (dmd_hicolor) sys->gdg_shift[3] >>= 1; // plane IV for odd
-        }
-    } else {
-        // 320 mode: shift all active planes — LSB first, shift right
-        bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-        sys->gdg_shift[0] >>= 1;
-        sys->gdg_shift[1] >>= 1;
-        if (dmd_hicolor) {
-            sys->gdg_shift[2] >>= 1;
-            sys->gdg_shift[3] >>= 1;
-        }
-    }
-    sys->gdg_shift_cnt--;
-}
-
-// Called once per pixel clock from the main timing loop.
-// Handles VRAS arbitration, display fetch, pixel output, and write buffer flush.
-void mz800_gdg_pixel_tick(mz800_sys_t* sys)
-{
-    uint32_t px = sys->pixel_line;
-    uint32_t line = sys->line_counter;
-    const video_timing_t* vt = &sys->vt;
-
-    // === VRAS phase arbitration (MZ-800 mode: 8px DISP + 8px CPU) ===
-    sys->vras_sub++;
-    if (sys->vras_sub >= 8) {
-        sys->vras_sub = 0;
-        sys->vras_phase ^= 1; // Toggle DISP ↔ CPU
-
-        if (sys->vras_phase == 0) {
-            // Entering DISP cycle: flush pending CPU write buffer
-            gdg_flush_write_buffer(sys);
-        }
-        // Note: cpu_wait_vram is now managed by vram_read_wait_counter, not phase toggle
+        sys->cpu_wr = false;
     }
 
-    // === MZ-800 VRAM read access cycle countdown ===
-    if (sys->vram_read_wait_counter > 0) {
-        sys->vram_read_wait_counter--;
-        if (sys->vram_read_wait_counter == 0) {
-            sys->cpu_wait_vram = false;
-        }
-    }
-
-    // === MZ-700 HBLANK event: release VRAM wait & reset write latch ===
-    // HBLANK zone starts 3 pixels before canvas end (matching reference: HBLN_FIRST = CANVAS_LAST - 3)
-    // In MZ-700 mode, the CPU can freely access VRAM during HBLANK/VBLANK/border
-    {
-        bool beam_in_hblank_zone = (px >= (vt->active_end - 3)) || (px < vt->active_start);
-        bool beam_in_vblank = (line >= vt->vblank_first_line || line < vt->vblank_resume_line);
-        bool beam_in_canvas_v = (line >= vt->canvas_first_line && line < vt->canvas_last_line);
-        bool new_hblank = beam_in_hblank_zone || beam_in_vblank || !beam_in_canvas_v;
-
-        if (new_hblank && !sys->mz700_in_hblank) {
-            // Rising edge: entering HBLANK — release MZ-700 VRAM wait, reset write latch
-            sys->mz700_wr_latch_count = 0;
-            // If CPU was waiting for HBLANK (MZ-700 mode), release it now
-            if ((sys->gdg_dmd & 0x08) && sys->cpu_wait_vram && sys->vram_read_wait_counter == 0) {
-                sys->cpu_wait_vram = false;
-            }
-        }
-        sys->mz700_in_hblank = new_hblank;
-    }
-
-    // === Determine what to output ===
-    bool in_vblank = (line >= vt->vblank_first_line || line < vt->vblank_resume_line);
-    bool in_hblank = (px >= vt->hblank_start || px < vt->hblank_end);
-    bool in_canvas_v = (line >= vt->canvas_first_line && line < vt->canvas_last_line);
-    bool in_active_h = (px >= vt->active_start && px < vt->active_end);
-    bool in_border_h = !in_hblank && !in_active_h &&
-                       (px >= vt->border_left_start && px < vt->border_right_end);
-    bool in_border_v = !in_vblank && !in_canvas_v;
-
-    uint8_t pixel_color = 0x00; // black (HSYNC/HBLANK/VBLANK)
-
-    if (!in_vblank && !in_hblank) {
-        if (in_canvas_v && in_active_h) {
-            // === Active graphics area ===
-            // Fetch new display byte(s) when shift register is exhausted
-            // Fetches happen during DISP phase at the start of a VRAS cycle
-            if (sys->gdg_shift_cnt == 0 && sys->vras_phase == 0 && sys->vras_sub == 0) {
-                gdg_fetch_display_byte(sys);
-            }
-
-            if (sys->gdg_shift_cnt > 0) {
-                pixel_color = gdg_current_pixel(sys);
-
-                bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
-                bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
-                if (dmd_scrw640) {
-                    // 640 mode: 1 pixel per pixel clock. Always advance.
-                    gdg_shift_advance(sys);
-                } else if (dmd_mz700) {
-                    // MZ-700: 8px chars, 16px wide per char (doubled).
-                    // Advance MZ-700 every other pixel clock.
-                    uint32_t active_px = px - vt->active_start;
-                    if (active_px & 1) {
-                        gdg_shift_advance(sys);
-                    }
-                } else {
-                    // 320 mode: 1 logical pixel = 2 pixel clocks.
-                    // Advance shift register every other pixel clock.
-                    uint32_t active_px = px - vt->active_start;
-                    if (active_px & 1) {
-                        gdg_shift_advance(sys);
-                    }
-                }
-            }
-        } else {
-            // Border area
-            pixel_color = sys->gdg_border;
-        }
-    }
-
-    // Write to framebuffer
-    if (sys->fb_line && px < GDG_FB_MAX_W) {
-        sys->fb_line[px] = pixel_color;
+    // --- Hardware signal: VRAM.WR (actual VRAM write occurs) ---
+    if (sys->vram_wr) {
+        sys->vram_wr = false;
     }
 }

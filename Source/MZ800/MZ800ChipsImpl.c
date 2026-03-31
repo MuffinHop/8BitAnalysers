@@ -153,6 +153,10 @@ void mz800_sys_init(mz800_sys_t* sys)
     sys->mz700_fg_color = 0;
     sys->mz700_bg_color = 0;
 
+    // --- MZ-800 hardware extensions ---
+    sys->gdg_superimpose = false;
+    sys->forbidden_mode = false;
+
     // PSG init — all channels off
     memset(&sys->psg, 0, sizeof(sys->psg));
     for (int i = 0; i < PSG_CHANNELS; i++) {
@@ -176,6 +180,16 @@ void mz800_sys_init(mz800_sys_t* sys)
     // Joystick — all released (active low = 0xFF)
     sys->joy[0].state = 0xFF;
     sys->joy[1].state = 0xFF;
+
+    // --- Hardware signal emulation fields ---
+    sys->vras = false;
+    sys->vcas = false;
+    sys->voe = false;
+    sys->vod = 0;
+    sys->vrwr = false;
+    sys->hbln = false;
+    sys->cpu_wr = false;
+    sys->vram_wr = false;
 }
 
 void mz800_sys_tick(mz800_sys_t* sys)
@@ -190,6 +204,10 @@ void mz800_sys_tick(mz800_sys_t* sys)
     bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
     bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
     bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
+
+    // --- Forbidden/illegal GDG mode detection ---
+    // Forbidden if both SCRW640 and HICOLOR are set (MZ-800 mode)
+    sys->forbidden_mode = (!dmd_mz700) && dmd_scrw640 && dmd_hicolor;
 
     if (pins & Z80_MREQ) {
         const uint16_t addr = Z80_GET_ADDR(pins);
@@ -362,6 +380,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                     sys->gdg_wr_hicolor = dmd_hicolor;
                 } else {
                     mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
+                    sys->vram_wr = true;
                 }
             } else if ((addr_hi == 0x0A || addr_hi == 0x0B) && !dmd_mz700 && sys->vram_on && dmd_scrw640) {
                 // A000-BFFF: VRAM write only in 640-wide mode (buffered during DISP phase)
@@ -379,6 +398,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                     sys->gdg_wr_hicolor = dmd_hicolor;
                 } else {
                     mz800_vram_write(sys, vaddr, data, addr_is_odd, dmd_scrw640, dmd_hicolor);
+                    sys->vram_wr = true;
                 }
             } else if (addr_hi == 0x0C && dmd_mz700 && sys->vram_on) {
                 // C000-CFFF: MZ-700 CG-RAM write
@@ -433,71 +453,26 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 uint8_t data_io = Z80_GET_DATA(pins);
                 switch (port) {
                     case 0xCC: // WF register
-                        sys->gdg_wf_plane = data_io & 0x0F;
-                        sys->gdg_wfrf_vbank = (data_io >> 4) & 0x01;
-                        if (data_io & 0x80) {
-                            sys->gdg_wf_mode = (data_io >> 5) & 0x06; // 0,2,4,6
-                        } else {
-                            sys->gdg_wf_mode = (data_io >> 5) & 0x07; // 0-7
-                        }
+                        mz800_gdg_write_wf(sys, data_io);
                         break;
                     case 0xCD: // RF register
-                        sys->gdg_rf_plane = data_io & 0x0F;
-                        sys->gdg_wfrf_vbank = (data_io >> 4) & 0x01;
-                        sys->gdg_rf_search = (data_io >> 7) & 0x01;
+                        mz800_gdg_write_rf(sys, data_io);
                         break;
                     case 0xCE: // DMD register (4 bits only)
-                        sys->gdg_dmd = data_io & 0x0F;
-                        // DMD→CTC0 gate: MZ-800 mode forces gate HIGH,
-                        // MZ-700 mode uses cached regct53g7
-                        if (data_io & 0x08) {
-                            i8253_gate(&sys->pit, 0, sys->gdg_regct53g7);
-                        } else {
-                            i8253_gate(&sys->pit, 0, 1);
-                        }
+                        mz800_gdg_write_dmd(sys, data_io);
                         break;
-                    case 0xCF: { // Hardware scroll + border (selected by port high byte)
+                    case 0xCF: // Hardware scroll + border + superimpose/CKSW (selected by port high byte)
                         if (port_hi >= 1 && port_hi <= 5) {
-                            switch (port_hi) {
-                                case 1: // SOF_LO
-                                    sys->gdg_sof &= 0x03 << 11;
-                                    sys->gdg_sof |= (data_io & 0xFF) << 3;
-                                    break;
-                                case 2: // SOF_HI
-                                    sys->gdg_sof &= 0xFF << 3;
-                                    sys->gdg_sof |= (data_io & 0x03) << 11;
-                                    break;
-                                case 3: // SW
-                                    sys->gdg_sw = (data_io & 0x7F) << 6;
-                                    break;
-                                case 4: // SSA
-                                    sys->gdg_ssa = (data_io & 0x7F) << 6;
-                                    break;
-                                case 5: // SEA
-                                    sys->gdg_sea = (data_io & 0x7F) << 6;
-                                    break;
-                            }
-                            mz800_hwscroll_regs_changed(sys);
+                            mz800_gdg_write_scroll(sys, port_hi, data_io);
                         } else if (port_hi == 6) {
-                            sys->gdg_border = data_io & 0x0F;
+                            mz800_gdg_write_border(sys, data_io);
                         } else if (port_hi == 7) {
-                            // PAL/NTSC selection: bit 7 set = NTSC
-                            mz800_set_video_standard(sys, (data_io & 0x80) == 0);
+                            mz800_gdg_write_superimpose(sys, data_io);
                         }
                         break;
-                    }
-                    case 0xF0: { // Palette register (single port, bit 6 selects group vs color)
-                        if (data_io & 0x40) {
-                            // Set palette group
-                            sys->gdg_palgrp = data_io & 0x03;
-                        } else {
-                            // Set palette color: bits 4-5 = combination index, bits 0-3 = IGRB
-                            uint8_t pal_value = data_io & 0x0F;
-                            uint8_t pal_idx = (data_io >> 4) & 0x03;
-                            sys->gdg_pal[pal_idx] = pal_value;
-                        }
+                    case 0xF0: // Palette register (single port, bit 6 selects group vs color)
+                        mz800_gdg_write_palette(sys, data_io);
                         break;
-                    }
                     
                     case 0xE0: // OUT E0: 0x0000-0x7FFF to DRAM
                         sys->rom_0000_on = false;
@@ -655,6 +630,60 @@ void mz800_sys_tick(mz800_sys_t* sys)
     
     const uint32_t cpu_div = sys->vt.cpu_divider;
     for (uint32_t px = 0; px < cpu_div; px++) {
+        // --- Hardware signal: HBLN (HBLANK) ---
+        if (sys->pixel_line >= sys->vt.hblank_start || sys->pixel_line < sys->vt.hblank_end) {
+            sys->hbln = true;
+        } else {
+            sys->hbln = false;
+        }
+
+        // --- Hardware signal: VRAS (VRAM Row Strobe) ---
+        // DISP phase (vras_phase==0): GDG owns VRAM, VRAS active
+        // CPU phase (vras_phase==1): CPU can access VRAM, VRAS inactive
+        sys->vras = (sys->vras_phase == 0);
+
+        // --- Hardware signal: VCAS (VRAM Column Strobe) ---
+        // VCAS is strobed at the first pixel of each 8-pixel DISP phase (vras_phase==0 && vras_sub==0)
+        sys->vcas = (sys->vras_phase == 0 && sys->vras_sub == 0);
+
+        // --- Hardware signal: VOE (Video Output Enable) ---
+        // VOE is true during visible scanlines and outside HBLANK
+        sys->voe =
+            (sys->line_counter >= sys->vt.vdisp_first_line &&
+             sys->line_counter < sys->vt.vdisp_last_line &&
+             !(sys->pixel_line >= sys->vt.hblank_start || sys->pixel_line < sys->vt.hblank_end));
+
+        // --- Hardware signal: VOD (VRAM address output) ---
+        // VOD is the current VRAM address output by GDG during DISP phase, else 0
+        if (sys->vras_phase == 0) {
+            // Use the current GDG VRAM address (gdg_vram_col) as VOD
+            sys->vod = (uint8_t)(sys->gdg_vram_col & 0xFF);
+        } else {
+            sys->vod = 0;
+        }
+
+        // --- Hardware signal: VRWR (VRAM write strobe) ---
+        // VRWR pulses true for one pixel tick when a buffered VRAM write is flushed during DISP phase
+        // We detect this by checking if a write is pending and DISP phase is active
+        if (sys->vras_phase == 0 && sys->gdg_wr_pending) {
+            sys->vrwr = true;
+        } else {
+            sys->vrwr = false;
+        }
+
+        // --- Hardware signal: CPU.WR (CPU write cycle) ---
+        // True if the CPU is performing a write cycle to memory (MREQ+WR)
+        if ((sys->pins & Z80_MREQ) && (sys->pins & Z80_WR)) {
+            sys->cpu_wr = true;
+        } else {
+            sys->cpu_wr = false;
+        }
+
+        // --- Hardware signal: VRAM.WR (actual VRAM write occurs) ---
+        // Cleared after one tick; set in the CPU write handler
+        if (sys->vram_wr) {
+            sys->vram_wr = false;
+        }
         sys->ctc0_sub++;
         if (sys->ctc0_sub >= 16) {
             sys->ctc0_sub = 0;
@@ -695,7 +724,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 sys->line_counter = 0;
             }
 
-            // Start-of-scanline GDG display engine setup
+            // Start-of-scanline GDG display engine setup (now in GDG module)
             mz800_gdg_scanline_start(sys);
 
             bool new_vblank = (sys->line_counter >= sys->vt.vblank_first_line ||
@@ -707,8 +736,8 @@ void mz800_sys_tick(mz800_sys_t* sys)
             }
         }
 
-        // GDG display engine: emit one pixel per pixel clock
-        mz800_gdg_pixel_tick(sys);
+        // GDG display engine: emit one pixel per pixel clock (now in GDG module)
+        mz800_gdg_display_pixel(sys);
     }
     // Derive CPU-level line_cycle for status register reads
     sys->line_cycle = sys->pixel_line / sys->vt.cpu_divider;
@@ -808,6 +837,10 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->mz700_fg_color = 0;
     sys->mz700_bg_color = 0;
 
+    // --- MZ-800 hardware extensions ---
+    sys->gdg_superimpose = false;
+    sys->forbidden_mode = false;
+
     // PSG reset — all channels off
     memset(&sys->psg, 0, sizeof(sys->psg));
     for (int i = 0; i < PSG_CHANNELS; i++) {
@@ -830,6 +863,16 @@ void mz800_sys_reset(mz800_sys_t* sys)
     // Joystick: all released
     sys->joy[0].state = 0xFF;
     sys->joy[1].state = 0xFF;
+
+    // --- Hardware signal emulation fields ---
+    sys->vras = false;
+    sys->vcas = false;
+    sys->voe = false;
+    sys->vod = 0;
+    sys->vrwr = false;
+    sys->hbln = false;
+    sys->cpu_wr = false;
+    sys->vram_wr = false;
 }
 
 void mz800_sys_key_down(mz800_sys_t* sys, int key) {
