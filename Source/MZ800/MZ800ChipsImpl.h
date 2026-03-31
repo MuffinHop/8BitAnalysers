@@ -285,10 +285,14 @@ void     mz800_hwscroll_regs_changed(mz800_sys_t* sys);
 uint16_t mz800_hwscroll_addr(mz800_sys_t* sys, uint16_t addr);
 uint8_t  mz800_vram_read(mz800_sys_t* sys, uint16_t vaddr, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
 void     mz800_vram_write(mz800_sys_t* sys, uint16_t vaddr, uint8_t data, int addr_is_odd, bool dmd_scrw640, bool dmd_hicolor);
+uint8_t  mz800_gdg_mem_read(mz800_sys_t* sys, uint16_t addr, uint64_t pins);
+void     mz800_gdg_mem_write(mz800_sys_t* sys, uint16_t addr, uint8_t data);
 void     mz800_gdg_pixel_tick(mz800_sys_t* sys);
 void     mz800_gdg_scanline_start(mz800_sys_t* sys);
-// GDG per-pixel timing and signal logic
 void     mz800_gdg_tick(mz800_sys_t* sys);
+// GDG state init/reset
+void     mz800_gdg_init(mz800_sys_t* sys, bool pal);
+void     mz800_gdg_reset(mz800_sys_t* sys);
 
 // --- PSG SN76489AN (mz800_psg.c) ---
 void psg_step(psg_t* psg);
@@ -305,6 +309,16 @@ void     pioz80_interrupt_reti(pioz80_t* pio, mz800_sys_t* sys);
 // --- CMT hack (mz800_cmt.c) ---
 // Load an MZF file; ROM patches on OUT 0x01/0x02 will use this data.
 bool mz800_sys_load_mzf(mz800_sys_t* sys, const uint8_t* data, uint32_t size);
+
+// GDG register write handlers
+void mz800_gdg_write_wf(mz800_sys_t* sys, uint8_t data);
+void mz800_gdg_write_rf(mz800_sys_t* sys, uint8_t data);
+void mz800_gdg_write_dmd(mz800_sys_t* sys, uint8_t data);
+void mz800_gdg_write_scroll(mz800_sys_t* sys, uint8_t port_hi, uint8_t data);
+void mz800_gdg_write_border(mz800_sys_t* sys, uint8_t data);
+void mz800_gdg_write_superimpose(mz800_sys_t* sys, uint8_t data);
+void mz800_gdg_write_palette(mz800_sys_t* sys, uint8_t data);
+void mz800_gdg_display_pixel(mz800_sys_t* sys);
 
 #ifdef __cplusplus
 }
