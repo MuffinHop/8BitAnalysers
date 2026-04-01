@@ -202,6 +202,11 @@ typedef struct {
     bool hbln;        // HBLANK signal (HBLN)
     bool cpu_wr;      // CPU write cycle (CPU.WR)
     bool vram_wr;     // Actual VRAM write occurs (VRAM.WR)
+
+    // --- IO write hooks (set by analyser for logging) ---
+    void* hook_user;  // opaque pointer passed to hook callbacks
+    void (*pit_write_hook)(void* user, uint16_t pc, uint16_t port, uint8_t data);
+    void (*psg_write_hook)(void* user, uint16_t pc, uint8_t data);
 } mz800_sys_t;
 
 extern mz800_sys_t g_mz800_sys;

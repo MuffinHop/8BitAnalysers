@@ -226,6 +226,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         }
                     } else if (addr_low & 0x04) {
                         i8253_write(&sys->pit, addr_low & 0x03, data);
+                        if (sys->pit_write_hook) sys->pit_write_hook(sys->hook_user, sys->cpu.pc, addr_low & 0x03, data);
                     } else {
                         int key_col = sys->ppi.pa.outp & 0x0F;
                         uint8_t kb_lines = 0xFF;
@@ -259,7 +260,9 @@ void mz800_sys_tick(mz800_sys_t* sys)
             bool dmd_mz700_mode = (sys->gdg_dmd & 0x08) != 0;
             if (port >= 0xD4 && port <= 0xD7) {
                 if (!dmd_mz700_mode) {
-                    i8253_write(&sys->pit, port, Z80_GET_DATA(pins));
+                    uint8_t pit_data = Z80_GET_DATA(pins);
+                    i8253_write(&sys->pit, port, pit_data);
+                    if (sys->pit_write_hook) sys->pit_write_hook(sys->hook_user, sys->cpu.pc, port & 0x03, pit_data);
                 }
             } else if (port >= 0xD0 && port <= 0xD3) {
                 if (!dmd_mz700_mode) {
@@ -329,6 +332,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                     
                     case 0xF2: // PSG SN76489AN write
                         sn76489an_write(&sys->psg, data_io);
+                        if (sys->psg_write_hook) sys->psg_write_hook(sys->hook_user, sys->cpu.pc, data_io);
                         break;
                     // Z80 PIO (0xFC-0xFF) handled by z80pio_tick below
                     

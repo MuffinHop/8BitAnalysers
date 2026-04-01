@@ -198,6 +198,21 @@ bool FMZ800Emu::Init(const FEmulatorLaunchConfig& launchConfig)
     PSGDevice.Init("SN76489AN", this, &g_mz800_sys.psg);
     PIODevice.Init("Z80 PIO", this, &g_mz800_sys.pio);
 
+    // Wire C write hooks so the IODevices receive write logs
+    g_mz800_sys.hook_user = this;
+    g_mz800_sys.pit_write_hook = [](void* user, uint16_t pc, uint16_t port, uint8_t data) {
+        FMZ800Emu* emu = (FMZ800Emu*)user;
+        FAddressRef pcRef;
+        pcRef.Address = pc;
+        emu->PITDevice.WritePIT(pcRef, port, data);
+    };
+    g_mz800_sys.psg_write_hook = [](void* user, uint16_t pc, uint8_t data) {
+        FMZ800Emu* emu = (FMZ800Emu*)user;
+        FAddressRef pcRef;
+        pcRef.Address = pc;
+        emu->PSGDevice.WritePSG(pcRef, data);
+    };
+
     printf("FMZ800Emu::Init almost finished returning true\n");
     return true;
 }
