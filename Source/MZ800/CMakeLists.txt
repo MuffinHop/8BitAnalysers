@@ -73,6 +73,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif ()
 
 
+
 # program source
 file ( GLOB program_src CONFIGURE_DEPENDS
 	./*.cpp ./*.c ./*.h
@@ -82,7 +83,16 @@ file ( GLOB program_src CONFIGURE_DEPENDS
 	SnapshotLoaders/*.cpp SnapshotLoaders/*.h
 	Viewers/*.cpp Viewers/*.h)
 
+# Ensure chips_impl.c is always included
+list(APPEND program_src ${CMAKE_CURRENT_SOURCE_DIR}/chips_impl.c)
+
+
+# Add executable first, then set include directories
 add_executable (MZ800Analyser MACOSX_BUNDLE ${shared_src} ${program_src} ${platform_main} ${vendor_src} )
+target_include_directories(MZ800Analyser PRIVATE
+	${CMAKE_CURRENT_SOURCE_DIR}
+	${CMAKE_CURRENT_SOURCE_DIR}/../Vendor/chips/chips
+)
 
 # set up test
 if(${with_tests})

@@ -1,10 +1,6 @@
 
 
 #include "MZ800ChipsImpl.h"
-#define CHIPS_IMPL
-#include "chips/z80.h"
-#include "chips/i8255.h"
-#include "chips/kbd.h"
 #include <string.h>
 
 #define CHIPS_UTIL_IMPL
@@ -101,20 +97,14 @@ void mz800_sys_init(mz800_sys_t* sys)
     // GDG state initialization
     mz800_gdg_init(sys, true);
 
-    // PSG init — all channels off
-    memset(&sys->psg, 0, sizeof(sys->psg));
-    for (int i = 0; i < PSG_CHANNELS; i++) {
-        sys->psg.ch[i].attn = 15; // OFF
-        sys->psg.ch[i].output = 1;
-    }
-    sys->psg.ch[3].type = 1; // noise
-    sys->psg.ch[3].shift_reg = 1 << 15;
+    // PSG init
+    sn76489an_init(&sys->psg);
 
     // CMT hack
     memset(&sys->cmt, 0, sizeof(sys->cmt));
 
-    // PIOZ80
-    pioz80_init(&sys->pioz80);
+    // Z80 PIO (chips library)
+    z80pio_init(&sys->pio);
     // CTC edge detection / VBLN
     sys->vblank_active  = false;
     sys->ctc1_prev_out  = 0;
@@ -151,10 +141,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
 
     uint64_t pins = z80_tick(&sys->cpu, sys->pins);
 
-    // RETI detection: Z80 sets RETI pin when it decodes the instruction
-    if (pins & Z80_RETI) {
-        pioz80_interrupt_reti(&sys->pioz80, sys);
-    }
+    // RETI handled by z80pio_tick via shared RETI pin
 
     bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
     bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
@@ -341,11 +328,9 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         break;
                     
                     case 0xF2: // PSG SN76489AN write
-                        mz800_psg_write_byte(&sys->psg, data_io);
+                        sn76489an_write(&sys->psg, data_io);
                         break;
-                    case 0xFC: case 0xFD: case 0xFE: case 0xFF: // Z80 PIO (PIOZ80)
-                        pioz80_write(&sys->pioz80, port & 0x03, data_io, sys);
-                        break;
+                    // Z80 PIO (0xFC-0xFF) handled by z80pio_tick below
                     
                     case 0x01: { // CMT hack RHEAD — copy pre-loaded header to Z80 HL
                         if (sys->cmt.has_file) {
@@ -454,8 +439,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
                             data = sys->joy[1].state;
                         }
                         break;
-                    case 0xFC: case 0xFD: case 0xFE: case 0xFF: // Z80 PIO (PIOZ80)
-                        data = pioz80_read(&sys->pioz80, port & 0x03, sys);
+                    case 0xFC: case 0xFD: case 0xFE: case 0xFF: // Z80 PIO handled by z80pio_tick below
                         break;
                 }
             }
@@ -529,18 +513,13 @@ void mz800_sys_tick(mz800_sys_t* sys)
         sys->ctc0_sub++;
         if (sys->ctc0_sub >= 16) {
             sys->ctc0_sub = 0;
-            uint8_t prev_ctc0_out = sys->pit.channels[0].out;
             i8253_tick(&sys->pit, 0);
-            // CTC0 output change → PIOZ80 port A event (bit 4 = ~CTC0)
-            if (sys->pit.channels[0].out != prev_ctc0_out) {
-                pioz80_port_event(&sys->pioz80, 0, sys);
-            }
         }
         
         sys->psg_sub++;
         if (sys->psg_sub >= sys->vt.psg_pixel_divider) {
             sys->psg_sub = 0;
-            psg_step(&sys->psg);
+            sn76489an_tick(&sys->psg);
         }
         
         sys->pixel_line++;
@@ -573,8 +552,6 @@ void mz800_sys_tick(mz800_sys_t* sys)
                                sys->line_counter < sys->vt.vblank_resume_line);
             if (new_vblank != sys->vblank_active) {
                 sys->vblank_active = new_vblank;
-                // VBLANK edge → PIOZ80 port A event (bit 5)
-                pioz80_port_event(&sys->pioz80, 0, sys);
             }
         }
 
@@ -594,17 +571,62 @@ void mz800_sys_tick(mz800_sys_t* sys)
     if (sys->pit.channels[2].out && pc2_mask) {
         pins |= Z80_INT;
     }
-    // PIOZ80 interrupt pending → Z80 INT
-    if (sys->pioz80.interrupt == PIOZ80_INT_PENDING) {
-        pins |= Z80_INT;
-    }
-    
-    // Interrupt acknowledge (M1 + IORQ)
-    if ((pins & Z80_M1) && (pins & Z80_IORQ)) {
-        if (sys->pioz80.interrupt == PIOZ80_INT_PENDING) {
-            // PIOZ80 has higher priority — deliver IM2 vector
-            uint8_t vector = pioz80_interrupt_ack_im2(&sys->pioz80, sys);
-            Z80_SET_DATA(pins, vector);
+
+    // === Z80 PIO tick (chips library) ===
+    // Build PIO pin mask from Z80 pins (shared pin positions: M1, IORQ, RD, INT, RETI, data bus)
+    {
+        uint64_t pio_pins = pins;
+
+        // Address decode: CE if IORQ (without M1) and port 0xFC-0xFF
+        bool is_pio_io = false;
+        if ((pins & Z80_IORQ) && !(pins & Z80_M1)) {
+            uint16_t pio_port = Z80_GET_ADDR(pins) & 0xFF;
+            if (pio_port >= 0xFC) {
+                is_pio_io = true;
+                pio_pins |= Z80PIO_CE;
+                // BASEL: addr bit 0 → port B select
+                if (pio_port & 0x01) pio_pins |= Z80PIO_BASEL;
+                // CDSEL: MZ-800 addr bit 1 inverted (bit1=0 → ctrl, bit1=1 → data)
+                if (!(pio_port & 0x02)) pio_pins |= Z80PIO_CDSEL;
+            }
+        }
+
+        // Port A inputs: bits 0-1 always high, bit 4 = ~CTC0, bit 5 = VBLANK
+        uint8_t pa = 0x03;
+        if (!sys->pit.channels[0].out) pa |= (1 << 4);
+        if (sys->vblank_active) pa |= (1 << 5);
+        Z80PIO_SET_PA(pio_pins, pa);
+        Z80PIO_SET_PB(pio_pins, 0xFF);  // Port B: all high (pullups)
+
+        // IEI: PIO is top of daisy chain
+        pio_pins |= Z80PIO_IEIO;
+
+        // Save interrupt state for acknowledge detection
+        uint8_t pio_int_state_a = sys->pio.port[0].int_state;
+        uint8_t pio_int_state_b = sys->pio.port[1].int_state;
+
+        pio_pins = z80pio_tick(&sys->pio, pio_pins);
+
+        // PIO read: extract data from PIO to Z80 data bus
+        if (is_pio_io && (pins & Z80_RD)) {
+            Z80_SET_DATA(pins, Z80PIO_GET_DATA(pio_pins));
+        }
+
+        // PIO INT → Z80 INT
+        if (pio_pins & Z80PIO_INT) {
+            pins |= Z80_INT;
+        }
+
+        // Interrupt acknowledge: detect PIO just transitioned to SERVICED
+        if ((pins & Z80_M1) && (pins & Z80_IORQ)) {
+            for (int i = 0; i < 2; i++) {
+                uint8_t prev = (i == 0) ? pio_int_state_a : pio_int_state_b;
+                if (!(prev & Z80PIO_INT_SERVICED) &&
+                    (sys->pio.port[i].int_state & Z80PIO_INT_SERVICED)) {
+                    Z80_SET_DATA(pins, Z80PIO_GET_DATA(pio_pins));
+                    break;
+                }
+            }
         }
     }
 
@@ -624,20 +646,14 @@ void mz800_sys_reset(mz800_sys_t* sys)
     // GDG state reset
     mz800_gdg_reset(sys);
 
-    // PSG reset — all channels off
-    memset(&sys->psg, 0, sizeof(sys->psg));
-    for (int i = 0; i < PSG_CHANNELS; i++) {
-        sys->psg.ch[i].attn = 15;
-        sys->psg.ch[i].output = 1;
-    }
-    sys->psg.ch[3].type = 1;
-    sys->psg.ch[3].shift_reg = 1 << 15;
+    // PSG reset
+    sn76489an_reset(&sys->psg);
 
     // CMT: keep loaded file, reset load state
     sys->cmt.header_loaded = false;
 
-    // PIOZ80 reset
-    pioz80_init(&sys->pioz80);
+    // Z80 PIO reset (chips library)
+    z80pio_reset(&sys->pio);
     sys->vblank_active = false;
     sys->ctc1_prev_out = 0;
     sys->ctc0_prev_out = 0;

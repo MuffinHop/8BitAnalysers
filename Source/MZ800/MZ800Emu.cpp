@@ -193,6 +193,11 @@ bool FMZ800Emu::Init(const FEmulatorLaunchConfig& launchConfig)
     CodeAnalysis.Init(this);
     CodeAnalysis.ViewState[0].Enabled = true;
 
+    // Register IO analyzer devices
+    PITDevice.Init("i8253 PIT", this, &g_mz800_sys.pit);
+    PSGDevice.Init("SN76489AN", this, &g_mz800_sys.psg);
+    PIODevice.Init("Z80 PIO", this, &g_mz800_sys.pio);
+
     printf("FMZ800Emu::Init almost finished returning true\n");
     return true;
 }

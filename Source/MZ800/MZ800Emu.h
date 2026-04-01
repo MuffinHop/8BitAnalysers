@@ -1,5 +1,8 @@
 #pragma once
 #include "Misc/EmuBase.h"
+#include <CodeAnalyser/IODevices/I8253Device.h>
+#include <CodeAnalyser/IODevices/SN76489ANDevice.h>
+#include <CodeAnalyser/IODevices/Z80PIODevice.h>
 #include <vector>
 #include <cstdint>
 
@@ -38,4 +41,8 @@ private:
 
     // MZF file buffer — must outlive sys->cmt.body pointer
     std::vector<uint8_t> MzfBuffer;
+
+    FI8253Device     PITDevice;
+    FSN76489ANDevice PSGDevice;
+    FZ80PIODevice    PIODevice;
 };

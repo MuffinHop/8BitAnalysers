@@ -5,80 +5,14 @@ extern "C" {
 #endif
 
 #include "chips/z80.h"
+#include "chips/z80pio.h"
 #include "chips/i8255.h"
 #include "i8253.h"
 #include "chips/kbd.h"
+#include <chips/sn76489an.h>
 
 #include <stdbool.h>
 #include <stdint.h>
-
-// --- PSG (SN76489AN) ---
-#define PSG_CHANNELS 4
-
-typedef struct {
-    uint8_t  type;        // 0=tone, 1=noise
-    uint16_t divider;     // 10-bit tone period (or noise config)
-    uint16_t latch_div;   // latched low nibble for 2-byte tone writes
-    uint8_t  attn;        // 4-bit attenuation (0=max, 15=off)
-    uint16_t timer;       // countdown timer
-    uint8_t  output;      // current output signal (0 or 1)
-    // Noise-specific
-    uint8_t  noise_div_type; // 0-3 (3 = use ch2 divider)
-    uint8_t  noise_type;     // 0=periodic, 1=white
-    uint16_t shift_reg;      // 16-bit LFSR
-} psg_channel_t;
-
-typedef struct {
-    uint8_t       latch_cs;   // last latched channel (0-3)
-    uint8_t       latch_attn; // last latch was attenuation? (0 or 1)
-    psg_channel_t ch[PSG_CHANNELS];
-} psg_t;
-
-// --- Z80 PIO (PIOZ80) --- ports 0xFC-0xFF
-// Address mapping (matching real hardware):
-//   bit 0 = port_id:   0=Port A, 1=Port B
-//   bit 1 = addr_type:  0=CTRL,   1=DATA
-//   0xFC=CTRL_A, 0xFD=CTRL_B, 0xFE=DATA_A, 0xFF=DATA_B
-
-typedef enum {
-    PIOZ80_PORT_INT_NONE      = 0x00,
-    PIOZ80_PORT_INT_PENDING   = 0x01,
-    PIOZ80_PORT_INT_RECEIVED  = 0x02,
-    PIOZ80_PORT_INT_REPENDING = 0x03
-} pioz80_port_int_t;
-
-typedef enum {
-    PIOZ80_EXPECT_COMMAND = 0,
-    PIOZ80_EXPECT_IOMCW,
-    PIOZ80_EXPECT_INTMCW
-} pioz80_ctrl_expect_t;
-
-typedef enum {
-    PIOZ80_INT_NONE     = 0x00,
-    PIOZ80_INT_PENDING  = 0x03,
-    PIOZ80_INT_RECEIVED = 0x02
-} pioz80_interrupt_t;
-
-typedef struct {
-    uint8_t mode;               // 0=output, 1=input, 2=bidir, 3=user
-    uint8_t io_mask;            // per-bit: 1=input, 0=output
-    uint8_t icmask;             // interrupt control mask: 0=monitored, 1=masked
-    uint8_t data_output;        // output latch
-    uint8_t masked_input;       // cached masked input state
-    uint8_t interrupt_vector;   // IM2 vector (bit 0 always 0)
-    pioz80_ctrl_expect_t ctrl_expect;
-    uint8_t icfnc;              // 0=OR, 1=AND
-    uint8_t iclvl;              // 0=LOW, 1=HIGH
-    uint8_t icena;              // 0=disabled, 1=enabled
-    pioz80_port_int_t port_int;
-    uint8_t last_intfnc_result; // 0=false, 1=true
-} pioz80_port_t;
-
-typedef struct {
-    pioz80_port_t port[2];       // [0]=A, [1]=B
-    pioz80_interrupt_t interrupt;
-    int8_t interrupt_port_id;    // -1=none, 0=A, 1=B
-} pioz80_t;
 
 // --- CMT hack (MZF direct loading) ---
 #define MZF_HEADER_SIZE 128
@@ -145,8 +79,8 @@ typedef struct {
     i8255_t ppi;
     i8253_t pit;
     kbd_t kbd;
-    psg_t psg;
-    pioz80_t pioz80;
+    sn76489an_t psg;
+    z80pio_t pio;
     cmt_hack_t cmt;
     joy_dev_t joy[2];
 
@@ -293,18 +227,6 @@ void     mz800_gdg_tick(mz800_sys_t* sys);
 // GDG state init/reset
 void     mz800_gdg_init(mz800_sys_t* sys, bool pal);
 void     mz800_gdg_reset(mz800_sys_t* sys);
-
-// --- PSG SN76489AN (mz800_psg.c) ---
-void psg_step(psg_t* psg);
-void mz800_psg_write_byte(psg_t* psg, uint8_t value);
-
-// --- PIOZ80 (mz800_pioz80.c) ---
-void     pioz80_init(pioz80_t* pio);
-uint8_t  pioz80_read(pioz80_t* pio, uint8_t addr, mz800_sys_t* sys);
-void     pioz80_write(pioz80_t* pio, uint8_t addr, uint8_t value, mz800_sys_t* sys);
-void     pioz80_port_event(pioz80_t* pio, int port_id, mz800_sys_t* sys);
-uint8_t  pioz80_interrupt_ack_im2(pioz80_t* pio, mz800_sys_t* sys);
-void     pioz80_interrupt_reti(pioz80_t* pio, mz800_sys_t* sys);
 
 // --- CMT hack (mz800_cmt.c) ---
 // Load an MZF file; ROM patches on OUT 0x01/0x02 will use this data.
