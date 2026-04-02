@@ -311,9 +311,6 @@ void FMZ800Emu::Tick()
         const float frameTime = std::min(1000000.0f / ImGui::GetIO().Framerate, 32000.0f);
         const uint32_t microSeconds = std::max(static_cast<uint32_t>(frameTime), uint32_t(1));
 
-        static int frame_cnt = 0;
-        if (frame_cnt++ < 3) fprintf(stderr, "MZ800: Tick frame %d, %u us\n", frame_cnt, microSeconds);
-
         CodeAnalysis.OnFrameStart();
         StoreRegisters_Z80(CodeAnalysis);
         mz800_sys_exec(&g_mz800_sys, microSeconds);
@@ -468,108 +465,6 @@ void FMZ800Emu::DrawEmulatorUI()
                 FrameBuffer[i] = pal[pix[i] & 0x0F];
 
             ImGui_UpdateTextureRGBA(ScreenTexture, FrameBuffer);
-
-            // Diagnostic: dump VRAM state once after ~120 frames
-            {
-                static int diag_frame = 0;
-                diag_frame++;
-                if (diag_frame == 120) {
-                    FILE* df = fopen("/tmp/mz800_diag.txt", "w");
-                    if (df) {
-                    const gdg_whid65040_t* gdg = &g_mz800_sys.gdg;
-                    // CG-RAM occupancy (vram[0][0x0000-0x0FFF])
-                    int cgram_nonzero = 0;
-                    for (int i = 0; i < 0x1000; i++)
-                        if (gdg->vram[0][i] != 0) cgram_nonzero++;
-                    // Char code occupancy (vram[0][0x1000-0x17FF])
-                    int charcode_nonzero = 0;
-                    for (int i = 0x1000; i < 0x1800; i++)
-                        if (gdg->vram[0][i] != 0) charcode_nonzero++;
-                    // Attr occupancy (vram[0][0x1800-0x1FFF])
-                    int attr_nonzero = 0;
-                    for (int i = 0x1800; i < 0x2000; i++)
-                        if (gdg->vram[0][i] != 0) attr_nonzero++;
-                    // Indexed framebuffer non-zero pixels
-                    int fb_nonzero = 0;
-                    for (size_t i = 0; i < num_pixels; i++)
-                        if (pix[i] != 0) fb_nonzero++;
-                    // RGBA non-black pixels
-                    int rgba_nonblack = 0;
-                    for (size_t i = 0; i < num_pixels; i++)
-                        if (FrameBuffer[i] != 0xFF000000 && FrameBuffer[i] != 0) rgba_nonblack++;
-
-                    fprintf(df, "DMD=%02X banks: rom0=%d rom1=%d romE=%d vram=%d\n",
-                        gdg->dmd, gdg->bank_rom0000, gdg->bank_rom1000,
-                        gdg->bank_rome000, gdg->bank_vram);
-                    fprintf(df, "CG-RAM nonzero: %d/4096\n", cgram_nonzero);
-                    fprintf(df, "CharCodes nonzero: %d/2048  Attrs nonzero: %d/2048\n",
-                        charcode_nonzero, attr_nonzero);
-                    fprintf(df, "First 10 charcodes: ");
-                    for (int i = 0; i < 10; i++) fprintf(df, "%02X ", gdg->vram[0][0x1000 + i]);
-                    fprintf(df, "\n");
-                    fprintf(df, "First 10 attrs: ");
-                    for (int i = 0; i < 10; i++) fprintf(df, "%02X ", gdg->vram[0][0x1800 + i]);
-                    fprintf(df, "\n");
-                    fprintf(df, "CG-RAM 'A'(0x41) pattern: ");
-                    for (int i = 0; i < 8; i++) fprintf(df, "%02X ", gdg->vram[0][0x41 * 8 + i]);
-                    fprintf(df, "\n");
-                    fprintf(df, "CGROM 'A'(0x41) pattern: ");
-                    for (int i = 0; i < 8; i++) fprintf(df, "%02X ", g_mz800_sys.rom[0x1000 + 0x41 * 8 + i]);
-                    fprintf(df, "\n");
-                    fprintf(df, "FB indexed nonzero: %d/%zu  RGBA nonblack: %d/%zu\n",
-                        fb_nonzero, num_pixels, rgba_nonblack, num_pixels);
-                    fprintf(df, "Screen rect: x=%d y=%d w=%d h=%d  Frame: %dx%d\n",
-                        disp.screen.x, disp.screen.y, disp.screen.width, disp.screen.height, fbW, fbH);
-                    fprintf(df, "canvas: first=%d last=%d  active: start=%d end=%d\n",
-                        gdg->vt.canvas_first_line, gdg->vt.canvas_last_line,
-                        gdg->vt.active_start, gdg->vt.active_end);
-                    fprintf(df, "PC=%04X tick_count=%u\n", g_mz800_sys.cpu.pc, g_mz800_sys.tick_count);
-                    fprintf(df, "vdisp: first=%d last=%d  border_left=%d border_right=%d\n",
-                        gdg->vt.vdisp_first_line, gdg->vt.vdisp_last_line,
-                        gdg->vt.border_left_start, gdg->vt.border_right_end);
-                    // Dump ROM bytes around current PC
-                    uint16_t pc = g_mz800_sys.cpu.pc;
-                    fprintf(df, "ROM bytes at PC=%04X: ", pc);
-                    for (int i = -4; i < 16; i++) {
-                        uint16_t a = pc + i;
-                        uint8_t b;
-                        if (a >= 0xE000 && g_mz800_sys.gdg.bank_rome000)
-                            b = g_mz800_sys.rom[a & 0x3FFF];
-                        else
-                            b = g_mz800_sys.ram[a];
-                        fprintf(df, "%02X ", b);
-                    }
-                    fprintf(df, "\n");
-                    // Dump ROM at E800-E840 to see boot sequence
-                    fprintf(df, "ROM E800-E840: ");
-                    for (int i = 0; i < 0x40; i++)
-                        fprintf(df, "%02X ", g_mz800_sys.rom[0x2800 + i]);
-                    fprintf(df, "\n");
-                    // Check if CPU is in a HALT or tight loop
-                    fprintf(df, "CPU: halted=%d iff1=%d iff2=%d\n",
-                        (g_mz800_sys.cpu.pins & Z80_HALT) ? 1 : 0,
-                        g_mz800_sys.cpu.iff1, g_mz800_sys.cpu.iff2);
-                    fclose(df);
-                    }
-                    // Write screen capture as PPM for visual inspection
-                    FILE* ppm = fopen("/tmp/mz800_screen.ppm", "wb");
-                    if (ppm) {
-                        int sx = disp.screen.x, sy = disp.screen.y;
-                        int sw = disp.screen.width, sh = disp.screen.height;
-                        fprintf(ppm, "P6\n%d %d\n255\n", sw, sh);
-                        for (int y = 0; y < sh; y++) {
-                            for (int x = 0; x < sw; x++) {
-                                uint32_t rgba = FrameBuffer[(sy + y) * fbW + (sx + x)];
-                                uint8_t r = rgba & 0xFF;
-                                uint8_t g = (rgba >> 8) & 0xFF;
-                                uint8_t b = (rgba >> 16) & 0xFF;
-                                fputc(r, ppm); fputc(g, ppm); fputc(b, ppm);
-                            }
-                        }
-                        fclose(ppm);
-                    }
-                }
-            }
 
             // UV crop to visible screen area
             const chips_rect_t scr = disp.screen;
