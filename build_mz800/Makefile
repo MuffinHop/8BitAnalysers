@@ -777,6 +777,30 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s
 
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.o
+
+# target to build an object file
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
+
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.i
+
+# target to preprocess a source file
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
+
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.s
+
+# target to generate assembly for a file
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
+
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.o
 
@@ -3537,30 +3561,6 @@ mz800_cmt.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_cmt.c.s
 .PHONY : mz800_cmt.c.s
 
-mz800_gdg.o: mz800_gdg.c.o
-.PHONY : mz800_gdg.o
-
-# target to build an object file
-mz800_gdg.c.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_gdg.c.o
-.PHONY : mz800_gdg.c.o
-
-mz800_gdg.i: mz800_gdg.c.i
-.PHONY : mz800_gdg.i
-
-# target to preprocess a source file
-mz800_gdg.c.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_gdg.c.i
-.PHONY : mz800_gdg.c.i
-
-mz800_gdg.s: mz800_gdg.c.s
-.PHONY : mz800_gdg.s
-
-# target to generate assembly for a file
-mz800_gdg.c.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_gdg.c.s
-.PHONY : mz800_gdg.c.s
-
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -3648,6 +3648,9 @@ help:
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.o"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.i"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.s"
+	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.o"
+	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.i"
+	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.s"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.o"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.i"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.s"
@@ -3993,9 +3996,6 @@ help:
 	@echo "... mz800_cmt.o"
 	@echo "... mz800_cmt.i"
 	@echo "... mz800_cmt.s"
-	@echo "... mz800_gdg.o"
-	@echo "... mz800_gdg.i"
-	@echo "... mz800_gdg.s"
 .PHONY : help
 
 

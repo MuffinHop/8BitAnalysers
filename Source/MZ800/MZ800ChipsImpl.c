@@ -2,10 +2,69 @@
 
 #include "MZ800ChipsImpl.h"
 #include <string.h>
+#include <stdio.h>
+#include <stdarg.h>
+
+/* Boot trace: targeted events only */
+static FILE* _bt_file = NULL;
+static int _bt_count = 0;
+static bool _bt_done = false;
+
+static void _bt_log(const char* fmt, ...) {
+    if (_bt_done) return;
+    if (!_bt_file) {
+        _bt_file = fopen("/tmp/mz800_boot_trace2.txt", "w");
+        if (!_bt_file) { _bt_done = true; return; }
+    }
+    va_list ap;
+    va_start(ap, fmt);
+    vfprintf(_bt_file, fmt, ap);
+    va_end(ap);
+    _bt_count++;
+    if (_bt_count % 50 == 0) fflush(_bt_file);
+    if (_bt_count >= 2000) { fflush(_bt_file); fclose(_bt_file); _bt_file = NULL; _bt_done = true; }
+}
 
 #define CHIPS_UTIL_IMPL
 #include "util/z80dasm.h"
 #include "util/m6502dasm.h"
+
+/* SN76489AN volume table: 2dB steps, 0=max, 15=off.
+   Values are linear amplitude scaled to 0..1 range (per channel, summed). */
+static const float _sn76489_vol[16] = {
+    1.0f, 0.7943f, 0.6310f, 0.5012f, 0.3981f, 0.3162f, 0.2512f, 0.1995f,
+    0.1585f, 0.1259f, 0.1000f, 0.0794f, 0.0631f, 0.0501f, 0.0398f, 0.0f,
+};
+
+/* Mix all 4 PSG channels into a single float sample */
+static float _mz800_psg_sample(sn76489an_t* psg) {
+    float s = 0.0f;
+    for (int i = 0; i < SN76489AN_NUM_CHANNELS; i++) {
+        if (psg->chn[i].output) {
+            s += _sn76489_vol[psg->chn[i].attn];
+        }
+    }
+    return s * 0.25f;  /* normalize: 4 channels */
+}
+
+/* DC adjustment filter */
+#define _MZ800_DCADJ_BUFLEN (512)
+static struct {
+    float sum;
+    int pos;
+    float buf[_MZ800_DCADJ_BUFLEN];
+} _mz800_dcadj;
+
+static float _mz800_dcadjust(float s) {
+    _mz800_dcadj.sum -= _mz800_dcadj.buf[_mz800_dcadj.pos];
+    _mz800_dcadj.sum += s;
+    _mz800_dcadj.buf[_mz800_dcadj.pos] = s;
+    _mz800_dcadj.pos = (_mz800_dcadj.pos + 1) & (_MZ800_DCADJ_BUFLEN - 1);
+    return s - (_mz800_dcadj.sum / _MZ800_DCADJ_BUFLEN);
+}
+
+/* Fixed-point scale for audio sample timing */
+#define _MZ800_AUDIO_FP_SCALE (128)
 
 mz800_sys_t g_mz800_sys;
 
@@ -87,15 +146,17 @@ void mz800_sys_init(mz800_sys_t* sys)
     kbd_register_key(&sys->kbd, 145, 9, 4, 0);
     kbd_register_key(&sys->kbd, 146, 9, 3, 0);
     
-    // Initial memory state — matches mz800emu memory_reset():
-    // ROM_0000, ROM_1000, ROM_E000 on; VRAM off (monitor ROM enables via OUT E4)
-    sys->rom_0000_on = true;
-    sys->rom_1000_on = true;
-    sys->rom_e000_on = true;
-    sys->vram_on = false;
+    // Initial memory state is set by GDG init (bank_rom0000 etc.)
 
     // GDG state initialization
-    mz800_gdg_init(sys, true);
+    {
+        gdg_whid65040_desc_t gdg_desc;
+        memset(&gdg_desc, 0, sizeof(gdg_desc));
+        gdg_desc.pal = true;
+        gdg_desc.mz800_mode = true;
+        gdg_desc.cgrom = &sys->rom[0x1000];
+        gdg_whid65040_init(&sys->gdg, &gdg_desc);
+    }
 
     // PSG init
     sn76489an_init(&sys->psg);
@@ -105,8 +166,7 @@ void mz800_sys_init(mz800_sys_t* sys)
 
     // Z80 PIO (chips library)
     z80pio_init(&sys->pio);
-    // CTC edge detection / VBLN
-    sys->vblank_active  = false;
+    // CTC edge detection
     sys->ctc1_prev_out  = 0;
     sys->ctc0_prev_out  = 0;
     // CTC0 gate starts LOW (controlled by E008); CTC1/CTC2 gates set in i8253_init
@@ -114,26 +174,12 @@ void mz800_sys_init(mz800_sys_t* sys)
     // Joystick — all released (active low = 0xFF)
     sys->joy[0].state = 0xFF;
     sys->joy[1].state = 0xFF;
-
-    // --- Hardware signal emulation fields ---
-    sys->vras = false;
-    sys->vcas = false;
-    sys->voe = false;
-    sys->vod = 0;
-    sys->vrwr = false;
-    sys->hbln = false;
-    sys->cpu_wr = false;
-    sys->vram_wr = false;
 }
 
 void mz800_sys_tick(mz800_sys_t* sys)
 {
-
-    // --- GDG: update per-pixel timing and VRAM wait logic ---
-    mz800_gdg_tick(sys);
-
-    // --- Z80 WAIT pin assertion for VRAM stalls ---
-    if (sys->cpu_wait_vram) {
+    // --- Z80 WAIT pin assertion for GDG VRAM stalls ---
+    if (sys->gdg.cpu_wait) {
         sys->pins |= Z80_WAIT;
     } else {
         sys->pins &= ~Z80_WAIT;
@@ -143,33 +189,34 @@ void mz800_sys_tick(mz800_sys_t* sys)
 
     // RETI handled by z80pio_tick via shared RETI pin
 
-    bool dmd_scrw640 = (sys->gdg_dmd & 0x04) != 0;
-    bool dmd_hicolor = (sys->gdg_dmd & 0x02) != 0;
-    bool dmd_mz700   = (sys->gdg_dmd & 0x08) != 0;
-
-    // --- Forbidden/illegal GDG mode detection ---
-    // Forbidden if both SCRW640 and HICOLOR are set (MZ-800 mode)
-    sys->forbidden_mode = (!dmd_mz700) && dmd_scrw640 && dmd_hicolor;
+    bool dmd_mz700   = (sys->gdg.dmd & GDG_DMD_MZ700) != 0;
 
     if (pins & Z80_MREQ) {
         const uint16_t addr = Z80_GET_ADDR(pins);
         if (pins & Z80_RD) {
             uint8_t data = 0xFF;
             uint8_t addr_hi = addr >> 12;
-            if (addr_hi == 0x00 && sys->rom_0000_on) {
+            if (addr_hi == 0x00 && sys->gdg.bank_rom0000) {
                 data = sys->rom[addr];
-            } else if (addr_hi == 0x01 && sys->rom_1000_on) {
+            } else if (addr_hi == 0x01 && sys->gdg.bank_rom1000) {
                 data = sys->rom[addr];
-            } else if (addr_hi == 0x0E && sys->rom_e000_on) {
+                /* Trace first CGROM read */
+                static int cgrd_cnt = 0;
+                if (cgrd_cnt < 5) {
+                    _bt_log("RD CGROM %04X=%02X PC=%04X tick=%u\n",
+                        addr, data, sys->cpu.pc, sys->tick_count);
+                    cgrd_cnt++;
+                }
+            } else if (addr_hi == 0x0E && sys->gdg.bank_rome000) {
                 uint16_t addr_low = addr & 0x0FFF;
                 if (addr_low <= 0x08) {
                     if (addr_low == 0x08) {
                         data = 0x00;
-                        if (sys->pixel_line >= sys->vt.hblank_start ||
-                            sys->pixel_line < sys->vt.hblank_end) {
+                        if (sys->gdg.pixel_line >= sys->gdg.vt.hblank_start ||
+                            sys->gdg.pixel_line < sys->gdg.vt.hblank_end) {
                             data |= 0x80;
                         }
-                        data |= (sys->tempo & 1);
+                        data |= (sys->gdg.tempo & 1);
                     } else if (addr_low & 0x04) {
                         if (addr_low == 0x07) {
                             data = sys->dbus_latch;
@@ -192,13 +239,15 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 } else {
                     data = sys->rom[addr & 0x3FFF];
                 }
-            } else if (addr_hi == 0x0F && sys->rom_e000_on) {
+            } else if (addr_hi == 0x0F && sys->gdg.bank_rome000) {
                 data = sys->rom[addr & 0x3FFF];
             } else if (
                 (addr_hi == 0x08 || addr_hi == 0x09 || addr_hi == 0x0A || addr_hi == 0x0B || addr_hi == 0x0C || addr_hi == 0x0D)
             ) {
-                data = mz800_gdg_mem_read(sys, addr, pins);
-                if (data == 0xFF) {
+                uint8_t vdata;
+                if (gdg_whid65040_mem_rd(&sys->gdg, addr, &vdata)) {
+                    data = vdata;
+                } else {
                     data = sys->ram[addr];
                 }
             } else {
@@ -209,20 +258,18 @@ void mz800_sys_tick(mz800_sys_t* sys)
         } else if (pins & Z80_WR) {
             uint8_t data = Z80_GET_DATA(pins);
             uint8_t addr_hi = addr >> 12;
-            if (addr_hi == 0x00 && sys->rom_0000_on) {
+            if (addr_hi == 0x00 && sys->gdg.bank_rom0000) {
                 // discard write under ROM
-            } else if (addr_hi == 0x01 && sys->rom_1000_on) {
+            } else if (addr_hi == 0x01 && sys->gdg.bank_rom1000) {
                 // discard write under CGROM
-            } else if (addr_hi == 0x0E && sys->rom_e000_on) {
+            } else if (addr_hi == 0x0E && sys->gdg.bank_rome000) {
                 uint16_t addr_low = addr & 0x0FFF;
                 if (addr_low <= 0x08) {
                     if (addr_low == 0x08) {
-                        uint8_t new_g7 = data & 0x01;
-                        if (new_g7 != sys->gdg_regct53g7) {
-                            sys->gdg_regct53g7 = new_g7;
-                            if (sys->gdg_dmd & 0x08) {
-                                i8253_gate(&sys->pit, 0, new_g7);
-                            }
+                        bool prev_gate = sys->gdg.ctc0_gate;
+                        gdg_whid65040_write_e008(&sys->gdg, data);
+                        if (sys->gdg.ctc0_gate != prev_gate) {
+                            i8253_gate(&sys->pit, 0, sys->gdg.ctc0_gate);
                         }
                     } else if (addr_low & 0x04) {
                         i8253_write(&sys->pit, addr_low & 0x03, data);
@@ -241,12 +288,26 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         i8255_tick(&sys->ppi, ppi_pins);
                     }
                 }
-            } else if (addr_hi == 0x0F && sys->rom_e000_on) {
+            } else if (addr_hi == 0x0F && sys->gdg.bank_rome000) {
                 // discard write under ROM
             } else if (
                 (addr_hi == 0x08 || addr_hi == 0x09 || addr_hi == 0x0A || addr_hi == 0x0B || addr_hi == 0x0C || addr_hi == 0x0D)
             ) {
-                mz800_gdg_mem_write(sys, addr, data);
+                /* Trace VRAM writes */
+                static int vwr_cnt = 0;
+                if (addr_hi == 0x0C && vwr_cnt < 20) {
+                    _bt_log("WR C %04X=%02X dmd=%02X vram=%d PC=%04X tick=%u\n",
+                        addr, data, sys->gdg.dmd, sys->gdg.bank_vram, sys->cpu.pc, sys->tick_count);
+                    vwr_cnt++;
+                }
+                if (addr_hi == 0x0D && vwr_cnt < 20) {
+                    _bt_log("WR D %04X=%02X dmd=%02X rome=%d PC=%04X tick=%u\n",
+                        addr, data, sys->gdg.dmd, sys->gdg.bank_rome000, sys->cpu.pc, sys->tick_count);
+                    vwr_cnt++;
+                }
+                if (!gdg_whid65040_mem_wr(&sys->gdg, addr, data)) {
+                    sys->ram[addr] = data;  /* VRAM not mapped — write to RAM */
+                }
             } else {
                 sys->ram[addr] = data;
             }
@@ -257,7 +318,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
         const uint8_t port_hi = (port_full >> 8) & 0xFF;
         
         if (pins & Z80_WR) {
-            bool dmd_mz700_mode = (sys->gdg_dmd & 0x08) != 0;
+            bool dmd_mz700_mode = (sys->gdg.dmd & GDG_DMD_MZ700) != 0;
             if (port >= 0xD4 && port <= 0xD7) {
                 if (!dmd_mz700_mode) {
                     uint8_t pit_data = Z80_GET_DATA(pins);
@@ -283,52 +344,15 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 }
             } else {
                 uint8_t data_io = Z80_GET_DATA(pins);
-                switch (port) {
-                    case 0xCC: // WF register
-                        mz800_gdg_write_wf(sys, data_io);
-                        break;
-                    case 0xCD: // RF register
-                        mz800_gdg_write_rf(sys, data_io);
-                        break;
-                    case 0xCE: // DMD register (4 bits only)
-                        mz800_gdg_write_dmd(sys, data_io);
-                        break;
-                    case 0xCF: // Hardware scroll + border + superimpose/CKSW (selected by port high byte)
-                        if (port_hi >= 1 && port_hi <= 5) {
-                            mz800_gdg_write_scroll(sys, port_hi, data_io);
-                        } else if (port_hi == 6) {
-                            mz800_gdg_write_border(sys, data_io);
-                        } else if (port_hi == 7) {
-                            mz800_gdg_write_superimpose(sys, data_io);
-                        }
-                        break;
-                    case 0xF0: // Palette register (single port, bit 6 selects group vs color)
-                        mz800_gdg_write_palette(sys, data_io);
-                        break;
-                    
-                    case 0xE0: // OUT E0: 0x0000-0x7FFF to DRAM
-                        sys->rom_0000_on = false;
-                        sys->rom_1000_on = false;
-                        break;
-                    case 0xE1: // OUT E1: 0xE000-0xFFFF to DRAM
-                        sys->rom_e000_on = false;
-                        break;
-                    case 0xE2: // OUT E2: 0x0000-0x0FFF to Monitor ROM
-                        sys->rom_0000_on = true;
-                        break;
-                    case 0xE3: // OUT E3: 0xE000-0xFFFF to Monitor ROM
-                        sys->rom_e000_on = true;
-                        break;
-                    case 0xE4: // OUT E4: Full reset state (MZ-700 mode: no CGROM/VRAM)
-                        sys->rom_0000_on = true;
-                        sys->rom_1000_on = true;
-                        sys->rom_e000_on = true;
-                        sys->vram_on = true;
-                        if (sys->gdg_dmd & 0x08) { // MZ-700 mode
-                            sys->rom_1000_on = false;
-                            sys->vram_on = false;
-                        }
-                        break;
+                // Try GDG first (handles CC,CD,CE,CF,E0-E4,F0)
+                if (gdg_whid65040_iorq_wr(&sys->gdg, port_full, data_io)) {
+                    if (port >= 0xE0 && port <= 0xE4) {
+                        _bt_log("OUT %02X=%02X: rom0=%d rom1=%d romE=%d vram=%d PC=%04X tick=%u\n",
+                            port, data_io, sys->gdg.bank_rom0000, sys->gdg.bank_rom1000,
+                            sys->gdg.bank_rome000, sys->gdg.bank_vram, sys->cpu.pc, sys->tick_count);
+                    }
+                    if (sys->gdg_write_hook) sys->gdg_write_hook(sys->hook_user, sys->cpu.pc, port_full, data_io);
+                } else switch (port) {
                     
                     case 0xF2: // PSG SN76489AN write
                         sn76489an_write(&sys->psg, data_io);
@@ -370,9 +394,17 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 }
             }
         } else if (pins & Z80_RD) {
-            bool dmd_mz700_mode = (sys->gdg_dmd & 0x08) != 0;
+            bool dmd_mz700_mode = (sys->gdg.dmd & GDG_DMD_MZ700) != 0;
             uint8_t data = sys->dbus_latch; // default: last bus value
-            if (port >= 0xD4 && port <= 0xD7) {
+            // Try GDG first (handles CE status, E0/E1 bank switching)
+            uint8_t gdg_data;
+            if (gdg_whid65040_iorq_rd(&sys->gdg, port_full, &gdg_data)) {
+                data = gdg_data;
+                if (port == 0xE0 || port == 0xE1) {
+                    _bt_log("IN %02X: rom1=%d vram=%d PC=%04X tick=%u\n",
+                        port, sys->gdg.bank_rom1000, sys->gdg.bank_vram, sys->cpu.pc, sys->tick_count);
+                }
+            } else if (port >= 0xD4 && port <= 0xD7) {
                 if (!dmd_mz700_mode) {
                     if ((port & 0x03) == 3) {
                         data = sys->dbus_latch; // D7 (CW register) is write-only
@@ -399,40 +431,6 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 }
             } else {
                 switch (port) {
-                    case 0xCE: {
-                        // Video status register (pixel-accurate, PAL/NTSC parameterized)
-                        // Bit 7: HBLANK, Bit 6: VBLANK, Bit 5: HSYNC, Bit 4: VSYNC
-                        // Bit 1: hardware switch (1=MZ-800), Bit 0: TEMPO
-                        data = sys->mz800_switch ? 0x02 : 0x00;
-                        // VBLANK: outside display area
-                        if (sys->line_counter >= sys->vt.vblank_first_line ||
-                            sys->line_counter < sys->vt.vblank_resume_line) {
-                            data |= 0x40;
-                        }
-                        // VSYNC: last 3 lines
-                        if (sys->line_counter >= sys->vt.vsync_first_line) {
-                            data |= 0x10;
-                        }
-                        // HBLANK: outside enabled region
-                        if (sys->pixel_line >= sys->vt.hblank_start ||
-                            sys->pixel_line < sys->vt.hblank_end) {
-                            data |= 0x80;
-                        }
-                        // HSYNC: beginning of line
-                        if (sys->pixel_line < sys->vt.hsync_width) {
-                            data |= 0x20;
-                        }
-                        data |= (sys->tempo & 1);
-                        break;
-                    }
-                    case 0xE0: // IN E0: map CGROM + VRAM
-                        sys->rom_1000_on = true;
-                        sys->vram_on = true;
-                        break;
-                    case 0xE1: // IN E1: unmap CGROM + VRAM
-                        sys->rom_1000_on = false;
-                        sys->vram_on = false;
-                        break;
                     case 0xF0: // JOY1 — gated by PPI PA bit 5 (active low)
                         if (!(sys->ppi.pa.outp & 0x20)) {
                             data = sys->joy[0].state;
@@ -451,122 +449,56 @@ void mz800_sys_tick(mz800_sys_t* sys)
         }
     }
 
-    // === Timing: advance vt.cpu_divider pixel clocks per CPU tick ===
-    // PAL: cpu_divider=5 (CLK/5). NTSC: cpu_divider=4 (CLK/4). Both give ~3.55 MHz CPU.
-    // CTC0 clocks every 16 pixel clocks (CLK/16, standard-independent).
-    // PSG steps every vt.psg_pixel_divider pixel clocks (16 CPU ticks: 80 px PAL, 64 px NTSC).
-    // Line = vt.pixels_per_line pixel clocks (1136 PAL, 912 NTSC).
-    // Mid-frame PAL↔NTSC switching: counters wrap naturally at new limits.
+    // --- CPU tick hook for code analysis framework integration ---
+    if (sys->cpu_tick_hook) {
+        sys->cpu_tick_hook(pins, sys->hook_user);
+    }
+
+    // === Timing: advance GDG pixel clocks (cpu_divider per CPU tick) ===
+    // The GDG tick handles: hardware signals, VRAM arbitration, display pixel
+    // rendering, CTC0/PSG clock division, scanline/frame management, and VBLANK.
+    // It returns flags telling us when to clock external chips.
     
-    const uint32_t cpu_div = sys->vt.cpu_divider;
+    // Feed CPU write signal to GDG before ticking
+    sys->gdg.hw_cpu_wr = (pins & Z80_MREQ) && (pins & Z80_WR);
+
+    const uint32_t cpu_div = sys->gdg.vt.cpu_divider;
     for (uint32_t px = 0; px < cpu_div; px++) {
-        // --- Hardware signal: HBLN (HBLANK) ---
-        if (sys->pixel_line >= sys->vt.hblank_start || sys->pixel_line < sys->vt.hblank_end) {
-            sys->hbln = true;
-        } else {
-            sys->hbln = false;
-        }
-
-        // --- Hardware signal: VRAS (VRAM Row Strobe) ---
-        // DISP phase (vras_phase==0): GDG owns VRAM, VRAS active
-        // CPU phase (vras_phase==1): CPU can access VRAM, VRAS inactive
-        sys->vras = (sys->vras_phase == 0);
-
-        // --- Hardware signal: VCAS (VRAM Column Strobe) ---
-        // VCAS is strobed at the first pixel of each 8-pixel DISP phase (vras_phase==0 && vras_sub==0)
-        sys->vcas = (sys->vras_phase == 0 && sys->vras_sub == 0);
-
-        // --- Hardware signal: VOE (Video Output Enable) ---
-        // VOE is true during visible scanlines and outside HBLANK
-        sys->voe =
-            (sys->line_counter >= sys->vt.vdisp_first_line &&
-             sys->line_counter < sys->vt.vdisp_last_line &&
-             !(sys->pixel_line >= sys->vt.hblank_start || sys->pixel_line < sys->vt.hblank_end));
-
-        // --- Hardware signal: VOD (VRAM address output) ---
-        // VOD is the current VRAM address output by GDG during DISP phase, else 0
-        if (sys->vras_phase == 0) {
-            // Use the current GDG VRAM address (gdg_vram_col) as VOD
-            sys->vod = (uint8_t)(sys->gdg_vram_col & 0xFF);
-        } else {
-            sys->vod = 0;
-        }
-
-        // --- Hardware signal: VRWR (VRAM write strobe) ---
-        // VRWR pulses true for one pixel tick when a buffered VRAM write is flushed during DISP phase
-        // We detect this by checking if a write is pending and DISP phase is active
-        if (sys->vras_phase == 0 && sys->gdg_wr_pending) {
-            sys->vrwr = true;
-        } else {
-            sys->vrwr = false;
-        }
-
-        // --- Hardware signal: CPU.WR (CPU write cycle) ---
-        // True if the CPU is performing a write cycle to memory (MREQ+WR)
-        if ((sys->pins & Z80_MREQ) && (sys->pins & Z80_WR)) {
-            sys->cpu_wr = true;
-        } else {
-            sys->cpu_wr = false;
-        }
-
-        // --- Hardware signal: VRAM.WR (actual VRAM write occurs) ---
-        // Cleared after one tick; set in the CPU write handler
-        if (sys->vram_wr) {
-            sys->vram_wr = false;
-        }
-        sys->ctc0_sub++;
-        if (sys->ctc0_sub >= 16) {
-            sys->ctc0_sub = 0;
+        uint8_t tick_flags = gdg_whid65040_tick(&sys->gdg);
+        
+        if (tick_flags & GDG_TICK_CTC0) {
             i8253_tick(&sys->pit, 0);
         }
-        
-        sys->psg_sub++;
-        if (sys->psg_sub >= sys->vt.psg_pixel_divider) {
-            sys->psg_sub = 0;
+        if (tick_flags & GDG_TICK_PSG) {
             sn76489an_tick(&sys->psg);
+            /* Audio sample decimation: count PSG ticks, emit sample when ready */
+            if (sys->audio.sample_period > 0) {
+                sys->audio.sample_counter -= _MZ800_AUDIO_FP_SCALE;
+                if (sys->audio.sample_counter <= 0) {
+                    sys->audio.sample_counter += sys->audio.sample_period;
+                    float sample = _mz800_dcadjust(_mz800_psg_sample(&sys->psg));
+                    sys->audio.sample_buffer[sys->audio.sample_pos++] = sample;
+                    if (sys->audio.sample_pos >= sys->audio.num_samples) {
+                        if (sys->audio.callback.func) {
+                            sys->audio.callback.func(sys->audio.sample_buffer, sys->audio.num_samples, sys->audio.callback.user_data);
+                        }
+                        sys->audio.sample_pos = 0;
+                    }
+                }
+            }
         }
-        
-        sys->pixel_line++;
-        if (sys->pixel_line >= sys->vt.pixels_per_line) {
-            sys->pixel_line = 0;
-            sys->line_counter++;
-
+        if (tick_flags & GDG_TICK_NEWLINE) {
             // CTC1 clocked by HSYNC (once per line); CTC2 clocked by CTC1 falling edge
             sys->ctc1_prev_out = sys->pit.channels[1].out;
             i8253_tick(&sys->pit, 1);
             if (sys->ctc1_prev_out && !sys->pit.channels[1].out) {
                 i8253_tick(&sys->pit, 2);
             }
-
-            // TEMPO toggles every N scanlines (~34 Hz for both PAL and NTSC)
-            sys->tempo_divider++;
-            if (sys->tempo_divider >= sys->vt.tempo_toggle_lines) {
-                sys->tempo_divider = 0;
-                sys->tempo++;
-            }
-
-            if (sys->line_counter >= sys->vt.lines_per_frame) {
-                sys->line_counter = 0;
-            }
-
-            // Start-of-scanline GDG display engine setup (now in GDG module)
-            mz800_gdg_scanline_start(sys);
-
-            bool new_vblank = (sys->line_counter >= sys->vt.vblank_first_line ||
-                               sys->line_counter < sys->vt.vblank_resume_line);
-            if (new_vblank != sys->vblank_active) {
-                sys->vblank_active = new_vblank;
-            }
         }
-
-        // GDG display engine: emit one pixel per pixel clock (now in GDG module)
-        mz800_gdg_display_pixel(sys);
     }
-    // Derive CPU-level line_cycle for status register reads
-    sys->line_cycle = sys->pixel_line / sys->vt.cpu_divider;
 
-    // VRAM access WAIT — stall CPU during DISP phase
-    if (sys->cpu_wait_vram) {
+    // VRAM access WAIT — stall CPU during VRAM access (handled by GDG)
+    if (sys->gdg.cpu_wait) {
         pins |= Z80_WAIT;
     }
 
@@ -598,7 +530,7 @@ void mz800_sys_tick(mz800_sys_t* sys)
         // Port A inputs: bits 0-1 always high, bit 4 = ~CTC0, bit 5 = VBLANK
         uint8_t pa = 0x03;
         if (!sys->pit.channels[0].out) pa |= (1 << 4);
-        if (sys->vblank_active) pa |= (1 << 5);
+        if (sys->gdg.vblank_active) pa |= (1 << 5);
         Z80PIO_SET_PA(pio_pins, pa);
         Z80PIO_SET_PB(pio_pins, 0xFF);  // Port B: all high (pullups)
 
@@ -643,12 +575,9 @@ void mz800_sys_reset(mz800_sys_t* sys)
     sys->pins = z80_reset(&sys->cpu);
     i8253_reset(&sys->pit);
     i8255_reset(&sys->ppi);
-    sys->rom_0000_on = true;
-    sys->rom_1000_on = true;
-    sys->rom_e000_on = true;
-    sys->vram_on = false;  // OFF at reset — monitor ROM enables via OUT E4
-    // GDG state reset
-    mz800_gdg_reset(sys);
+
+    // GDG reset (handles bank switching, video timing, VRAM, hardware signals)
+    gdg_whid65040_reset(&sys->gdg);
 
     // PSG reset
     sn76489an_reset(&sys->psg);
@@ -658,7 +587,6 @@ void mz800_sys_reset(mz800_sys_t* sys)
 
     // Z80 PIO reset (chips library)
     z80pio_reset(&sys->pio);
-    sys->vblank_active = false;
     sys->ctc1_prev_out = 0;
     sys->ctc0_prev_out = 0;
     // CTC0 gate starts LOW (i8253_init sets it); CTC1/CTC2 already HIGH from init
@@ -666,16 +594,6 @@ void mz800_sys_reset(mz800_sys_t* sys)
     // Joystick: all released
     sys->joy[0].state = 0xFF;
     sys->joy[1].state = 0xFF;
-
-    // --- Hardware signal emulation fields ---
-    sys->vras = false;
-    sys->vcas = false;
-    sys->voe = false;
-    sys->vod = 0;
-    sys->vrwr = false;
-    sys->hbln = false;
-    sys->cpu_wr = false;
-    sys->vram_wr = false;
 }
 
 void mz800_sys_key_down(mz800_sys_t* sys, int key) {
@@ -688,6 +606,33 @@ void mz800_sys_key_up(mz800_sys_t* sys, int key) {
     if (key >= 0 && key < 256) {
         kbd_key_up(&sys->kbd, key);
     }
+}
+
+void mz800_sys_setup_audio(mz800_sys_t* sys, chips_audio_callback_t callback, int sample_rate, int num_samples) {
+    sys->audio.callback = callback;
+    sys->audio.num_samples = (num_samples > 0 && num_samples <= 1024) ? num_samples : 128;
+    sys->audio.sample_pos = 0;
+    /* PSG clock rate: PAL = 17734475 / 80 = 221680.9 Hz, NTSC = 14318180 / 64 = 223721.6 Hz
+       Audio sample period = psg_hz / sample_rate (in fixed-point) */
+    int psg_hz = sys->gdg.bPAL ? (17734475 / 80) : (14318180 / 64);
+    if (sample_rate <= 0) sample_rate = 44100;
+    sys->audio.sample_period = (psg_hz * _MZ800_AUDIO_FP_SCALE) / sample_rate;
+    sys->audio.sample_counter = sys->audio.sample_period;
+    memset(&_mz800_dcadj, 0, sizeof(_mz800_dcadj));
+}
+
+uint32_t mz800_sys_exec(mz800_sys_t* sys, uint32_t micro_seconds) {
+    /* Calculate number of CPU ticks to run.
+       PAL: 17734475 Hz master / cpu_divider(5) = 3546895 CPU Hz
+       NTSC: 14318180 Hz / 4 = 3579545 CPU Hz */
+    uint32_t cpu_hz = sys->gdg.bPAL ? (17734475 / 5) : (14318180 / 4);
+    uint32_t ticks_to_run = (uint32_t)(((uint64_t)cpu_hz * micro_seconds) / 1000000ULL);
+    if (ticks_to_run < 1) ticks_to_run = 1;
+
+    for (uint32_t t = 0; t < ticks_to_run; t++) {
+        mz800_sys_tick(sys);
+    }
+    return ticks_to_run;
 }
 
 

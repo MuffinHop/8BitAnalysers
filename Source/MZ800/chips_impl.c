@@ -6,3 +6,4 @@
 #include "chips/kbd.h"
 #include "i8253.h"
 #include <chips/sn76489an.h>
+#include <chips/gdg_whid65040.h>
