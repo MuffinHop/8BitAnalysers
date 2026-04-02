@@ -5,6 +5,8 @@
 
 #include <string.h>
 #include <sys/stat.h>
+#include <string>
+#include <vector>
 
 bool CreateDir(const char* osDir)
 {
@@ -97,4 +99,67 @@ void FileInit(void)
 	snprintf(g_bundlePath, PLATFORM_MAX_PATH, "%s", [bundlePath fileSystemRepresentation]);
 	snprintf(g_documentPath, PLATFORM_MAX_PATH, "%s", [documentsPath fileSystemRepresentation]);
 	snprintf(g_appSupportPath, PLATFORM_MAX_PATH, "%s", [spectrumAnalyserDirectory fileSystemRepresentation]);
+}
+
+bool OpenFileDialog(std::string &outFile, const char *pInitialDir, const char *pFilter)
+{
+	@autoreleasepool {
+		NSOpenPanel *panel = [NSOpenPanel openPanel];
+		[panel setCanChooseFiles:YES];
+		[panel setCanChooseDirectories:NO];
+		[panel setAllowsMultipleSelection:NO];
+
+		if (pInitialDir && pInitialDir[0] != '\0') {
+			NSString *dir = [NSString stringWithUTF8String:pInitialDir];
+			[panel setDirectoryURL:[NSURL fileURLWithPath:dir isDirectory:YES]];
+		}
+
+		// Parse Win32-style filter: pairs of "Description\0*.ext1;*.ext2\0" terminated by double \0
+		if (pFilter) {
+			NSMutableArray<NSString *> *extensions = [[NSMutableArray alloc] init];
+			const char *p = pFilter;
+			bool hasWildcard = false;
+			while (*p) {
+				// Skip description string
+				p += strlen(p) + 1;
+				if (!*p) break;
+				// Parse wildcard string (e.g. "*.mzf;*.wav;*.mzq")
+				std::string wildcards(p);
+				p += strlen(p) + 1;
+
+				size_t pos = 0;
+				while (pos < wildcards.size()) {
+					size_t semi = wildcards.find(';', pos);
+					if (semi == std::string::npos) semi = wildcards.size();
+					std::string wc = wildcards.substr(pos, semi - pos);
+					pos = semi + 1;
+
+					// Extract extension from "*.ext"
+					size_t dot = wc.rfind('.');
+					if (dot != std::string::npos && dot + 1 < wc.size()) {
+						std::string ext = wc.substr(dot + 1);
+						if (ext == "*") {
+							hasWildcard = true;
+						} else {
+							[extensions addObject:[NSString stringWithUTF8String:ext.c_str()]];
+						}
+					}
+				}
+			}
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+			if (!hasWildcard && [extensions count] > 0) {
+				[panel setAllowedFileTypes:extensions];
+			}
+#pragma clang diagnostic pop
+		}
+
+		NSModalResponse result = [panel runModal];
+		if (result == NSModalResponseOK) {
+			NSURL *url = [[panel URLs] firstObject];
+			outFile = [[url path] UTF8String];
+			return true;
+		}
+	}
+	return false;
 }

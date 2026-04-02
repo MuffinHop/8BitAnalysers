@@ -24,6 +24,10 @@
 **/CMakeFiles
 **/[Cc][Mm]ake-[Bb]uild*
 
+# Out-of-source build directories
+build_mz800/
+Source/MZ800/build/
+
 
 # Compiled Static libraries
 *.lai

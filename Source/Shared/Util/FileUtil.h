@@ -47,3 +47,7 @@ uint16_t ParseHexString16bit(const std::string& string);
 
 bool CreateDir(const char* osDir);
 char GetDirSep();
+
+// Native OS file open dialog. pFilter is a description + wildcard list, e.g. "MZF Files\0*.mzf\0All Files\0*.*\0"
+// Returns true if the user picked a file; the path is written to outFile.
+bool OpenFileDialog(std::string &outFile, const char *pInitialDir = nullptr, const char *pFilter = nullptr);

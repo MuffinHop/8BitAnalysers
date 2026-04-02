@@ -2,6 +2,7 @@
 
 #include <string.h>
 #include <sys/stat.h>
+#include <string>
 
 bool CreateDir(const char* osDir)
 {
@@ -42,4 +43,10 @@ const char* GetDocumentsPath(const char* fileName)
 const char* GetAppSupportPath(const char* fileName)
 {
 	return fileName;
+}
+
+bool OpenFileDialog(std::string &outFile, const char *pInitialDir, const char *pFilter)
+{
+	// TODO: implement using zenity/kdialog
+	return false;
 }
