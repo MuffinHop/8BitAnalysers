@@ -87,7 +87,7 @@ rebuild_cache/fast: rebuild_cache
 
 # Special rule for the target list_install_components
 list_install_components:
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"RunTime\""
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"RunTime\" \"Unspecified\""
 .PHONY : list_install_components
 
 # Special rule for the target list_install_components
@@ -176,6 +176,71 @@ MZ800Analyser/fast:
 .PHONY : MZ800Analyser/fast
 
 #=============================================================================
+# Target rules for targets named MZ800AnalyserTest
+
+# Build rule for target.
+MZ800AnalyserTest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 MZ800AnalyserTest
+.PHONY : MZ800AnalyserTest
+
+# fast build rule for target.
+MZ800AnalyserTest/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/build
+.PHONY : MZ800AnalyserTest/fast
+
+#=============================================================================
+# Target rules for targets named gmock
+
+# Build rule for target.
+gmock: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock
+.PHONY : gmock
+
+# fast build rule for target.
+gmock/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock.dir/build
+.PHONY : gmock/fast
+
+#=============================================================================
+# Target rules for targets named gmock_main
+
+# Build rule for target.
+gmock_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gmock_main
+.PHONY : gmock_main
+
+# fast build rule for target.
+gmock_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build.make _deps/googletest-build/googlemock/CMakeFiles/gmock_main.dir/build
+.PHONY : gmock_main/fast
+
+#=============================================================================
+# Target rules for targets named gtest
+
+# Build rule for target.
+gtest: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest
+.PHONY : gtest
+
+# fast build rule for target.
+gtest/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest.dir/build
+.PHONY : gtest/fast
+
+#=============================================================================
+# Target rules for targets named gtest_main
+
+# Build rule for target.
+gtest_main: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 gtest_main
+.PHONY : gtest_main
+
+# fast build rule for target.
+gtest_main/fast:
+	$(MAKE) $(MAKESILENT) -f _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build.make _deps/googletest-build/googletest/CMakeFiles/gtest_main.dir/build
+.PHONY : gtest_main/fast
+
+#=============================================================================
 # Target rules for targets named glfw
 
 # Build rule for target.
@@ -207,6 +272,7 @@ MZ800ChipsImpl.o: MZ800ChipsImpl.c.o
 # target to build an object file
 MZ800ChipsImpl.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800ChipsImpl.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800ChipsImpl.c.o
 .PHONY : MZ800ChipsImpl.c.o
 
 MZ800ChipsImpl.i: MZ800ChipsImpl.c.i
@@ -215,6 +281,7 @@ MZ800ChipsImpl.i: MZ800ChipsImpl.c.i
 # target to preprocess a source file
 MZ800ChipsImpl.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800ChipsImpl.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800ChipsImpl.c.i
 .PHONY : MZ800ChipsImpl.c.i
 
 MZ800ChipsImpl.s: MZ800ChipsImpl.c.s
@@ -223,6 +290,7 @@ MZ800ChipsImpl.s: MZ800ChipsImpl.c.s
 # target to generate assembly for a file
 MZ800ChipsImpl.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800ChipsImpl.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800ChipsImpl.c.s
 .PHONY : MZ800ChipsImpl.c.s
 
 MZ800Config.o: MZ800Config.cpp.o
@@ -231,6 +299,7 @@ MZ800Config.o: MZ800Config.cpp.o
 # target to build an object file
 MZ800Config.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800Config.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800Config.cpp.o
 .PHONY : MZ800Config.cpp.o
 
 MZ800Config.i: MZ800Config.cpp.i
@@ -239,6 +308,7 @@ MZ800Config.i: MZ800Config.cpp.i
 # target to preprocess a source file
 MZ800Config.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800Config.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800Config.cpp.i
 .PHONY : MZ800Config.cpp.i
 
 MZ800Config.s: MZ800Config.cpp.s
@@ -247,6 +317,7 @@ MZ800Config.s: MZ800Config.cpp.s
 # target to generate assembly for a file
 MZ800Config.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800Config.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800Config.cpp.s
 .PHONY : MZ800Config.cpp.s
 
 MZ800Emu.o: MZ800Emu.cpp.o
@@ -255,6 +326,7 @@ MZ800Emu.o: MZ800Emu.cpp.o
 # target to build an object file
 MZ800Emu.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800Emu.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800Emu.cpp.o
 .PHONY : MZ800Emu.cpp.o
 
 MZ800Emu.i: MZ800Emu.cpp.i
@@ -263,6 +335,7 @@ MZ800Emu.i: MZ800Emu.cpp.i
 # target to preprocess a source file
 MZ800Emu.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800Emu.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800Emu.cpp.i
 .PHONY : MZ800Emu.cpp.i
 
 MZ800Emu.s: MZ800Emu.cpp.s
@@ -271,6 +344,7 @@ MZ800Emu.s: MZ800Emu.cpp.s
 # target to generate assembly for a file
 MZ800Emu.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/MZ800Emu.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/MZ800Emu.cpp.s
 .PHONY : MZ800Emu.cpp.s
 
 Main.o: Main.cpp.o
@@ -297,12 +371,37 @@ Main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Main.cpp.s
 .PHONY : Main.cpp.s
 
+Tests/MZ800Tests.o: Tests/MZ800Tests.cpp.o
+.PHONY : Tests/MZ800Tests.o
+
+# target to build an object file
+Tests/MZ800Tests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Tests/MZ800Tests.cpp.o
+.PHONY : Tests/MZ800Tests.cpp.o
+
+Tests/MZ800Tests.i: Tests/MZ800Tests.cpp.i
+.PHONY : Tests/MZ800Tests.i
+
+# target to preprocess a source file
+Tests/MZ800Tests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Tests/MZ800Tests.cpp.i
+.PHONY : Tests/MZ800Tests.cpp.i
+
+Tests/MZ800Tests.s: Tests/MZ800Tests.cpp.s
+.PHONY : Tests/MZ800Tests.s
+
+# target to generate assembly for a file
+Tests/MZ800Tests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Tests/MZ800Tests.cpp.s
+.PHONY : Tests/MZ800Tests.cpp.s
+
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.o
 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.i
@@ -311,6 +410,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.s
@@ -319,6 +419,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.o
@@ -327,6 +428,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.i
@@ -335,6 +437,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.s
@@ -343,6 +446,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M6502Disassembler.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.o
@@ -351,6 +455,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.i
@@ -359,6 +464,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.s
@@ -367,6 +473,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/M65C02Disassembler.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.o
@@ -375,6 +482,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Assem
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.i
@@ -383,6 +491,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Assem
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.s
@@ -391,6 +500,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Assem
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/AssemblerExport.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.o
@@ -399,6 +509,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.i
@@ -407,6 +518,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.s
@@ -415,6 +527,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalyser.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.o
@@ -423,6 +536,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.i
@@ -431,6 +545,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.s
@@ -439,6 +554,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisDot.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.o
@@ -447,6 +563,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.i
@@ -455,6 +572,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.s
@@ -463,6 +581,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisJson.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.o
@@ -471,6 +590,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.i
@@ -479,6 +599,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.s
@@ -487,6 +608,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisPage.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.o
@@ -495,6 +617,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.i
@@ -503,6 +626,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.s
@@ -511,6 +635,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeA
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/CodeAnalysisState.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.o
@@ -519,6 +644,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.i
@@ -527,6 +653,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.s
@@ -535,6 +662,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/CommandProcessor.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.o
@@ -543,6 +671,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.i
@@ -551,6 +680,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.s
@@ -559,6 +689,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/FormatDataCommand.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.o
@@ -567,6 +698,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.i
@@ -575,6 +707,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.s
@@ -583,6 +716,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetCommentCommand.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.o
@@ -591,6 +725,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.i
@@ -599,6 +734,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.s
@@ -607,6 +743,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Comma
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Commands/SetItemDataCommand.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.o
@@ -615,6 +752,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataT
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.i
@@ -623,6 +761,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataT
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.s
@@ -631,6 +770,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataT
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/DataTypes.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.o
@@ -639,6 +779,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debug
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.i
@@ -647,6 +788,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debug
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.s
@@ -655,6 +797,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debug
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Debugger.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.o
@@ -663,6 +806,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disas
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.i
@@ -671,6 +815,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disas
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.s
@@ -679,6 +824,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disas
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Disassembler.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.o
@@ -687,6 +833,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindT
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.i
@@ -695,6 +842,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindT
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.s
@@ -703,6 +851,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindT
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FindTool.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.o
@@ -711,6 +860,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Funct
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.i
@@ -719,6 +869,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Funct
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.s
@@ -727,6 +878,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Funct
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/FunctionAnalyser.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.o
@@ -735,6 +887,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAna
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.i
@@ -743,6 +896,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAna
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.s
@@ -751,6 +905,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAna
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IOAnalyser.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.o
@@ -759,6 +914,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.i
@@ -767,6 +923,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s
@@ -775,6 +932,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/AYAudioDevice.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.o
@@ -783,6 +941,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.i
@@ -791,6 +950,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.s
@@ -799,6 +959,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/CMTDevice.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
@@ -807,6 +968,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
@@ -815,6 +977,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
@@ -823,6 +986,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/GDGDevice.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.o
@@ -831,6 +995,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.i
@@ -839,6 +1004,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.s
@@ -847,6 +1013,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8253Device.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.o
@@ -855,6 +1022,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.i
@@ -863,6 +1031,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.s
@@ -871,6 +1040,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/I8255Device.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.o
@@ -879,6 +1049,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.i
@@ -887,6 +1058,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.s
@@ -895,6 +1067,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/MC6845Device.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.o
@@ -903,6 +1076,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.i
@@ -911,6 +1085,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.s
@@ -919,6 +1094,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/SN76489ANDevice.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.o
@@ -927,6 +1103,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.i
@@ -935,6 +1112,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.s
@@ -943,6 +1121,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/VIAIODevice.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.o
@@ -951,6 +1130,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.i
@@ -959,6 +1139,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.s
@@ -967,6 +1148,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/WD2793Device.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.o
@@ -975,6 +1157,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.i
@@ -983,6 +1166,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.s
@@ -991,6 +1175,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODev
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/IODevices/Z80PIODevice.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.o
@@ -999,6 +1184,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Memor
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.i
@@ -1007,6 +1193,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Memor
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.s
@@ -1015,6 +1202,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Memor
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/MemoryAnalyser.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.o
@@ -1023,6 +1211,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Stati
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.i
@@ -1031,6 +1220,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Stati
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.s
@@ -1039,7 +1229,32 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Stati
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.cpp.s
+
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.o
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.o
+
+# target to build an object file
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.o
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.o
+
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.i
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.i
+
+# target to preprocess a source file
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.i
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.i
+
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.s
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.s
+
+# target to generate assembly for a file
+Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.s
+.PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.o
@@ -1047,6 +1262,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/65
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.i
@@ -1055,6 +1271,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/65
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.s
@@ -1063,6 +1280,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/65
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.o
@@ -1071,6 +1289,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/65
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.i
@@ -1079,6 +1298,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/65
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.s
@@ -1087,6 +1307,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/65
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/RegisterView6502.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.o
@@ -1095,6 +1316,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Ch
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.i
@@ -1103,6 +1325,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Ch
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.s
@@ -1111,6 +1334,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Ch
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CharacterMapViewer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.o
@@ -1119,6 +1343,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.i
@@ -1127,6 +1352,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.s
@@ -1135,6 +1361,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeAnalyserUI.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.o
@@ -1143,6 +1370,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.i
@@ -1151,6 +1379,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.s
@@ -1159,6 +1388,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeItemUI.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.o
@@ -1167,6 +1397,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.i
@@ -1175,6 +1406,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.s
@@ -1183,6 +1415,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/CodeToolTips.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.o
@@ -1191,6 +1424,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.i
@@ -1199,6 +1433,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.s
@@ -1207,6 +1442,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Co
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ComboBoxes.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.o
@@ -1215,6 +1451,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Da
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.i
@@ -1223,6 +1460,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Da
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.s
@@ -1231,6 +1469,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Da
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DataItemUI.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.o
@@ -1239,6 +1478,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Di
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.i
@@ -1247,6 +1487,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Di
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.s
@@ -1255,6 +1496,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Di
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/DisplayTypes.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.o
@@ -1263,6 +1505,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Fu
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.i
@@ -1271,6 +1514,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Fu
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.s
@@ -1279,6 +1523,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Fu
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/FunctionViewer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.o
@@ -1287,6 +1532,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Gl
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.i
@@ -1295,6 +1541,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Gl
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.s
@@ -1303,6 +1550,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Gl
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GlobalsViewer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.o
@@ -1311,6 +1559,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Gr
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.i
@@ -1319,6 +1568,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Gr
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.s
@@ -1327,6 +1577,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Gr
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/GraphicsViewer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.o
@@ -1335,6 +1586,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Im
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.i
@@ -1343,6 +1595,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Im
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.s
@@ -1351,6 +1604,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Im
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ImageViewer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.o
@@ -1359,6 +1613,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Me
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.i
@@ -1367,6 +1622,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Me
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.s
@@ -1375,6 +1631,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Me
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/MemoryAccessGrid.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.o
@@ -1383,6 +1640,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Ov
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.i
@@ -1391,6 +1649,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Ov
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.s
@@ -1399,6 +1658,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Ov
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/OverviewViewer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.o
@@ -1407,6 +1667,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UI
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.i
@@ -1415,6 +1676,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UI
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.s
@@ -1423,6 +1685,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UI
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/UIColours.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.o
@@ -1431,6 +1694,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Vi
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.i
@@ -1439,6 +1703,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Vi
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.s
@@ -1447,6 +1712,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Vi
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/ViewerBase.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.o
@@ -1455,6 +1721,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.i
@@ -1463,6 +1730,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.s
@@ -1471,6 +1739,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/CodeToolTipsZ80.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.o
@@ -1479,6 +1748,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.i
@@ -1487,6 +1757,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.s
@@ -1495,6 +1766,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/DataItemZ80.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.o
@@ -1503,6 +1775,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.i
@@ -1511,6 +1784,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.s
@@ -1519,6 +1793,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z8
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/Z80/RegisterViewZ80.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.o
@@ -1527,6 +1802,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/C
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.i
@@ -1535,6 +1811,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/C
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.s
@@ -1543,6 +1820,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/C
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/CodeAnalyserZ80.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.o
@@ -1551,6 +1829,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.i
@@ -1559,6 +1838,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.s
@@ -1567,6 +1847,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Z80/Z80Disassembler.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.o
@@ -1575,6 +1856,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.i
@@ -1583,6 +1865,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.s
@@ -1591,6 +1874,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/DebugLog.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.o
@@ -1599,6 +1883,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.i
@@ -1607,6 +1892,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.s
@@ -1615,6 +1901,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Debug/ImGuiLog.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.o
@@ -1623,6 +1910,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFil
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.i
@@ -1631,6 +1919,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFil
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.s
@@ -1639,6 +1928,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFil
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFile.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.o
@@ -1647,6 +1937,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFil
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.i
@@ -1655,6 +1946,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFil
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.s
@@ -1663,6 +1955,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFil
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolFileInfo.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.o
@@ -1671,6 +1964,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/Skoolkit
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.i
@@ -1679,6 +1973,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/Skoolkit
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.s
@@ -1687,6 +1982,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/Skoolkit
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Exporters/SkoolkitExporter.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.o
@@ -1695,6 +1991,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.i
@@ -1703,6 +2000,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.s
@@ -1711,6 +2009,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/GLFW/ImGuiTexture_GLFW.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.o
@@ -1719,6 +2018,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGui
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.i
@@ -1727,6 +2027,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGui
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.s
@@ -1735,6 +2036,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGui
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiDrawing.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.o
@@ -1743,6 +2045,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGui
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.i
@@ -1751,6 +2054,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGui
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.s
@@ -1759,6 +2063,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGui
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/ImGuiSupport/ImGuiScaling.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.o
@@ -1767,6 +2072,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/Skoolkit
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.i
@@ -1775,6 +2081,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/Skoolkit
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.s
@@ -1783,6 +2090,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/Skoolkit
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Importers/SkoolkitImporter.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.o
@@ -1791,6 +2099,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCo
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.i
@@ -1799,6 +2108,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCo
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.s
@@ -1807,6 +2117,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCo
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaConsole.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.o
@@ -1815,6 +2126,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCo
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.i
@@ -1823,6 +2135,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCo
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.s
@@ -1831,6 +2144,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCo
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaCoreAPI.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.o
@@ -1839,6 +2153,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDo
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.i
@@ -1847,6 +2162,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDo
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.s
@@ -1855,6 +2171,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDo
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaDocs.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.o
@@ -1863,6 +2180,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEd
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.i
@@ -1871,6 +2189,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEd
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.s
@@ -1879,6 +2198,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEd
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaEditor.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.o
@@ -1887,6 +2207,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSy
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.i
@@ -1895,6 +2216,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSy
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.s
@@ -1903,6 +2225,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSy
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaSys.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.o
@@ -1911,6 +2234,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUt
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.i
@@ -1919,6 +2243,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUt
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.s
@@ -1927,6 +2252,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUt
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/LuaScripting/LuaUtils.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.o
@@ -1935,6 +2261,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.i
@@ -1943,6 +2270,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.s
@@ -1951,6 +2279,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/EmuBase.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.o
@@ -1959,6 +2288,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoop
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.i
@@ -1967,6 +2297,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoop
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.s
@@ -1975,6 +2306,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoop
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GLFW/MainLoopGLFW_GL3.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.o
@@ -1983,6 +2315,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.o:
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.i
@@ -1991,6 +2324,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.i:
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.s
@@ -1999,6 +2333,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.s:
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GameConfig.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.o
@@ -2007,6 +2342,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.i
@@ -2015,6 +2351,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.s
@@ -2023,6 +2360,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GamesList.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.o
@@ -2031,6 +2369,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.i
@@ -2039,6 +2378,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.s
@@ -2047,6 +2387,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/GlobalConfig.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.o
@@ -2055,6 +2396,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSuppo
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.i
@@ -2063,6 +2405,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSuppo
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.s
@@ -2071,6 +2414,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSuppo
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Misc/SkoolkitSupport.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.o
@@ -2079,6 +2423,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.i
@@ -2087,6 +2432,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.s
@@ -2095,6 +2441,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/FileUtil.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.o
@@ -2103,6 +2450,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.i
@@ -2111,6 +2459,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.s
@@ -2119,6 +2468,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/GraphicsView.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.o
@@ -2127,6 +2477,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.i
@@ -2135,6 +2486,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.s
@@ -2143,6 +2495,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Mac/FileUtil_Mac.mm.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.o
@@ -2151,6 +2504,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.i
@@ -2159,6 +2513,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.s
@@ -2167,6 +2522,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/MemoryBuffer.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.o
@@ -2175,6 +2531,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.o: Users
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.i
@@ -2183,6 +2540,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.i: Users
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.s
@@ -2191,6 +2549,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.s: Users
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/Util/Misc.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.o
@@ -2199,6 +2558,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.i
@@ -2207,6 +2567,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.s
@@ -2215,6 +2576,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/ImGuiColorTextEdit/TextEditor.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.o
@@ -2223,6 +2585,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/img
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.i
@@ -2231,6 +2594,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/img
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.s
@@ -2239,6 +2603,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/img
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_glfw.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.o
@@ -2247,6 +2612,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/img
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.i
@@ -2255,6 +2621,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/img
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.s
@@ -2263,6 +2630,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/img
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/backends/imgui_impl_opengl3.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.o
@@ -2271,6 +2639,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.o: Use
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.i
@@ -2279,6 +2648,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.i: Use
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.s
@@ -2287,6 +2657,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.s: Use
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.o
@@ -2295,6 +2666,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.o
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.i
@@ -2303,6 +2675,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.i
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.s
@@ -2311,6 +2684,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.s
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_demo.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.o
@@ -2319,6 +2693,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.o
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.i
@@ -2327,6 +2702,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.i
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.s
@@ -2335,6 +2711,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.s
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_draw.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.o
@@ -2343,6 +2720,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.i
@@ -2351,6 +2729,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.s
@@ -2359,6 +2738,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_tables.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.o
@@ -2367,6 +2747,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widget
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.i
@@ -2375,6 +2756,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widget
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.s
@@ -2383,6 +2765,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widget
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/imgui_widgets.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.o
@@ -2391,6 +2774,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/img
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.i
@@ -2399,6 +2783,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/img
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.s
@@ -2407,6 +2792,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/img
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui/misc/cpp/imgui_stdlib.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.o
@@ -2415,6 +2801,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.i
@@ -2423,6 +2810,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.s
@@ -2431,6 +2819,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/imgui_lua_bindings/imgui_lua_bindings.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.o
@@ -2439,6 +2828,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.i
@@ -2447,6 +2837,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.s
@@ -2455,6 +2846,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.o
@@ -2463,6 +2855,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.i
@@ -2471,6 +2864,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.s
@@ -2479,6 +2873,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_demo.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.o
@@ -2487,6 +2882,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_item
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.i
@@ -2495,6 +2891,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_item
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.s
@@ -2503,6 +2900,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_item
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/implot/implot_items.cpp.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.o
@@ -2511,6 +2909,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.o: Use
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.i
@@ -2519,6 +2918,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.i: Use
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.s
@@ -2527,6 +2927,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.s: Use
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lapi.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.o
@@ -2535,6 +2936,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.i
@@ -2543,6 +2945,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.s
@@ -2551,6 +2954,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lauxlib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.o
@@ -2559,6 +2963,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.o:
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.i
@@ -2567,6 +2972,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.i:
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.s
@@ -2575,6 +2981,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.s:
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lbaselib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.o
@@ -2583,6 +2990,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.i
@@ -2591,6 +2999,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.s
@@ -2599,6 +3008,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcode.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.o
@@ -2607,6 +3017,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.o:
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.i
@@ -2615,6 +3026,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.i:
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.s
@@ -2623,6 +3035,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.s:
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lcorolib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.o
@@ -2631,6 +3044,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.i
@@ -2639,6 +3053,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.s
@@ -2647,6 +3062,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lctype.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.o
@@ -2655,6 +3071,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.i
@@ -2663,6 +3080,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.s
@@ -2671,6 +3089,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldblib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.o
@@ -2679,6 +3098,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.i
@@ -2687,6 +3107,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.s
@@ -2695,6 +3116,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldebug.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.o
@@ -2703,6 +3125,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.i
@@ -2711,6 +3134,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.s
@@ -2719,6 +3143,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldo.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.o
@@ -2727,6 +3152,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.i
@@ -2735,6 +3161,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.s
@@ -2743,6 +3170,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ldump.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.o
@@ -2751,6 +3179,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.i
@@ -2759,6 +3188,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.s
@@ -2767,6 +3197,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lfunc.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.o
@@ -2775,6 +3206,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.i
@@ -2783,6 +3215,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.s
@@ -2791,6 +3224,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lgc.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.o
@@ -2799,6 +3233,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.i
@@ -2807,6 +3242,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.s
@@ -2815,6 +3251,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/linit.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.o
@@ -2823,6 +3260,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.i
@@ -2831,6 +3269,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.s
@@ -2839,6 +3278,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/liolib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.o
@@ -2847,6 +3287,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.o: Use
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.i
@@ -2855,6 +3296,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.i: Use
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.s
@@ -2863,6 +3305,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.s: Use
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/llex.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.o
@@ -2871,6 +3314,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.o:
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.i
@@ -2879,6 +3323,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.i:
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.s
@@ -2887,6 +3332,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.s:
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmathlib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.o
@@ -2895,6 +3341,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.o: Use
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.i
@@ -2903,6 +3350,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.i: Use
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.s
@@ -2911,6 +3359,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.s: Use
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lmem.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.o
@@ -2919,6 +3368,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.i
@@ -2927,6 +3377,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.s
@@ -2935,6 +3386,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loadlib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.o
@@ -2943,6 +3395,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.i
@@ -2951,6 +3404,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.s
@@ -2959,6 +3413,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lobject.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.o
@@ -2967,6 +3422,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.o:
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.i
@@ -2975,6 +3431,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.i:
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.s
@@ -2983,6 +3440,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.s:
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lopcodes.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.o
@@ -2991,6 +3449,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.i
@@ -2999,6 +3458,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.s
@@ -3007,6 +3467,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/loslib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.o
@@ -3015,6 +3476,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.i
@@ -3023,6 +3485,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.s
@@ -3031,6 +3494,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lparser.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.o
@@ -3039,6 +3503,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.i
@@ -3047,6 +3512,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.s
@@ -3055,6 +3521,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstate.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.o
@@ -3063,6 +3530,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.i
@@ -3071,6 +3539,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.s
@@ -3079,6 +3548,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstring.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.o
@@ -3087,6 +3557,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.i
@@ -3095,6 +3566,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.s
@@ -3103,6 +3575,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lstrlib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.o
@@ -3111,6 +3584,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.i
@@ -3119,6 +3593,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.s
@@ -3127,6 +3602,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltable.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.o
@@ -3135,6 +3611,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.i
@@ -3143,6 +3620,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.s
@@ -3151,6 +3629,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltablib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.o
@@ -3159,6 +3638,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.i
@@ -3167,6 +3647,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.s
@@ -3175,6 +3656,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltests.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.o
@@ -3183,6 +3665,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.i
@@ -3191,6 +3674,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.s
@@ -3199,6 +3683,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/ltm.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.o
@@ -3207,6 +3692,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.o: 
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.i
@@ -3215,6 +3701,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.i: 
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.s
@@ -3223,6 +3710,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.s: 
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lundump.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.o
@@ -3231,6 +3719,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.o:
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.i
@@ -3239,6 +3728,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.i:
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.s
@@ -3247,6 +3737,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.s:
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lutf8lib.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.o
@@ -3255,6 +3746,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.i
@@ -3263,6 +3755,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.s
@@ -3271,6 +3764,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lvm.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.o
@@ -3279,6 +3773,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.o: Use
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.i
@@ -3287,6 +3782,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.i: Use
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.s
@@ -3295,6 +3791,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.s: Use
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/luasrc/lzio.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.o
@@ -3303,6 +3800,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.i
@@ -3311,6 +3809,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.s
@@ -3319,6 +3818,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/adler32.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.o
@@ -3327,6 +3827,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.i
@@ -3335,6 +3836,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.s
@@ -3343,6 +3845,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/compress.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.o
@@ -3351,6 +3854,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.i
@@ -3359,6 +3863,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.s
@@ -3367,6 +3872,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/crc32.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.o
@@ -3375,6 +3881,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.i
@@ -3383,6 +3890,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.s
@@ -3391,6 +3899,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/deflate.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.o
@@ -3399,6 +3908,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.i
@@ -3407,6 +3917,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.s
@@ -3415,6 +3926,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/infback.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.o
@@ -3423,6 +3935,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.i
@@ -3431,6 +3944,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.s
@@ -3439,6 +3953,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inffast.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.o
@@ -3447,6 +3962,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.i
@@ -3455,6 +3971,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.s
@@ -3463,6 +3980,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inflate.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.o
@@ -3471,6 +3989,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.o: U
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.i
@@ -3479,6 +3998,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.i: U
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.s
@@ -3487,6 +4007,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.s: U
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/inftrees.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.o
@@ -3495,6 +4016,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.i
@@ -3503,6 +4025,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.s
@@ -3511,6 +4034,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/trees.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.o
@@ -3519,6 +4043,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.o: Us
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.i
@@ -3527,6 +4052,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.i: Us
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.s
@@ -3535,6 +4061,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.s: Us
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/uncompr.c.s
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.o: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.o
@@ -3543,6 +4070,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.o: User
 # target to build an object file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.o
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.o
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.i: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.i
@@ -3551,6 +4079,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.i: User
 # target to preprocess a source file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.i
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.i
 
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.s: Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.s
@@ -3559,6 +4088,7 @@ Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.s: User
 # target to generate assembly for a file
 Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.s
 .PHONY : Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Vendor/zlib/zutil.c.s
 
 chips_impl.o: chips_impl.c.o
@@ -3567,6 +4097,7 @@ chips_impl.o: chips_impl.c.o
 # target to build an object file
 chips_impl.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/chips_impl.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/chips_impl.c.o
 .PHONY : chips_impl.c.o
 
 chips_impl.i: chips_impl.c.i
@@ -3575,6 +4106,7 @@ chips_impl.i: chips_impl.c.i
 # target to preprocess a source file
 chips_impl.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/chips_impl.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/chips_impl.c.i
 .PHONY : chips_impl.c.i
 
 chips_impl.s: chips_impl.c.s
@@ -3583,6 +4115,7 @@ chips_impl.s: chips_impl.c.s
 # target to generate assembly for a file
 chips_impl.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/chips_impl.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/chips_impl.c.s
 .PHONY : chips_impl.c.s
 
 i8253.o: i8253.c.o
@@ -3591,6 +4124,7 @@ i8253.o: i8253.c.o
 # target to build an object file
 i8253.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/i8253.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/i8253.c.o
 .PHONY : i8253.c.o
 
 i8253.i: i8253.c.i
@@ -3599,6 +4133,7 @@ i8253.i: i8253.c.i
 # target to preprocess a source file
 i8253.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/i8253.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/i8253.c.i
 .PHONY : i8253.c.i
 
 i8253.s: i8253.c.s
@@ -3607,6 +4142,7 @@ i8253.s: i8253.c.s
 # target to generate assembly for a file
 i8253.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/i8253.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/i8253.c.s
 .PHONY : i8253.c.s
 
 mz800_cmt.o: mz800_cmt.c.o
@@ -3615,6 +4151,7 @@ mz800_cmt.o: mz800_cmt.c.o
 # target to build an object file
 mz800_cmt.c.o:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_cmt.c.o
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/mz800_cmt.c.o
 .PHONY : mz800_cmt.c.o
 
 mz800_cmt.i: mz800_cmt.c.i
@@ -3623,6 +4160,7 @@ mz800_cmt.i: mz800_cmt.c.i
 # target to preprocess a source file
 mz800_cmt.c.i:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_cmt.c.i
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/mz800_cmt.c.i
 .PHONY : mz800_cmt.c.i
 
 mz800_cmt.s: mz800_cmt.c.s
@@ -3631,6 +4169,7 @@ mz800_cmt.s: mz800_cmt.c.s
 # target to generate assembly for a file
 mz800_cmt.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800Analyser.dir/build.make CMakeFiles/MZ800Analyser.dir/mz800_cmt.c.s
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/MZ800AnalyserTest.dir/build.make CMakeFiles/MZ800AnalyserTest.dir/mz800_cmt.c.s
 .PHONY : mz800_cmt.c.s
 
 # Help Target
@@ -3647,7 +4186,12 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... update_mappings"
 	@echo "... MZ800Analyser"
+	@echo "... MZ800AnalyserTest"
 	@echo "... glfw"
+	@echo "... gmock"
+	@echo "... gmock_main"
+	@echo "... gtest"
+	@echo "... gtest_main"
 	@echo "... MZ800ChipsImpl.o"
 	@echo "... MZ800ChipsImpl.i"
 	@echo "... MZ800ChipsImpl.s"
@@ -3660,6 +4204,9 @@ help:
 	@echo "... Main.o"
 	@echo "... Main.i"
 	@echo "... Main.s"
+	@echo "... Tests/MZ800Tests.o"
+	@echo "... Tests/MZ800Tests.i"
+	@echo "... Tests/MZ800Tests.s"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.o"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.i"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/6502/CodeAnalyser6502.s"
@@ -3753,6 +4300,9 @@ help:
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.o"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.i"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/StaticAnalysis.s"
+	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.o"
+	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.i"
+	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/Tests/CodeAnalyserTests.s"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.o"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.i"
 	@echo "... Users/sofiasavilampi/Repositories/8BitAnalysers/Source/Shared/CodeAnalyser/UI/6502/CodeToolTips6502.s"

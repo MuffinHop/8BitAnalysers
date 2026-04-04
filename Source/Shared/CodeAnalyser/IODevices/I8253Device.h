@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../IOAnalyser.h"
-#include "i8253.h"
+#include <chips/i8253.h>
 
 class FEmuBase;
 

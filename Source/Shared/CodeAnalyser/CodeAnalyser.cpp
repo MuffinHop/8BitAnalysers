@@ -869,17 +869,8 @@ uint16_t WriteCodeInfoForAddress(FCodeAnalysisState &state, uint16_t pc)
 		case ECPUType::M65C02:
 			newPC = M65C02DisassembleCodeInfoItem(pc, state, pCodeInfo);
 			break;
-	}
-
-	state.SetCodeInfoForAddress(pc, pCodeInfo);	
-
-	// set operands as data item
-	for (uint16_t codeAddr = pc + 1; codeAddr < newPC; codeAddr++)
-	{
-		FDataInfo* pOperandData = state.GetReadDataInfoForAddress(codeAddr);
-		pOperandData->DataType = EDataType::InstructionOperand;
-		pOperandData->ByteSize = 1;
-		pOperandData->InstructionAddress = state.AddressRefFromPhysicalAddress(pc);
+                default:
+                        break;
 	}
 	pCodeInfo->ByteSize = newPC - pc;
 

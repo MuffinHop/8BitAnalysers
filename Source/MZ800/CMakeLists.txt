@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 3.30)
 
 project (MZ800Analyser)
 
-set( with_tests false )
+set( with_tests true )
 
 # for Google test
 if(${with_tests})
@@ -42,13 +42,13 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	find_package(Threads REQUIRED)
 	find_library(AUDIOTOOLBOX_LIBRARY AudioToolbox)
 	set( gfxapi "GLFWApi")
-	set( with_tests false )
+	set( with_tests true )
 endif()
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
 	#set( gfxapi "DX11")
 	set( gfxapi "GLFWApi")	
-	set( with_tests false )
+	set( with_tests true )
 endif()
 
 # Put binary and configuration files to /bin subfolder
@@ -86,9 +86,10 @@ file ( GLOB program_src CONFIGURE_DEPENDS
 # Ensure chips_impl.c is always included
 list(APPEND program_src ${CMAKE_CURRENT_SOURCE_DIR}/chips_impl.c)
 
+list(FILTER program_src EXCLUDE REGEX "Main.cpp")
 
 # Add executable first, then set include directories
-add_executable (MZ800Analyser MACOSX_BUNDLE ${shared_src} ${program_src} ${platform_main} ${vendor_src} )
+add_executable (MZ800Analyser MACOSX_BUNDLE ${shared_src} ${program_src} ${CMAKE_CURRENT_SOURCE_DIR}/Main.cpp ${platform_main} ${vendor_src} )
 target_include_directories(MZ800Analyser PRIVATE
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/../Vendor/chips/chips
@@ -102,7 +103,11 @@ file ( GLOB test_src
 file ( GLOB shared_test_src
 	../Shared/CodeAnalyser/Tests/*.cpp ../Shared/CodeAnalyser/Tests/*.h)
 
-add_executable (MZ800AnalyserTest MACOSX_BUNDLE ${test_src} ${shared_test_src} ${shared_src} ${program_src} ${vendor_src} )
+add_executable (MZ800AnalyserTest ${test_src} ${shared_test_src} ${shared_src} ${program_src} ${vendor_src} )
+target_include_directories(MZ800AnalyserTest PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/../Vendor/chips/chips
+)
 
 set_target_properties( MZ800AnalyserTest PROPERTIES CXX_STANDARD 20 )
 set_target_properties( MZ800AnalyserTest PROPERTIES C_STANDARD 11 )
@@ -306,5 +311,4 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	#sinclude(CPack)
  
 endif()
-target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c i8253.c)
-target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c i8253.c)
+target_sources(MZ800Analyser PRIVATE MZ800ChipsImpl.c)
