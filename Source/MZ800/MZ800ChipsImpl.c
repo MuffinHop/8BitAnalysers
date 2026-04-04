@@ -235,12 +235,10 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 uint16_t addr_low = addr & 0x0FFF;
                 if (addr_low <= 0x08) {
                     if (addr_low == 0x08) {
-                        data = 0x00;
-                        if (sys->gdg.pixel_line >= sys->gdg.vt.hblank_start ||
-                            sys->gdg.pixel_line < sys->gdg.vt.hblank_end) {
-                            data |= 0x80;
-                        }
-                        data |= (sys->gdg.tempo & 1);
+                        /* E008 Custom LSI status = GDG status register (same as port CE read).
+                         * Contains: TEMPO, HBLANK, VBLANK, HSYNC, VSYNC, MZ-800 device flag.
+                         * Reference: mz800-emuz maps E008 read → port 0xCE. */
+                        data = gdg_whid65040_status(&sys->gdg);
                     } else if (addr_low & 0x04) {
                         if (addr_low == 0x07) {
                             data = sys->dbus_latch;
@@ -347,33 +345,30 @@ void mz800_sys_tick(mz800_sys_t* sys)
         const uint8_t port_hi = (port_full >> 8) & 0xFF;
         
         if (pins & Z80_WR) {
-            bool dmd_mz700_mode = (sys->gdg.dmd & GDG_DMD_MZ700) != 0;
             if (port >= 0xD4 && port <= 0xD7) {
-                if (!dmd_mz700_mode) {
-                    uint8_t pit_data = Z80_GET_DATA(pins);
-                    i8253_write(&sys->pit, port, pit_data);
-                    if (sys->pit_write_hook) sys->pit_write_hook(sys->hook_user, sys->cpu.pc, port & 0x03, pit_data);
-                }
+                /* PIT ports always accessible (both MZ-700 and MZ-800 modes) */
+                uint8_t pit_data = Z80_GET_DATA(pins);
+                i8253_write(&sys->pit, port, pit_data);
+                if (sys->pit_write_hook) sys->pit_write_hook(sys->hook_user, sys->cpu.pc, port & 0x03, pit_data);
             } else if (port >= 0xD0 && port <= 0xD3) {
-                if (!dmd_mz700_mode) {
-                    // Determine keyboard active column based on port A output
-                    int key_col = sys->ppi.pa.outp & 0x0F;
-                    uint8_t kb_lines = 0xFF; // unpressed
-                    if (key_col < 10) {
-                        kb_lines = ~(kbd_test_lines(&sys->kbd, (1 << key_col))) & 0xFF;
-                    }
-
-                    // Map Z80 pins to i8255 pins before tick
-                    uint64_t ppi_pins = 0;
-                    ppi_pins |= (port & 3); // A0, A1
-                    ppi_pins |= I8255_CS | I8255_WR;
-                    I8255_SET_DATA(ppi_pins, Z80_GET_DATA(pins));
-                    I8255_SET_PB(ppi_pins, kb_lines); // Feed keyboard lines to port B
-                    i8255_tick(&sys->ppi, ppi_pins);
-                    /* PA7 active-low resets cursor blink timer */
-                    if (!(sys->ppi.pa.outp & 0x80)) sys->cursor_timer = 0;
-                    if (sys->ppi_write_hook) sys->ppi_write_hook(sys->hook_user, sys->cpu.pc, port & 3, Z80_GET_DATA(pins));
+                /* PPI ports always accessible (both MZ-700 and MZ-800 modes) */
+                // Determine keyboard active column based on port A output
+                int key_col = sys->ppi.pa.outp & 0x0F;
+                uint8_t kb_lines = 0xFF; // unpressed
+                if (key_col < 10) {
+                    kb_lines = ~(kbd_test_lines(&sys->kbd, (1 << key_col))) & 0xFF;
                 }
+
+                // Map Z80 pins to i8255 pins before tick
+                uint64_t ppi_pins = 0;
+                ppi_pins |= (port & 3); // A0, A1
+                ppi_pins |= I8255_CS | I8255_WR;
+                I8255_SET_DATA(ppi_pins, Z80_GET_DATA(pins));
+                I8255_SET_PB(ppi_pins, kb_lines); // Feed keyboard lines to port B
+                i8255_tick(&sys->ppi, ppi_pins);
+                /* PA7 active-low resets cursor blink timer */
+                if (!(sys->ppi.pa.outp & 0x80)) sys->cursor_timer = 0;
+                if (sys->ppi_write_hook) sys->ppi_write_hook(sys->hook_user, sys->cpu.pc, port & 3, Z80_GET_DATA(pins));
             } else {
                 uint8_t data_io = Z80_GET_DATA(pins);
                 // Try GDG first (handles CC,CD,CE,CF,E0-E4,F0)
@@ -434,7 +429,6 @@ void mz800_sys_tick(mz800_sys_t* sys)
                 }
             }
         } else if (pins & Z80_RD) {
-            bool dmd_mz700_mode = (sys->gdg.dmd & GDG_DMD_MZ700) != 0;
             uint8_t data = sys->dbus_latch; // default: last bus value
             // Try GDG first (handles CE status, E0/E1 bank switching)
             uint8_t gdg_data;
@@ -445,32 +439,30 @@ void mz800_sys_tick(mz800_sys_t* sys)
                         port, sys->gdg.bank_rom1000, sys->gdg.bank_vram, sys->cpu.pc, sys->tick_count);
                 }
             } else if (port >= 0xD4 && port <= 0xD7) {
-                if (!dmd_mz700_mode) {
-                    if ((port & 0x03) == 3) {
-                        data = sys->dbus_latch; // D7 (CW register) is write-only
-                    } else {
-                        data = i8253_read(&sys->pit, port);
-                    }
+                /* PIT ports always accessible (both MZ-700 and MZ-800 modes) */
+                if ((port & 0x03) == 3) {
+                    data = sys->dbus_latch; // D7 (CW register) is write-only
+                } else {
+                    data = i8253_read(&sys->pit, port);
                 }
             } else if (port >= 0xD0 && port <= 0xD3) {
-                if (!dmd_mz700_mode) {
-                    // Determine keyboard active column based on port A output
-                    int key_col = sys->ppi.pa.outp & 0x0F;
-                    uint8_t kb_lines = 0xFF; // unpressed
-                    if (key_col < 10) {
-                        kb_lines = ~(kbd_test_lines(&sys->kbd, (1 << key_col))) & 0xFF;
-                    }
-
-                    // Read from 8255
-                    uint64_t ppi_pins = 0;
-                    ppi_pins |= (port & 3); // A0, A1
-                    ppi_pins |= I8255_CS | I8255_RD;
-                    I8255_SET_PB(ppi_pins, kb_lines); // Feed keyboard lines to port B
-                    I8255_SET_PC(ppi_pins, _mz800_ppi_pc_inputs(sys));
-                    ppi_pins = i8255_tick(&sys->ppi, ppi_pins);
-                    data = I8255_GET_DATA(ppi_pins);
-                    if (sys->ppi_write_hook) sys->ppi_write_hook(sys->hook_user, sys->cpu.pc, port & 3, data);
+                /* PPI ports always accessible (both MZ-700 and MZ-800 modes) */
+                // Determine keyboard active column based on port A output
+                int key_col = sys->ppi.pa.outp & 0x0F;
+                uint8_t kb_lines = 0xFF; // unpressed
+                if (key_col < 10) {
+                    kb_lines = ~(kbd_test_lines(&sys->kbd, (1 << key_col))) & 0xFF;
                 }
+
+                // Read from 8255
+                uint64_t ppi_pins = 0;
+                ppi_pins |= (port & 3); // A0, A1
+                ppi_pins |= I8255_CS | I8255_RD;
+                I8255_SET_PB(ppi_pins, kb_lines); // Feed keyboard lines to port B
+                I8255_SET_PC(ppi_pins, _mz800_ppi_pc_inputs(sys));
+                ppi_pins = i8255_tick(&sys->ppi, ppi_pins);
+                data = I8255_GET_DATA(ppi_pins);
+                if (sys->ppi_write_hook) sys->ppi_write_hook(sys->hook_user, sys->cpu.pc, port & 3, data);
             } else {
                 switch (port) {
                     case 0xF0: // JOY1 — gated by PPI PA bit 5 (active low)
